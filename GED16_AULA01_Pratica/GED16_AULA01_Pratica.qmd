@@ -52,18 +52,118 @@ Mais informações a respeito dos dados podem ser obtidas no arquivo `data/abalo
 
 ### Análise Exploratória de Dados
 
-Iniciamos a análise exploratória da massa de dados `abalone` carregando o conjunto de dados do arquivo associado, e atribuíndo corretamente o nome de cada uma das variáveis do problema.
+Conduza a análise exploratória da massa de dados `abalone`, a fim de compreender suas características principais.   
+Voltaremos a utilizar essa massa de dados em atividades futuras.
 
 ```{r}
 rm(list=ls())
 abalone <- read_csv("data/abalone/abalone.data", col_names = FALSE)
 names(abalone) <- c("sex", "length", "diameter", "height", "whole_w", "shucked_w", "viscera_w", "shell_w", "rings")
+```
+
+Identifando a estrutura dos dados:
+```{r}
+str(abalone)
+```
+Percebemos que as variáveis já possuem nomes explicativos. Porém, percebe-se que `sex` está com tipo `char` quando deveria ser `Factor`. Vamos também adicionar idade e retornar os valores contínuos para suas escalas originais (multiplicar por 200).
+
+```{r}
+abalone <- abalone %>% mutate_at("sex", as.factor)
+abalone$age <- abalone$rings + 1.5
+
+abalone$length <- abalone$length * 200
+abalone$diameter <- abalone$diameter * 200
+abalone$height <- abalone$height * 200
+abalone$whole_w <- abalone$whole_w * 200
+abalone$shucked_w <- abalone$shucked_w * 200
+abalone$viscera_w <- abalone$viscera_w * 200
+abalone$shell_w <- abalone$shell_w * 200
+```
+
+Dessa forma, temos o sumário do conjunto de dados:
+
+
+```{r}
 summary(abalone)
 ```
 
+Percebe-se que algumas observações possuem altura zero. Avaliando essas observações:
+
+```{r}
+abalone[abalone$height==0,]
+```
+Obtemos duas observações que não fazem sentido. Retirando-as:
+```{r}
+abalone <- abalone[abalone$height!=0,]
+```
 
 
+```{r}
+# Histograma de `age`
+ggplot(abalone, aes(x = age)) +
+  geom_histogram(aes(y = after_stat(density))) +
+  # adiciona linha de densidade estimada (suavização)
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.6) +
+  # adiciona dispersão unidimensional de `age`
+  geom_rug(alpha = 0.5)
+```
 
+```{r}
+  plot(abalone[,-c(9,9)])
+```
+```{r}
+  library(GGally)
+  ggpairs(abalone[,-c(9,9)])
+```
 
+```{r}
+  abalone$sum_w <- abalone$shucked_w + abalone$viscera_w + abalone$shell_w
+  plot(abalone$whole_w, abalone$sum_w)
+```
+```{r}
+  cor(abalone$whole_w, abalone$sum_w)
+```
 
-----
+```{r}
+# Boxplot de `age`
+ggplot(abalone, aes(x = age, y = "")) +
+  # adiciona barras de erros
+  geom_errorbar(stat = "boxplot", width = 0.1) +
+  # adiciona boxplot
+  geom_boxplot () +
+  # adiciona dispersão unidimensional de `age`
+  geom_rug(alpha = 0.5) +
+  # adiciona rótulo aos eixos
+  labs(y = "", x = "age")
+```
+```{r}
+# Boxplots
+ggplot(abalone, aes(x = age, y = sex)) +
+  geom_boxplot()
+
+```
+```{r}
+ggplot(abalone)+ 
+  geom_point(aes(x=whole_w, y = length))
+```
+```{r}
+cor(abalone$whole_w, abalone$length)
+```
+
+```{r}
+ggplot(abalone)+ 
+  geom_point(aes(x=whole_w, y = length*diameter**2))
+```
+
+```{r}
+cor(abalone$whole_w, abalone$length*abalone$diameter**2)
+```
+```{r}
+ggplot(abalone)+ 
+  geom_point(aes(x=whole_w, y = age))
+```
+```{r}
+ggplot(abalone)+ 
+  geom_point(aes(x=whole_w, y = age))
+```
