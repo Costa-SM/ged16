@@ -1,0 +1,69 @@
+---
+lang: pt  
+title: "GED-16: Análise de Regressão"
+subtitle: "AULA01: Prática (1o. semestre/2023)"
+author: "Prof. Denise B. Ferrari"
+date: "2023-03-08"  
+format:
+  html:
+    theme: cosmo
+execute:
+  echo: true
+  eval: true
+  warning: false    
+---
+```{r include = FALSE}
+library(tidyverse)
+```
+
+----
+
+### Introdução
+
+Abalone é um tipo de molusco que vive em águas marinhas costeiras em diversas regiões do globo. A concha do abalone apresenta tamanho que varia entre 10 a 25cm e sua coloração interior iridescente nacarada é muito valorizada na confecção de jóias e ornamentos; além disso, a carne do animal é considerada uma iguaria em muitos países. Devido ao seu alto valor comercial e consequente pesca excessiva, além da degradação de seu habitat pela ação humana, diversas espécies de abalone atualmente correm risco de extinção. Existem mais de 100 espécies de abalone ao redor do mundo, das quais cerca de 15 são produzidas por meio de aquicultura. Determinar a idade do abalone de maneira acurada é importante tanto em termos comerciais (o valor comercial do abalone está associado à sua idade) bem como em termos ambientais (condições ambientais podem afetar a saúde do animal). A idade do animal pode ser determinada a partir da contagem do número de anéis na concha, utilizando um microscópio, a partir de um procedimento delicado e trabalhoso.
+
+
+![Abalone (Image by <a href="https://pixabay.com/users/lisaleo-3220940/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4919586">Lisa Yount</a> from <a href="https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4919586">Pixabay</a>)](img/abalone.jpg){width=80%}
+
+Os dados disponíveis no arquivo `data/abalone/abalone.data` foram
+obtidos no [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Abalone) e são bastante utilizados na investigação de métodos de Machine Learning. Tais dados foram coletados a partir do estudo original:
+
+Warwick J Nash, Tracy L Sellers, Simon R Talbot, Andrew J Cawthorn and
+	Wes B Ford (1994) "The Population Biology of Abalone (_Haliotis_
+	species) in Tasmania. I. Blacklip Abalone (_H. rubra_) from the
+	North	Coast and Islands of Bass Strait", Sea Fisheries Division,
+	Technical Report No. 48 (ISSN 1034-3288).
+
+O principal objetivo do projeto era determinar a idade do molusco a partir de medidas físicas do animal mais fáceis de serem obtidas. Os dados originais foram pré-processados no sentido de remover observações faltantes e os valores das variáveis contínuas foram dividos por 200. Há um total de 4177 observações coletadas para 9 variáveis:
+
+1. `sex`: sexo do animal (M, F, I)
+2. `length`: maior comprimento da concha (mm)
+3. `diameter`: comprimento perpendicular à `length` (mm)
+4. `height`: comprimento da carne da concha (mm)
+5. `whole_w`: peso do animal (g)
+6. `shucked_w`: peso da carne (g)
+7. `viscera_w`: peso das vísceras (g)
+8. `shell_w`: peso da concha (g)
+9. `rings`: número de anéis (a idade é obtida somando 1.5)
+
+Mais informações a respeito dos dados podem ser obtidas no arquivo `data/abalone/abalone.names`.
+
+----
+
+### Análise Exploratória de Dados
+
+Iniciamos a análise exploratória da massa de dados `abalone` carregando o conjunto de dados do arquivo associado, e atribuíndo corretamente o nome de cada uma das variáveis do problema.
+
+```{r}
+rm(list=ls())
+abalone <- read_csv("data/abalone/abalone.data", col_names = FALSE)
+names(abalone) <- c("sex", "length", "diameter", "height", "whole_w", "shucked_w", "viscera_w", "shell_w", "rings")
+summary(abalone)
+```
+
+
+
+
+
+
+----
