@@ -185,7 +185,7 @@ ggplot(abalone)+
 ```{r}
 cor(abalone$whole_w, abalone$length*abalone$diameter**2)
 ```
-Podemos hipotetizar também que abalones mais velhos sejam mais pesados. Ainda que exista alguma relação entre essas variáveis, parece que ela é mais forte quando os abalones são mais novos, porém quanto mais velhos eles ficam, mais dispersos ficam os pesos. Percebe-se uma correlção significativamente menor entre essas variáveis se comparados aos casos anteriormente analisados.
+Podemos hipotetizar também que abalones mais velhos sejam mais pesados. Ainda que exista alguma relação entre essas variáveis, parece que ela é mais forte quando os abalones são mais novos, porém quanto mais velhos eles ficam, mais dispersos ficam os pesos. Percebe-se uma correlação significativamente menor entre essas variáveis se comparados aos casos anteriormente analisados.
 ```{r}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = age))
