@@ -92,7 +92,7 @@ Percebe-se que algumas observações possuem altura zero. Avaliando essas observ
 ```{r}
 abalone[abalone$height==0,]
 ```
-Obtemos duas observações que não fazem sentido. Podemos retirá-las do conjunto de dados.
+Obtemos duas observações que não fazem sentido (altura zero e pesos diferentes de zero). Podemos retirá-las do conjunto de dados.
 ```{r}
 abalone <- abalone[abalone$height!=0,]
 ```
@@ -143,7 +143,7 @@ Assim, pode-se gerar o gráfico da variável `whole_w` *versus* a soma das vari�
   cor(abalone$whole_w, abalone$sum_w)
 ```
 
-Podemos também analisar a distribuição da idade dos Abalones, o que é feito abaixo, através da geração de um *boxplot*. Nota-se, através deste, que 75\% dos Abalones encontram-se na faixa entre 9 e 13 anos de idade, mas que, novamente, há aqueles com mais de até 30 anos.
+Podemos também analisar a distribuição da idade dos Abalones, o que é feito abaixo, através da geração de um *boxplot*. Nota-se, através deste, que 50\% dos Abalones encontram-se na faixa entre 9 e 13 anos de idade. Além disso, existem vários *outliers* com idades superiores a 18 anos de idade.
 
 ```{r}
 # Boxplot de `age`
@@ -158,7 +158,7 @@ ggplot(abalone, aes(x = age, y = "")) +
   labs(y = "", x = "age")
 ```
 
-Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, *boxplots* da idade para cada um dos sexos. Nota-se que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma consequência de uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, e que esta tarefa se torna mais fácil conforme estes envelhecem.
+Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, *boxplots* da idade para cada um dos sexos. Não há grandes diferenças na distribuição de idades de machos e fêmeas. Nota-se, porém, que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma evidência de se existir uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, sendo esta tarefa possivelmente mais fácil conforme estes envelhecem.
 
 ```{r}
 # Boxplots
@@ -166,27 +166,30 @@ ggplot(abalone, aes(x = age, y = sex)) +
   geom_boxplot()
 
 ```
+
+Ainda com base nos gráficos de relação entre as características, podemos analisar mais a fundo a relação entre o tamanho e o peso dos abalones. Tomando as variáveis `whole_w` e `diameter`, podemos percaber uma grande correlação entre essas variáveis.
 ```{r}
 ggplot(abalone)+ 
-  geom_point(aes(x=whole_w, y = length))
-```
-```{r}
-cor(abalone$whole_w, abalone$length)
+  geom_point(aes(x=whole_w, y = diameter))
 ```
 
 ```{r}
+cor(abalone$whole_w, abalone$diameter)
+```
+Podemos também hipotetizar que os abalones tem densidade aproximadamente constante. Assim, analisando o gráfico entre `whole_w` *versus* `height`*`diameter`^2, encontramos um gráfico que lembra uma reta. Também podemos perceber que encontra-se uma correlação ainda maior que a do caso anterior.
+```{r}
 ggplot(abalone)+ 
-  geom_point(aes(x=whole_w, y = length*diameter**2))
+  geom_point(aes(x=whole_w, y = height*diameter**2))
 ```
 
 ```{r}
 cor(abalone$whole_w, abalone$length*abalone$diameter**2)
 ```
+Podemos hipotetizar também que abalones mais velhos sejam mais pesados. Ainda que exista alguma relação entre essas variáveis, parece que ela é mais forte quando os abalones são mais novos, porém quanto mais velhos eles ficam, mais dispersos ficam os pesos. Percebe-se uma correlção significativamente menor entre essas variáveis se comparados aos casos anteriormente analisados.
 ```{r}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = age))
 ```
 ```{r}
-ggplot(abalone)+ 
-  geom_point(aes(x=whole_w, y = age))
+cor(abalone$whole_w, abalone$age)
 ```
