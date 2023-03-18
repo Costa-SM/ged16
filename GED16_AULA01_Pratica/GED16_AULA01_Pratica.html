@@ -166,37 +166,244 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="análise-exploratória-de-dados" class="level3">
 <h3 class="anchored" data-anchor-id="análise-exploratória-de-dados">Análise Exploratória de Dados</h3>
-<p>Iniciamos a análise exploratória da massa de dados <code>abalone</code> carregando o conjunto de dados do arquivo associado, e atribuíndo corretamente o nome de cada uma das variáveis do problema.</p>
+<p>Conduza a análise exploratória da massa de dados <code>abalone</code>, a fim de compreender suas características principais.<br>
+Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/abalone/abalone.data"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(abalone) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"length"</span>, <span class="st">"diameter"</span>, <span class="st">"height"</span>, <span class="st">"whole_w"</span>, <span class="st">"shucked_w"</span>, <span class="st">"viscera_w"</span>, <span class="st">"shell_w"</span>, <span class="st">"rings"</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(abalone) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"length"</span>, <span class="st">"diameter"</span>, <span class="st">"height"</span>, <span class="st">"whole_w"</span>, <span class="st">"shucked_w"</span>, <span class="st">"viscera_w"</span>, <span class="st">"shell_w"</span>, <span class="st">"rings"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Começamos identificando a estrutura dos dados:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     sex                length         diameter          height      
- Length:4177        Min.   :0.075   Min.   :0.0550   Min.   :0.0000  
- Class :character   1st Qu.:0.450   1st Qu.:0.3500   1st Qu.:0.1150  
- Mode  :character   Median :0.545   Median :0.4250   Median :0.1400  
-                    Mean   :0.524   Mean   :0.4079   Mean   :0.1395  
-                    3rd Qu.:0.615   3rd Qu.:0.4800   3rd Qu.:0.1650  
-                    Max.   :0.815   Max.   :0.6500   Max.   :1.1300  
-    whole_w         shucked_w        viscera_w         shell_w      
- Min.   :0.0020   Min.   :0.0010   Min.   :0.0005   Min.   :0.0015  
- 1st Qu.:0.4415   1st Qu.:0.1860   1st Qu.:0.0935   1st Qu.:0.1300  
- Median :0.7995   Median :0.3360   Median :0.1710   Median :0.2340  
- Mean   :0.8287   Mean   :0.3594   Mean   :0.1806   Mean   :0.2388  
- 3rd Qu.:1.1530   3rd Qu.:0.5020   3rd Qu.:0.2530   3rd Qu.:0.3290  
- Max.   :2.8255   Max.   :1.4880   Max.   :0.7600   Max.   :1.0050  
-     rings       
- Min.   : 1.000  
- 1st Qu.: 8.000  
- Median : 9.000  
- Mean   : 9.934  
- 3rd Qu.:11.000  
- Max.   :29.000  </code></pre>
+<pre><code>spc_tbl_ [4,177 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ sex      : chr [1:4177] "M" "M" "F" "M" ...
+ $ length   : num [1:4177] 0.455 0.35 0.53 0.44 0.33 0.425 0.53 0.545 0.475 0.55 ...
+ $ diameter : num [1:4177] 0.365 0.265 0.42 0.365 0.255 0.3 0.415 0.425 0.37 0.44 ...
+ $ height   : num [1:4177] 0.095 0.09 0.135 0.125 0.08 0.095 0.15 0.125 0.125 0.15 ...
+ $ whole_w  : num [1:4177] 0.514 0.226 0.677 0.516 0.205 ...
+ $ shucked_w: num [1:4177] 0.2245 0.0995 0.2565 0.2155 0.0895 ...
+ $ viscera_w: num [1:4177] 0.101 0.0485 0.1415 0.114 0.0395 ...
+ $ shell_w  : num [1:4177] 0.15 0.07 0.21 0.155 0.055 0.12 0.33 0.26 0.165 0.32 ...
+ $ rings    : num [1:4177] 15 7 9 10 7 8 20 16 9 19 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   X1 = col_character(),
+  ..   X2 = col_double(),
+  ..   X3 = col_double(),
+  ..   X4 = col_double(),
+  ..   X5 = col_double(),
+  ..   X6 = col_double(),
+  ..   X7 = col_double(),
+  ..   X8 = col_double(),
+  ..   X9 = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
 </div>
 </div>
-<hr>
+<p>Percebemos que as variáveis já possuem nomes explicativos. Porém, percebe-se que <code>sex</code> está com tipo <code>char</code> quando deveria ser <code>Factor</code>. Vamos também obter a idade, a partir do número de anéis do Abalone, e retornar os valores contínuos para suas escalas originais (multiplicar por 200).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="st">"sex"</span>, as.factor)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>age <span class="ot">&lt;-</span> abalone<span class="sc">$</span>rings <span class="sc">+</span> <span class="fl">1.5</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>length <span class="ot">&lt;-</span> abalone<span class="sc">$</span>length <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>diameter <span class="ot">&lt;-</span> abalone<span class="sc">$</span>diameter <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>height <span class="ot">&lt;-</span> abalone<span class="sc">$</span>height <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>whole_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>whole_w <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>shucked_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shucked_w <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>viscera_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>viscera_w <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>shell_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shell_w <span class="sc">*</span> <span class="dv">200</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dessa forma, temos o sumário do conjunto de dados:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> sex          length         diameter          height         whole_w     
+ F:1307   Min.   : 15.0   Min.   : 11.00   Min.   :  0.0   Min.   :  0.4  
+ I:1342   1st Qu.: 90.0   1st Qu.: 70.00   1st Qu.: 23.0   1st Qu.: 88.3  
+ M:1528   Median :109.0   Median : 85.00   Median : 28.0   Median :159.9  
+          Mean   :104.8   Mean   : 81.58   Mean   : 27.9   Mean   :165.7  
+          3rd Qu.:123.0   3rd Qu.: 96.00   3rd Qu.: 33.0   3rd Qu.:230.6  
+          Max.   :163.0   Max.   :130.00   Max.   :226.0   Max.   :565.1  
+   shucked_w        viscera_w         shell_w           rings       
+ Min.   :  0.20   Min.   :  0.10   Min.   :  0.30   Min.   : 1.000  
+ 1st Qu.: 37.20   1st Qu.: 18.70   1st Qu.: 26.00   1st Qu.: 8.000  
+ Median : 67.20   Median : 34.20   Median : 46.80   Median : 9.000  
+ Mean   : 71.87   Mean   : 36.12   Mean   : 47.77   Mean   : 9.934  
+ 3rd Qu.:100.40   3rd Qu.: 50.60   3rd Qu.: 65.80   3rd Qu.:11.000  
+ Max.   :297.60   Max.   :152.00   Max.   :201.00   Max.   :29.000  
+      age       
+ Min.   : 2.50  
+ 1st Qu.: 9.50  
+ Median :10.50  
+ Mean   :11.43  
+ 3rd Qu.:12.50  
+ Max.   :30.50  </code></pre>
+</div>
+</div>
+<p>Percebe-se que algumas observações possuem altura zero. Avaliando essas observações:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>abalone[abalone<span class="sc">$</span>height<span class="sc">==</span><span class="dv">0</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 10
+  sex   length diameter height whole_w shucked_w viscera_w shell_w rings   age
+  &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 I         86       68      0    85.6      41.3      17.2    23       8   9.5
+2 I         63       46      0    26.8      11.5       5.7    70.1     6   7.5</code></pre>
+</div>
+</div>
+<p>Obtemos duas observações que não fazem sentido. Podemos retirá-las do conjunto de dados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>height<span class="sc">!=</span><span class="dv">0</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Assim, temos um sumário dos dados atualizados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> sex          length         diameter          height          whole_w      
+ F:1307   Min.   : 15.0   Min.   : 11.00   Min.   :  2.00   Min.   :  0.40  
+ I:1340   1st Qu.: 90.0   1st Qu.: 70.00   1st Qu.: 23.00   1st Qu.: 88.45  
+ M:1528   Median :109.0   Median : 85.00   Median : 28.00   Median :160.00  
+          Mean   :104.8   Mean   : 81.59   Mean   : 27.92   Mean   :165.80  
+          3rd Qu.:123.0   3rd Qu.: 96.00   3rd Qu.: 33.00   3rd Qu.:230.70  
+          Max.   :163.0   Max.   :130.00   Max.   :226.00   Max.   :565.10  
+   shucked_w        viscera_w         shell_w           rings       
+ Min.   :  0.20   Min.   :  0.10   Min.   :  0.30   Min.   : 1.000  
+ 1st Qu.: 37.25   1st Qu.: 18.70   1st Qu.: 26.00   1st Qu.: 8.000  
+ Median : 67.20   Median : 34.20   Median : 46.80   Median : 9.000  
+ Mean   : 71.90   Mean   : 36.13   Mean   : 47.77   Mean   : 9.935  
+ 3rd Qu.:100.40   3rd Qu.: 50.60   3rd Qu.: 65.75   3rd Qu.:11.000  
+ Max.   :297.60   Max.   :152.00   Max.   :201.00   Max.   :29.000  
+      age       
+ Min.   : 2.50  
+ 1st Qu.: 9.50  
+ Median :10.50  
+ Mean   :11.44  
+ 3rd Qu.:12.50  
+ Max.   :30.50  </code></pre>
+</div>
+</div>
+<p>Dado o sumário, analisaremos agora a distribuição de algumas das grandezas de interesse no conjunto de dados. Começaremos pela idade dos Abalones, a partir da qual pode ser construído o histograma abaixo, juntamente com a sua curva de densidade estimada. Pela análise destes, nota-se que há um grande número de Abalones com uma idade próxima a 10 anos, com os mais velhos podendo ter até próximo de 30 anos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma de `age`</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density))) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona linha de densidade estimada (suavização)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">colour =</span> <span class="dv">4</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">bw =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona dispersão unidimensional de `age`</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Pode-se, também, construir um conjunto de gráficos para analisar a relação entre cada uma das características do conjunto de dados. Nota-se, entretanto, que esse conjunto não conta com os valores de correlação das variáveis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>)])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Dessa maneira, pode-se, com base na figura anterior, construir a próxima, que conta com os valores de correlação entre as diferentes variáveis, bem como gráficos mais informativos relacionando o sexo dos Abalones com as suas outras características.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GGally)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(abalone[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>)])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Com base nesse apanhado geral de gráficos, pode-se realizar uma análise focada nas relações mais interessantes. Um desses casos consiste em comparar o valor do peso total do Abalone com os diferentes valores de pesos registrados posteriormente (<em>whole</em>, <em>shucked</em>, <em>viscera</em> e <em>shell</em>). Como pode-se constatar no conjunto de observações abaixo, a soma dos diferentes valores de peso nem sempre resulta no peso total registrado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>abalone[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 10
+  sex   length diameter height whole_w shucked_w viscera_w shell_w rings   age
+  &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 M         91       73     19   103.       44.9      20.2      30    15  16.5
+2 M         70       53     18    45.1      19.9       9.7      14     7   8.5
+3 F        106       84     27   135.       51.3      28.3      42     9  10.5</code></pre>
+</div>
+</div>
+<p>Assim, pode-se gerar o gráfico da variável <code>whole_w</code> <em>versus</em> a soma das variáveis <code>shucked_w</code>, <code>viscera_w</code> e <code>shell_w</code>. Bem como o valor de correlação das duas grandezas obtidas. Por fim, nota-se que este último é de aproximadamente 99.51%, um valor bastante alto.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  abalone<span class="sc">$</span>sum_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shucked_w <span class="sc">+</span> abalone<span class="sc">$</span>viscera_w <span class="sc">+</span> abalone<span class="sc">$</span>shell_w</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>sum_w)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>sum_w)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9951057</code></pre>
+</div>
+</div>
+<p>Podemos também analisar a distribuição da idade dos Abalones, o que é feito abaixo, através da geração de um <em>boxplot</em>. Nota-se, através deste, que 75% dos Abalones encontram-se na faixa entre 9 e 13 anos de idade, mas que, novamente, há aqueles com mais de até 30 anos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot de `age`</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> <span class="st">""</span>)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona barras de erros</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">stat =</span> <span class="st">"boxplot"</span>, <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona boxplot</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span> () <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona dispersão unidimensional de `age`</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona rótulo aos eixos</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"age"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, <em>boxplots</em> da idade para cada um dos sexos. Nota-se que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma consequência de uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, e que esta tarefa se torna mais fácil conforme estes envelhecem.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplots</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> sex)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> length))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>length)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9252173</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> length<span class="sc">*</span>diameter<span class="sc">**</span><span class="dv">2</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>length<span class="sc">*</span>abalone<span class="sc">$</span>diameter<span class="sc">**</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9685146</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> age))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> age))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 
 </main>

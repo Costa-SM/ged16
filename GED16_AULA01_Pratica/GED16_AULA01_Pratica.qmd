@@ -61,11 +61,11 @@ abalone <- read_csv("data/abalone/abalone.data", col_names = FALSE)
 names(abalone) <- c("sex", "length", "diameter", "height", "whole_w", "shucked_w", "viscera_w", "shell_w", "rings")
 ```
 
-Identifando a estrutura dos dados:
+Começamos identificando a estrutura dos dados:
 ```{r}
 str(abalone)
 ```
-Percebemos que as variáveis já possuem nomes explicativos. Porém, percebe-se que `sex` está com tipo `char` quando deveria ser `Factor`. Vamos também adicionar idade e retornar os valores contínuos para suas escalas originais (multiplicar por 200).
+Percebemos que as variáveis já possuem nomes explicativos. Porém, percebe-se que `sex` está com tipo `char` quando deveria ser `Factor`. Vamos também obter a idade, a partir do número de anéis do Abalone, e retornar os valores contínuos para suas escalas originais (multiplicar por 200).
 
 ```{r}
 abalone <- abalone %>% mutate_at("sex", as.factor)
@@ -92,11 +92,17 @@ Percebe-se que algumas observações possuem altura zero. Avaliando essas observ
 ```{r}
 abalone[abalone$height==0,]
 ```
-Obtemos duas observações que não fazem sentido. Retirando-as:
+Obtemos duas observações que não fazem sentido. Podemos retirá-las do conjunto de dados.
 ```{r}
 abalone <- abalone[abalone$height!=0,]
 ```
 
+Assim, temos um sumário dos dados atualizados.
+```{r}
+summary(abalone)
+```
+
+Dado o sumário, analisaremos agora a distribuição de algumas das grandezas de interesse no conjunto de dados. Começaremos pela idade dos Abalones, a partir da qual pode ser construído o histograma abaixo, juntamente com a sua curva de densidade estimada. Pela análise destes, nota-se que há um grande número de Abalones com uma idade próxima a 10 anos, com os mais velhos podendo ter até próximo de 30 anos.
 
 ```{r}
 # Histograma de `age`
@@ -109,13 +115,25 @@ ggplot(abalone, aes(x = age)) +
   geom_rug(alpha = 0.5)
 ```
 
+Pode-se, também, construir um conjunto de gráficos para analisar a relação entre cada uma das características do conjunto de dados. Nota-se, entretanto, que esse conjunto não conta com os valores de correlação das variáveis.
+
 ```{r}
   plot(abalone[,-c(9,9)])
 ```
+
+Dessa maneira, pode-se, com base na figura anterior, construir a próxima, que conta com os valores de correlação entre as diferentes variáveis, bem como gráficos mais informativos relacionando o sexo dos Abalones com as suas outras características.
+
 ```{r}
   library(GGally)
   ggpairs(abalone[,-c(9,9)])
 ```
+
+Com base nesse apanhado geral de gráficos, pode-se realizar uma análise focada nas relações mais interessantes. Um desses casos consiste em comparar o valor do peso total do Abalone com os diferentes valores de pesos registrados posteriormente (*whole*, *shucked*, *viscera* e *shell*). Como pode-se constatar no conjunto de observações abaixo, a soma dos diferentes valores de peso nem sempre resulta no peso total registrado.
+
+```{r}
+abalone[c(1,2,3),]
+```
+Assim, pode-se gerar o gráfico da variável `whole_w` *versus* a soma das variáveis `shucked_w`, `viscera_w` e `shell_w`. Bem como o valor de correlação das duas grandezas obtidas. Por fim, nota-se que este último é de aproximadamente 99.51\%, um valor bastante alto.
 
 ```{r}
   abalone$sum_w <- abalone$shucked_w + abalone$viscera_w + abalone$shell_w
@@ -124,6 +142,8 @@ ggplot(abalone, aes(x = age)) +
 ```{r}
   cor(abalone$whole_w, abalone$sum_w)
 ```
+
+Podemos também analisar a distribuição da idade dos Abalones, o que é feito abaixo, através da geração de um *boxplot*. Nota-se, através deste, que 75\% dos Abalones encontram-se na faixa entre 9 e 13 anos de idade, mas que, novamente, há aqueles com mais de até 30 anos.
 
 ```{r}
 # Boxplot de `age`
@@ -137,6 +157,9 @@ ggplot(abalone, aes(x = age, y = "")) +
   # adiciona rótulo aos eixos
   labs(y = "", x = "age")
 ```
+
+Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, *boxplots* da idade para cada um dos sexos. Nota-se que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma consequência de uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, e que esta tarefa se torna mais fácil conforme estes envelhecem.
+
 ```{r}
 # Boxplots
 ggplot(abalone, aes(x = age, y = sex)) +
