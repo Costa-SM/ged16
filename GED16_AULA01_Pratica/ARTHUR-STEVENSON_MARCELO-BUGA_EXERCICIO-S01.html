@@ -87,16 +87,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<script src="GED16_AULA01_Pratica_files/libs/clipboard/clipboard.min.js"></script>
-<script src="GED16_AULA01_Pratica_files/libs/quarto-html/quarto.js"></script>
-<script src="GED16_AULA01_Pratica_files/libs/quarto-html/popper.min.js"></script>
-<script src="GED16_AULA01_Pratica_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="GED16_AULA01_Pratica_files/libs/quarto-html/anchor.min.js"></script>
-<link href="GED16_AULA01_Pratica_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="GED16_AULA01_Pratica_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="GED16_AULA01_Pratica_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="GED16_AULA01_Pratica_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="GED16_AULA01_Pratica_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/quarto-html/quarto.js"></script>
+<script src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/quarto-html/popper.min.js"></script>
+<script src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/quarto-html/anchor.min.js"></script>
+<link href="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -177,7 +177,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>spc_tbl_ [4,177 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<pre><code>spec_tbl_df [4,177 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
  $ sex      : chr [1:4177] "M" "M" "F" "M" ...
  $ length   : num [1:4177] 0.455 0.35 0.53 0.44 0.33 0.425 0.53 0.545 0.475 0.55 ...
  $ diameter : num [1:4177] 0.365 0.265 0.42 0.365 0.255 0.3 0.415 0.425 0.37 0.44 ...
@@ -295,14 +295,14 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona dispersão unidimensional de `age`</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Pode-se, também, construir um conjunto de gráficos para analisar a relação entre cada uma das características do conjunto de dados. Nota-se, entretanto, que esse conjunto não conta com os valores de correlação das variáveis.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>)])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Dessa maneira, pode-se, com base na figura anterior, construir a próxima, que conta com os valores de correlação entre as diferentes variáveis, bem como gráficos mais informativos relacionando o sexo dos Abalones com as suas outras características.</p>
@@ -310,7 +310,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GGally)</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(abalone[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>)])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Com base nesse apanhado geral de gráficos, pode-se realizar uma análise focada nas relações mais interessantes. Um desses casos consiste em comparar o valor do peso total do Abalone com os diferentes valores de pesos registrados posteriormente (<em>whole</em>, <em>shucked</em>, <em>viscera</em> e <em>shell</em>). Como pode-se constatar no conjunto de observações abaixo, a soma dos diferentes valores de peso nem sempre resulta no peso total registrado.</p>
@@ -330,7 +330,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  abalone<span class="sc">$</span>sum_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shucked_w <span class="sc">+</span> abalone<span class="sc">$</span>viscera_w <span class="sc">+</span> abalone<span class="sc">$</span>shell_w</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>sum_w)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -352,7 +352,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona rótulo aos eixos</span></span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"age"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, <em>boxplots</em> da idade para cada um dos sexos. Não há grandes diferenças na distribuição de idades de machos e fêmeas. Nota-se, porém, que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma evidência de se existir uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, sendo esta tarefa possivelmente mais fácil conforme estes envelhecem.</p>
@@ -361,7 +361,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> sex)) <span class="sc">+</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ainda com base nos gráficos de relação entre as características, podemos analisar mais a fundo a relação entre o tamanho e o peso dos abalones. Tomando as variáveis <code>whole_w</code> e <code>diameter</code>, podemos percaber uma grande correlação entre essas variáveis.</p>
@@ -369,7 +369,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> diameter))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -383,7 +383,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> height<span class="sc">*</span>diameter<span class="sc">**</span><span class="dv">2</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -397,7 +397,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> age))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA01_Pratica_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<p><img src="ARTHUR-STEVENSON_MARCELO-BUGA_EXERCICIO-S01_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
