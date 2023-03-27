@@ -30,10 +30,10 @@ Os dados disponíveis no arquivo `data/abalone/abalone.data` foram
 obtidos no [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Abalone) e são bastante utilizados na investigação de métodos de Machine Learning. Tais dados foram coletados a partir do estudo original:
 
 Warwick J Nash, Tracy L Sellers, Simon R Talbot, Andrew J Cawthorn and
-	Wes B Ford (1994) "The Population Biology of Abalone (_Haliotis_
-	species) in Tasmania. I. Blacklip Abalone (_H. rubra_) from the
-	North	Coast and Islands of Bass Strait", Sea Fisheries Division,
-	Technical Report No. 48 (ISSN 1034-3288).
+Wes B Ford (1994) "The Population Biology of Abalone (_Haliotis_
+species) in Tasmania. I. Blacklip Abalone (_H. rubra_) from the
+North Coast and Islands of Bass Strait", Sea Fisheries Division,
+Technical Report No. 48 (ISSN 1034-3288).
 
 O principal objetivo do projeto era determinar a idade do molusco a partir de medidas físicas do animal mais fáceis de serem obtidas. Os dados originais foram pré-processados no sentido de remover observações faltantes e os valores das variáveis contínuas foram dividos por 200. Há um total de 4177 observações coletadas para 9 variáveis:
 
@@ -224,6 +224,7 @@ cor(abalone$whole_w, abalone$age)
   + Faz sentido aplicar alguma transformação à variável explicativa? Em caso positivo, replique os itens anteriores para um modelo para a variável explicativa transformada.
 
 ## Primeira Etapa
+
 Primeiramente, faremos essa etapa para a variável explicativa `diameter`, descrevendo o processo conforme ele acontece. Posteriormente, ele será repetido para as demais. Começamos criando o modelo de regressão linear simples relacionando-a com a variável de resposta `length`.
 
 ```{r}
@@ -231,12 +232,14 @@ Primeiramente, faremos essa etapa para a variável explicativa `diameter`, descr
 lm_diameter <- lm(length ~ diameter, data = abalone)
 lm_diameter
 ```
+
 Percebe-se que os coeficientes do modelo são ambos não nulos. Como nenhum abalone tem `diameter` = 0,  o valor do intercepto não tem significado prática. Geramos o gráfico de dispersão para avaliar o modelo.
 
 ```{r}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = diameter, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
+
 Percebe-se que a reta de regressão parece ser adequada à distribuição dos dados. Parece existir uma clara relação linear entre `length` e `diameter`.
 
 Agora, podemos calcular o MSE para a variável analisada. Analisaremos qual modelo gera a menor variabilidade posteriomente.
@@ -258,6 +261,7 @@ r2_diameter
 ### Demais Variáveis Explicativas
 
 ---
+
 Começaremos analisando `shucked_w`:
 ```{r}
 # Construindo o modelo de regressao linear simples relacionando length e shucked_w
@@ -295,7 +299,9 @@ lm_shell
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
+
 O gráfico de dispersão tem formato similar ao anterior, provavelmente devido a uma forte correlação entre `shucked_w` e `shell_w`, como analisado na Análise Exploratória de Dados.
+
 ```{r}
 # Calculo do MSE
 lm_shell_mse <- mean(lm_shell$residuals^2)
@@ -307,9 +313,13 @@ lm_shell_mse
 r2_shell <- summary(lm_shell)$r.squared
 r2_shell
 ```
+
 De fato, os valores de MSE e $R^2$ são muito similares ao caso anterior.
+
 ---
+
 Por fim, analisaremos a relação de `length` e `rings`:
+
 ```{r}
 # Construindo o modelo de regressao linear simples relacionando length e rings
 lm_rings <- lm(length ~ rings, data = abalone)
@@ -320,7 +330,9 @@ lm_rings
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = rings, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
+
 O gráfico de dispersão de `rings` *versus* `length` parece ser o "menos linear" entre os analisados. Vejamos os valores de MSE e $R^2$ para esse caso:
+
 ```{r}
 # Calculo do MSE
 lm_rings_mse <- mean(lm_rings$residuals^2)
@@ -378,7 +390,6 @@ f_lm$coefficients
 
 ### Não Identificado
 
-
 ---
 
 ```{r}
@@ -422,6 +433,7 @@ confint.lm(i_lm, level = 0.95)
 Percebe-se que, com 95% de confiança, o coeficiente angular dos indivíduos não identificados é diferente do coeficiente angular de machos e fêmeas, visto que o intervalo de confiança 95% dos não identificados se inicia em 1.21, enquanto dos machos acaba em 1.20 e das fêmeas acaba em 1.19. Da análise desses intervalos de confiança, não se pode tomar conclusões acerca da diferença entre os coeficientes angulares de machos e fêmeas com nível de cofiança de 95%.
 
 ### Intervalo de Confiança para Resposta Esperada
+
 Calcularemos o intervalo de confiança para `diameter` = 90 para cada valor de `sex`:
 
 ```{r}
@@ -456,6 +468,7 @@ ip
 Novamente, concluímos que, para abalones não identificados, garante-se com 95% de confiança que seu intervalo de confiança que o valor da resposta média de `length` deve estar entre 115.31 e 115.98. O mesmo vale para indivíduos masculinos, de 114.64 a 115.032 e femininos de 114.47 a 114.92. Percebe-se aqui que a grande interseção entre os intervalos de confiança dos abalones machos e fêmeas, de tal forma que não se pode concluir com esse nível de confiança que a resposta média dos machos é maior que das fêmeas para `diameter` = 90. 
 
 ### Intervalo de Previsão
+
 Vamos agora calcular intervalos de previsão associados a abalones de `diameter`= 90 para cada valor de `sex`:
 
 ```{r}
