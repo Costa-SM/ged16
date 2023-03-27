@@ -19,7 +19,7 @@ library(gridExtra)
 
 ----
 
-### Introdução
+# Introdução
 
 Abalone é um tipo de molusco que vive em águas marinhas costeiras em diversas regiões do globo. A concha do abalone apresenta tamanho que varia entre 10 a 25cm e sua coloração interior iridescente nacarada é muito valorizada na confecção de jóias e ornamentos; além disso, a carne do animal é considerada uma iguaria em muitos países. Devido ao seu alto valor comercial e consequente pesca excessiva, além da degradação de seu habitat pela ação humana, diversas espécies de abalone atualmente correm risco de extinção. Existem mais de 100 espécies de abalone ao redor do mundo, das quais cerca de 15 são produzidas por meio de aquicultura. Determinar a idade do abalone de maneira acurada é importante tanto em termos comerciais (o valor comercial do abalone está associado à sua idade) bem como em termos ambientais (condições ambientais podem afetar a saúde do animal). A idade do animal pode ser determinada a partir da contagem do número de anéis na concha, utilizando um microscópio, a partir de um procedimento delicado e trabalhoso.
 
@@ -51,7 +51,7 @@ Mais informações a respeito dos dados podem ser obtidas no arquivo `data/abalo
 
 ----
 
-### Análise Exploratória de Dados
+# Análise Exploratória de Dados
 
 Conduza a análise exploratória da massa de dados `abalone`, a fim de compreender suas características principais.   
 Voltaremos a utilizar essa massa de dados em atividades futuras.
@@ -196,7 +196,7 @@ cor(abalone$whole_w, abalone$age)
 ```
 
 
-### Análise de Regressão
+# Análise de Regressão
 
 1. Assuma que um modelo de regressão linear simples é adequado para modelar a relação da variável de resposta `length` a cada uma das variáveis explicativas  `diameter`, `shucked_w`, `shell_w` e `rings`.
 
@@ -223,7 +223,7 @@ cor(abalone$whole_w, abalone$age)
   + Construa intervalos de confiança para a resposta esperada correspondendo a `shell_w = 50`, para cada nível da variável `sex`. O que se pode concluir? 
   + Faz sentido aplicar alguma transformação à variável explicativa? Em caso positivo, replique os itens anteriores para um modelo para a variável explicativa transformada.
 
-#### Primeira Etapa
+## Primeira Etapa
 Primeiramente, faremos essa etapa para a variável explicativa `diameter`, descrevendo o processo conforme ele acontece. Posteriormente, ele será repetido para as demais. Começamos criando o modelo de regressão linear simples relacionando-a com a variável de resposta `length`.
 
 ```{r}
@@ -255,7 +255,7 @@ r2_diameter <- summary(lm_diameter)$r.squared
 r2_diameter
 ```
 
-##### Demais Variáveis Explicativas
+### Demais Variáveis Explicativas
 
 ---
 Começaremos analisando `shucked_w`:
@@ -335,7 +335,7 @@ r2_rings
 
 ---
 
-##### Comparação
+### Comparação
 
 Temos abaixo os valores de MSE e $R^2$ agrupados em uma tablea, para cada um dos modelos gerados. Percebe-se que a variável explicativa `diameter` tem o menor valor de MSE, e o maior valor de $R^2$, de maneira que, usando esse critério, ela mais contribui para a redução na variabilidade da resposta.
 
@@ -345,7 +345,7 @@ Temos abaixo os valores de MSE e $R^2$ agrupados em uma tablea, para cada um dos
 |   $R^2$    |   `r r2_diameter `   | `r r2_shucked`     | `r r2_shell`     | `r r2_rings`     |
 
 
-#### Segunda Etapa
+## Segunda Etapa
 
 Faremos agora uma análise separando os sexos dos abalones. Nessa análise, consideraremos indefinido também como um dos tipos da variável `sex`, uma vez que, possivelmente, existam relações entre abalones de sexo indefinido/não identificado que sejam interessantes para análise.
 
@@ -356,7 +356,7 @@ abalone_f <- abalone[abalone$sex == "F",]
 abalone_i <- abalone[abalone$sex == "I",]
 ```
 
-##### Sexo Masculino
+### Sexo Masculino
 
 ---
 
@@ -366,7 +366,7 @@ m_lm <- lm(length ~ diameter, data = abalone_m)
 m_lm$coefficients
 ```
 
-##### Feminino
+### Feminino
 
 ---
 
@@ -376,7 +376,9 @@ f_lm <- lm(length ~ diameter, data = abalone_f)
 f_lm$coefficients
 ```
 
-##### Não Identificado
+### Não Identificado
+
+
 ---
 
 ```{r}
@@ -391,7 +393,7 @@ ggplot(abalone,  aes(x = diameter, y = length)) + geom_point() +
 ```
 Percebe-se que as inclinações são similares, porém o intercepto feminino é maior que o masculino que, por sua vez, é maior que o não identificado.
 
-##### MSE
+### MSE
 
 ---
 
@@ -407,7 +409,8 @@ i_lm_mse
 
 ``` 
 MSE fem e n ident é semelhante, M é maior
-##### Intervalo de Confiança do Coeficiente Angular
+
+### Intervalo de Confiança do Coeficiente Angular
 
 
 ```{r}
@@ -418,7 +421,7 @@ confint.lm(i_lm, level = 0.95)
 ```
 Percebe-se que, com 95% de confiança, o coeficiente angular dos indivíduos não identificados é diferente do coeficiente angular de machos e fêmeas, visto que o intervalo de confiança 95% dos não identificados se inicia em 1.21, enquanto dos machos acaba em 1.20 e das fêmeas acaba em 1.19. Da análise desses intervalos de confiança, não se pode tomar conclusões acerca da diferença entre os coeficientes angulares de machos e fêmeas com nível de cofiança de 95%.
 
-##### Intervalo de Confiança para Resposta Esperada
+### Intervalo de Confiança para Resposta Esperada
 Calcularemos o intervalo de confiança para `diameter` = 90 para cada valor de `sex`:
 
 ```{r}
@@ -452,7 +455,7 @@ ip
 ```
 Novamente, concluímos que, para abalones não identificados, garante-se com 95% de confiança que seu intervalo de confiança que o valor da resposta média de `length` deve estar entre 115.31 e 115.98. O mesmo vale para indivíduos masculinos, de 114.64 a 115.032 e femininos de 114.47 a 114.92. Percebe-se aqui que a grande interseção entre os intervalos de confiança dos abalones machos e fêmeas, de tal forma que não se pode concluir com esse nível de confiança que a resposta média dos machos é maior que das fêmeas para `diameter` = 90. 
 
-##### Intervalo de Previsão
+### Intervalo de Previsão
 Vamos agora calcular intervalos de previsão associados a abalones de `diameter`= 90 para cada valor de `sex`:
 
 ```{r}
@@ -486,9 +489,9 @@ ip
 ```
 Observa-se que, como esperado, os intervalos de previsão são significativamente maiores que os intervalos de confiança para um mesmo valor de `diameter`. Dessa análise, podemos esperar que, dado um abalone de sexo masculino com `diameter` = 90, com 95% de confiança, seu valor de `length` deve estar entre 107.20 e 122.47. Para do sexo feminino com o mesmo valor de `diameter`, `length` deve estar entre 106.63 e 122.78 (95% de confiança) e para aqueles não identificáveis, de 108.54 a 122.75. Percebe-se que os intervalos de confiança são relativamente parecidos, com o intervalo dos não identificados iniciando um pouco depois dos demais e os três acabando próximos a 122.5. 
 
-#### Terceira Etapa
+## Terceira Etapa
 
-blabla
+Assim como foi feito na segunda etapa, pode-se dividir o conjunto de dados em cada uma das categorias de sexo existentes, sendo elas, masculino, feminino, e não identificado. Ademais, são obtidos os modelos lineares para cada um dos casos.
 
 ```{r} 
 # Separando os abalones por sexo
@@ -497,7 +500,7 @@ abalone_f <- abalone[abalone$sex == "F",]
 abalone_i <- abalone[abalone$sex == "I",]
 ```
 
-##### Masculino
+### Masculino
 
 ---
 
@@ -508,7 +511,7 @@ m_lm <- lm(length ~ shell_w, data = abalone_m)
 m_lm$coefficients
 ```
 
-##### Feminino
+### Feminino
 
 ---
 
@@ -518,7 +521,7 @@ f_lm <- lm(length ~ shell_w, data = abalone_f)
 f_lm$coefficients
 ```
 
-##### Não Identificado
+### Não Identificado
 
 ---
 
@@ -528,18 +531,31 @@ i_lm <- lm(length ~ shell_w, data = abalone_i)
 i_lm$coefficients
 ```
 
-##### MSE
+Nota-se que as funções geradas são consideravelmente diferentes, com valores de coeficientes angular e linear diferentes entre si. Pode-se também analisar o valor de MSE para cada um dos modelos.
+
+### MSE
 
 ---
 
 ```{r}
 # Calculo do MSE
 m_lm_mse <- mean(m_lm$residuals^2)
-f_lm_mse <- mean(f_lm$residuals^2)
-i_lm_mse <- mean(i_lm$residuals^2)
+m_lm_mse
 ```
 
-##### Intervalo de Confiança do Coeficiente Angular
+```{r}
+f_lm_mse <- mean(f_lm$residuals^2)
+f_lm_mse
+```
+
+```{r}
+i_lm_mse <- mean(i_lm$residuals^2)
+i_lm_mse
+```
+
+Nota-se que os valores de MSE para o sexo feminino, e o não identificado, são próximos, enquanto o masculino é mais elevado que ambos. Analisaremos, então, o intervalo de confiança dos Coeficientes Angulares de cada um dos modelos gerados.
+
+### Intervalo de Confiança do Coeficiente Angular
 
 
 ```{r}
@@ -549,7 +565,12 @@ confint.lm(f_lm, level = 0.95)
 confint.lm(i_lm, level = 0.95)
 ```
 
-##### Intervalo de Confiança para Resposta Esperada
+Através da comparação entre os resultados obtidos, nota-se que os intervalos contendo 95% dos Abalones femininos encontra-se aproximadamente entre [0.57, 0.61], dos masculinos  entre [0.66, 0.70], e dos não identificados, entre [1.14, 1.20], de maneira que não há interseção entre nenhum dos três. Devido a isso, pode-se afirmar, com 95% de certeza, que os coeficientes angulares de cada um dos modelos é diferente. O mesmo acontece para os intervalos referentes aos interceptos de cada um dos modelos obtidos.
+
+### Intervalo de Confiança para Resposta Esperada
+
+Pode-se gerar os intervalos de confiança para uma resposta de `shell_w` igual a 50, conforme foi solicitado para a análise.
+
 
 ```{r}
 # Masculino
@@ -581,55 +602,84 @@ ip <- predict.lm(i_lm, newdata = xh, interval = "confidence", level = 0.95)
 ip
 ```
 
+Analisando-se os cada um dos casos, nota-se que 95% dos Abalones masculinos estão contidos no intervalo [107.39, 108.43], dos femininos, no intervalo [109.14, 110.16], e dos não identificados, no intervalo [113.37, 115.03]. Dessa maneira, pode-se concluir, com uma confiança de 95%, que a resposta média dos Abalones machos é inferior à das fêmeas, que, por sua vez, é inferior ao dos não identificados.
+
+## Terceira Etapa Refeita
+
+Primeiramente, é necessário determinar se vale a pena realizar a análise feita antes novamente, mas com uma transformação na variável explicativa. Para tal, pode-se gerar o gráfico relacionando a variável `length` à `shell_w` e, em seguida, o que relaciona `length` e a raiz cúbica de `shell_w`, transformação escolhida com base no fato de o peso do abalone ser uma função do produto de uma densidade média, suposta constante, e uma medida de volume, que tentaremos reproduzir como o cubo da variável `length`.
+
 ```{r}
-ggplot(abalone, aes(x = shell_w ^ (1/3), y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
+plot_normal <- ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
+plot_cubic <- ggplot(abalone, aes(x = shell_w ^ (1/3), y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
+
+grid.arrange(plot_normal, plot_cubic, ncol = 2)
 ```
 
-###Terceira etapa refeita
+Através da comparação de ambos os gráficos gerados, nota-se que o segundo conjunto de pontos aparenta adequar-se significativamente melhor ao formato de uma reta que o primeiro. Com base nisto, supõe-se que refazer a análise com uma transformação de variável pode valer a pena. Assim, construímos uma nova variável para o conjunto de dados utilizado, contendo a raiz cúbica de `shell_w`. Usaremos os mesmos nomes de variável de antes no intuito de realizar menos alterações no código.
 
-##### Masculino
+```{r}
+abalone_m$shell_w_cubic <- abalone_m$shell_w ^ (1/3)
+abalone_f$shell_w_cubic <- abalone_f$shell_w ^ (1/3)
+abalone_i$shell_w_cubic <- abalone_i$shell_w ^ (1/3)
+```
+
+
+### Masculino
 
 ---
 
 
 ```{r}
 # Construindo os modelos de regressao masculino
-m_lm <- lm(length ~ shell_w, data = abalone_m)
+m_lm <- lm(length ~ shell_w_cubic, data = abalone_m)
 m_lm$coefficients
 ```
 
-##### Feminino
+### Feminino
 
 ---
 
 ```{r}
 # Construindo os modelos de regressao feminino
-f_lm <- lm(length ~ shell_w, data = abalone_f)
+f_lm <- lm(length ~ shell_w_cubic, data = abalone_f)
 f_lm$coefficients
 ```
 
-##### Não Identificado
+### Não Identificado
 
 ---
 
 ```{r}
 # Construindo os modelos de regressao nao identificado
-i_lm <- lm(length ~ shell_w, data = abalone_i)
+i_lm <- lm(length ~ shell_w_cubic, data = abalone_i)
 i_lm$coefficients
 ```
 
-##### MSE
+Primeiramente, nota-se um grande aumento no valor dos coeficientes angulares de cada um dos modelos obtidos, decorrentes da diminuição no valor da variável explicativa. Apesar disso, nota-se que ainda há uma diferença considerável nos coeficientes lineares de cada um destes, e que os angulares estão, a princípio, relativamente próximos. A seguir, realizaremos novamente a análise do valor de MSE.
+
+### MSE
 
 ---
 
 ```{r}
 # Calculo do MSE
 m_lm_mse <- mean(m_lm$residuals^2)
-f_lm_mse <- mean(f_lm$residuals^2)
-i_lm_mse <- mean(i_lm$residuals^2)
+m_lm_mse
 ```
 
-##### Intervalo de Confiança do Coeficiente Angular
+```{r}
+f_lm_mse <- mean(f_lm$residuals^2)
+f_lm_mse
+```
+
+```{r}
+i_lm_mse <- mean(i_lm$residuals^2)
+i_lm_mse
+```
+
+Nota-se, nesse caso, que os valores dos Abalones masculinos e femininos são próximos, enquanto o não identificado é consideravelmente inferior. A liderança no valor de MSE do sexo masculino parece se manter, entretanto. A seguir, temos a análise dos intervalos de confiança dos modelos.
+
+### Intervalo de Confiança do Coeficiente Angular
 
 
 ```{r}
@@ -639,6 +689,7 @@ confint.lm(f_lm, level = 0.95)
 confint.lm(i_lm, level = 0.95)
 ```
 
+Nota-se, através da análise dos intervalos obtidos, que o Coeficiente Angular de 95% dos Abalones femininos encontra-se no intervalo [27.00, 28.37], dos masculinos no [28.04, 29.14], e dos não identificados no [30.01, 30.77]. Dessa forma, não podemos afirmar com 95% de confiança que o coeficiente angular do modelo gerado para Abalones masculinos é superior ao dos femininos. Isto, entretanto, não é o caso para Abalones não identificados, para os quais podemos afirmar, com 95% de certeza, que o coeficiente angular do modelo gerado é superior ao dos femininos e masculinos.
 
 
 ----
