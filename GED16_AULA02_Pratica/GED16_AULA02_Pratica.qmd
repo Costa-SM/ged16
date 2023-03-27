@@ -389,7 +389,7 @@ i_lm$coefficients
 Podemos unir os três plots em um mesmo gráfico:
 ```{r}
 ggplot(abalone,  aes(x = diameter, y = length)) + geom_point() +
-             geom_smooth(method="lm", se=FALSE) + facet_wrap(~ sex)
+  geom_smooth(method="lm", se=FALSE) + facet_wrap(~ sex)
 ```
 Percebe-se que as inclinações são similares, porém o intercepto feminino é maior que o masculino que, por sua vez, é maior que o não identificado.
 
@@ -408,7 +408,7 @@ f_lm_mse
 i_lm_mse
 
 ``` 
-MSE fem e n ident é semelhante, M é maior
+Percebe-se que o MSE é menor entre os abalones não identificados, enquanto é maior para o sexo feminino.
 
 ### Intervalo de Confiança do Coeficiente Angular
 
