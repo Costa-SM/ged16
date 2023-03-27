@@ -231,14 +231,15 @@ Primeiramente, faremos essa etapa para a variável explicativa `diameter`, descr
 lm_diameter <- lm(length ~ diameter, data = abalone)
 lm_diameter
 ```
-
-Agora, geramos o gráfico de dispersão.
+Percebe-se que os coeficientes do modelo são ambos não nulos. Como nenhum abalone tem `diameter` = 0,  o valor do intercepto não tem significado prática. Geramos o gráfico de dispersão para avaliar o modelo.
 
 ```{r}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = diameter, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
-Em seguida, podemos calcular o MSE para a variável analisada. Analisaremos qual modelo gera a menor variabilidade posteriomente.
+Percebe-se que a reta de regressão parece ser adequada à distribuição dos dados. Parece existir uma clara relação linear entre `length` e `diameter`.
+
+Agora, podemos calcular o MSE para a variável analisada. Analisaremos qual modelo gera a menor variabilidade posteriomente.
 
 ```{r}
 # Calculo do MSE
@@ -246,7 +247,7 @@ lm_diameter_mse <- mean(lm_diameter$residuals^2)
 lm_diameter_mse
 ```
 
-Agora, podemos calcular o valor de $R^2$ referente ao modelo `lm_diameter`. Determinaremos qual das variáveis explicativas contribui para a maior redução na variabilidade da resposta ao final do processo.
+Podemos também calcular o valor de $R^2$ referente ao modelo `lm_diameter`. Determinaremos qual das variáveis explicativas contribui para a maior redução na variabilidade da resposta ao final do processo.
 
 ```{r}
 # Calculo do R^2
@@ -257,7 +258,7 @@ r2_diameter
 ##### Demais Variáveis Explicativas
 
 ---
-
+Começaremos analisando `shucked_w`:
 ```{r}
 # Construindo o modelo de regressao linear simples relacionando length e shucked_w
 lm_shucked <- lm(length ~ shucked_w, data = abalone)
@@ -268,7 +269,7 @@ lm_shucked
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shucked_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
-
+A relção entre `shucked_w` e `length` não parece ser tão linear quanto `diameter` e `length`. Avaliaremos os valores de MSE e $R^2$ para confirmar.
 ```{r}
 # Calculo do MSE
 lm_shucked_mse <- mean(lm_shucked$residuals^2)
@@ -283,6 +284,7 @@ r2_shucked
 
 ---
 
+Seguiremos analisando a relação de `shell_w` com `length`:
 ```{r}
 # Construindo o modelo de regressao linear simples relacionando length e shell_w
 lm_shell <- lm(length ~ shell_w, data = abalone)
@@ -293,7 +295,7 @@ lm_shell
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
-
+O gráfico de dispersão tem formato similar ao anterior, provavelmente devido a uma forte correlação entre `shucked_w` e `shell_w`, como analisado na Análise Exploratória de Dados.
 ```{r}
 # Calculo do MSE
 lm_shell_mse <- mean(lm_shell$residuals^2)
@@ -305,9 +307,9 @@ lm_shell_mse
 r2_shell <- summary(lm_shell)$r.squared
 r2_shell
 ```
-
+De fato, os valores de MSE e $R^2$ são muito similares ao caso anterior.
 ---
-
+Por fim, analisaremos a relação de `length` e `rings`:
 ```{r}
 # Construindo o modelo de regressao linear simples relacionando length e rings
 lm_rings <- lm(length ~ rings, data = abalone)
@@ -318,7 +320,7 @@ lm_rings
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = rings, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
-
+O gráfico de dispersão de `rings` *versus* `length` parece ser o "menos linear" entre os analisados. Vejamos os valores de MSE e $R^2$ para esse caso:
 ```{r}
 # Calculo do MSE
 lm_rings_mse <- mean(lm_rings$residuals^2)
@@ -345,7 +347,7 @@ Temos abaixo os valores de MSE e $R^2$ agrupados em uma tablea, para cada um dos
 
 #### Segunda Etapa
 
-blabla
+Faremos agora uma análise separando os sexos dos abalones. Nessa análise, consideraremos indefinido também como um dos tipos da variável `sex`, uma vez que, possivelmente, existam relações entre abalones de sexo indefinido/não identificado que sejam interessantes para análise.
 
 ```{r} 
 # Separando os abalones por sexo
@@ -354,10 +356,9 @@ abalone_f <- abalone[abalone$sex == "F",]
 abalone_i <- abalone[abalone$sex == "I",]
 ```
 
-##### Masculino
+##### Sexo Masculino
 
 ---
-
 
 ```{r}
 # Construindo os modelos de regressao masculino
@@ -376,7 +377,6 @@ f_lm$coefficients
 ```
 
 ##### Não Identificado
-
 ---
 
 ```{r}
@@ -384,8 +384,13 @@ f_lm$coefficients
 i_lm <- lm(length ~ diameter, data = abalone_i)
 i_lm$coefficients
 ```
+Podemos unir os três plots em um mesmo gráfico:
+```{r}
+ggplot(abalone,  aes(x = diameter, y = length)) + geom_point() +
+             geom_smooth(method="lm", se=FALSE) + facet_wrap(~ sex)
+```
+Percebe-se que as inclinações são similares, porém o intercepto feminino é maior que o masculino que, por sua vez, é maior que o não identificado.
 
-Funcoes parecidas, interceptos diferentes (translacao)
 ##### MSE
 
 ---
