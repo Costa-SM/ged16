@@ -378,7 +378,7 @@ m_lm <- lm(length ~ diameter, data = abalone_m)
 m_lm$coefficients
 ```
 
-### Feminino
+### Sexo Feminino
 
 ---
 
@@ -397,7 +397,7 @@ f_lm$coefficients
 i_lm <- lm(length ~ diameter, data = abalone_i)
 i_lm$coefficients
 ```
-Podemos unir os três plots em um mesmo gráfico:
+Podemos analisar os três modelos lado a lado:
 ```{r}
 ggplot(abalone,  aes(x = diameter, y = length)) + geom_point() +
   geom_smooth(method="lm", se=FALSE) + facet_wrap(~ sex)
@@ -414,8 +414,11 @@ m_lm_mse <- mean(m_lm$residuals^2)
 f_lm_mse <- mean(f_lm$residuals^2)
 i_lm_mse <- mean(i_lm$residuals^2)
 
+# Masculino
 m_lm_mse
+# Feminino
 f_lm_mse
+# Não identificado
 i_lm_mse
 
 ``` 
@@ -426,11 +429,15 @@ Percebe-se que o MSE é menor entre os abalones não identificados, enquanto é 
 
 ```{r}
 # Intervalo de confianca dos coeficientes angulares
+
+# Masculino
 confint.lm(m_lm, level = 0.95)
+#Feminino
 confint.lm(f_lm, level = 0.95)
+#Não identificadp
 confint.lm(i_lm, level = 0.95)
 ```
-Percebe-se que, com 95% de confiança, o coeficiente angular dos indivíduos não identificados é diferente do coeficiente angular de machos e fêmeas, visto que o intervalo de confiança 95% dos não identificados se inicia em 1.21, enquanto dos machos acaba em 1.20 e das fêmeas acaba em 1.19. Da análise desses intervalos de confiança, não se pode tomar conclusões acerca da diferença entre os coeficientes angulares de machos e fêmeas com nível de cofiança de 95%.
+Conclui-se que, com 95% de confiança, o coeficiente angular dos indivíduos não identificados é diferente do coeficiente angular de machos e fêmeas, visto que o intervalo de confiança 95% dos não identificados se inicia em 1.21, enquanto dos machos acaba em 1.20 e das fêmeas acaba em 1.19. Da análise desses intervalos de confiança, não se pode tomar conclusões acerca da diferença entre os coeficientes angulares de machos e fêmeas com nível de cofiança de 95%.
 
 ### Intervalo de Confiança para Resposta Esperada
 
@@ -476,7 +483,7 @@ Vamos agora calcular intervalos de previsão associados a abalones de `diameter`
 # Valor da variavel explicativa (diameter = 90)
 x0 <- data.frame(diameter = 90)
 
-# Intervalo de confianca
+# Intervalo de previsão
 ip <- predict.lm(m_lm, newdata = x0, interval = "prediction", level = 0.95)
 ip
 ```
@@ -486,7 +493,7 @@ ip
 # Valor da variavel explicativa (diameter = 90)
 x0 <- data.frame(diameter = 90)
 
-# Intervalo de confianca
+# Intervalo de previsão
 ip <- predict.lm(f_lm, newdata = x0, interval = "prediction", level = 0.95)
 ip
 ```
@@ -496,7 +503,7 @@ ip
 # Valor da variavel explicativa (diameter = 90)
 x0 <- data.frame(diameter = 90)
 
-# Intervalo de confianca
+# Intervalo de previsão
 ip <- predict.lm(i_lm, newdata = x0, interval = "prediction", level = 0.95)
 ip
 ```
@@ -551,17 +558,19 @@ Nota-se que as funções geradas são consideravelmente diferentes, com valores 
 ---
 
 ```{r}
-# Calculo do MSE
+# Calculo do MSE Masculino
 m_lm_mse <- mean(m_lm$residuals^2)
 m_lm_mse
 ```
 
 ```{r}
+# Calculo do MSE Feminino
 f_lm_mse <- mean(f_lm$residuals^2)
 f_lm_mse
 ```
 
 ```{r}
+# Calculo do MSE Não Identificado
 i_lm_mse <- mean(i_lm$residuals^2)
 i_lm_mse
 ```
@@ -573,8 +582,12 @@ Nota-se que os valores de MSE para o sexo feminino, e o não identificado, são 
 
 ```{r}
 # Intervalo de confianca dos coeficientes angulares
+
+# Masculino
 confint.lm(m_lm, level = 0.95)
+# Feminino
 confint.lm(f_lm, level = 0.95)
+#Não identificado
 confint.lm(i_lm, level = 0.95)
 ```
 
@@ -675,17 +688,19 @@ Primeiramente, nota-se um grande aumento no valor dos coeficientes angulares de 
 ---
 
 ```{r}
-# Calculo do MSE
+# Calculo do MSE Masculino
 m_lm_mse <- mean(m_lm$residuals^2)
 m_lm_mse
 ```
 
 ```{r}
+# Calculo do MSE Feminino
 f_lm_mse <- mean(f_lm$residuals^2)
 f_lm_mse
 ```
 
 ```{r}
+# Calculo do MSE Não Identificado
 i_lm_mse <- mean(i_lm$residuals^2)
 i_lm_mse
 ```
