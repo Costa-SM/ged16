@@ -178,7 +178,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>spc_tbl_ [4,177 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+<pre><code>spec_tbl_df [4,177 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
  $ sex      : chr [1:4177] "M" "M" "F" "M" ...
  $ length   : num [1:4177] 0.455 0.35 0.53 0.44 0.33 0.425 0.53 0.545 0.475 0.55 ...
  $ diameter : num [1:4177] 0.365 0.265 0.42 0.365 0.255 0.3 0.415 0.425 0.37 0.44 ...
@@ -322,7 +322,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  abalone<span class="sc">$</span>sum_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shucked_w <span class="sc">+</span> abalone<span class="sc">$</span>viscera_w <span class="sc">+</span> abalone<span class="sc">$</span>shell_w</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>sum_w)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -344,7 +344,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona rótulo aos eixos</span></span>
 <span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"age"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, <em>boxplots</em> da idade para cada um dos sexos. Não há grandes diferenças na distribuição de idades de machos e fêmeas. Nota-se, porém, que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma evidência de se existir uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, sendo esta tarefa possivelmente mais fácil conforme estes envelhecem.</p>
@@ -353,7 +353,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> sex)) <span class="sc">+</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Ainda com base nos gráficos de relação entre as características, podemos analisar mais a fundo a relação entre o tamanho e o peso dos abalones. Tomando as variáveis <code>whole_w</code> e <code>diameter</code>, podemos percaber uma grande correlação entre essas variáveis.</p>
@@ -361,7 +361,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> diameter))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -375,7 +375,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> height<span class="sc">*</span>diameter<span class="sc">**</span><span class="dv">2</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -389,7 +389,7 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> age))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -464,7 +464,7 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Em seguida, podemos calcular o MSE para a variável analisada. Analisaremos qual modelo gera a menor variabilidade posteriomente.</p>
@@ -506,7 +506,7 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shucked_w, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -544,7 +544,7 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-64-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -582,7 +582,7 @@ Coefficients:
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> rings, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -689,142 +689,156 @@ Coefficients:
    5.990772    1.218396 </code></pre>
 </div>
 </div>
-</section>
-<section id="mse" class="level5">
-<h5 class="anchored" data-anchor-id="mse">MSE</h5>
+<p>Funcoes parecidas, interceptos diferentes (translacao) ##### MSE</p>
 <hr>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
 <span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>m_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15.11766</code></pre>
 </div>
-</section>
-<section id="intervalo-de-confiança-do-coeficiente-angular" class="level5">
-<h5 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular">Intervalo de Confiança do Coeficiente Angular</h5>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>f_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16.91334</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>i_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13.07654</code></pre>
+</div>
+</div>
+<p>MSE fem e n ident é semelhante, M é maior ##### Intervalo de Confiança do Coeficiente Angular</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               2.5 %   97.5 %
 (Intercept) 6.270673 8.340868
 diameter    1.183235 1.206375</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               2.5 %    97.5 %
 (Intercept) 7.127150 10.025520
 diameter    1.163437  1.194925</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>               2.5 %   97.5 %
 (Intercept) 5.246228 6.735315
 diameter    1.207390 1.229402</code></pre>
 </div>
 </div>
+<p>Percebe-se que, com 95% de confiança, o coeficiente angular dos indivíduos não identificados é diferente do coeficiente angular de machos e fêmeas, visto que o intervalo de confiança 95% dos não identificados se inicia em 1.21, enquanto dos machos acaba em 1.20 e das fêmeas acaba em 1.19. Da análise desses intervalos de confiança, não se pode tomar conclusões acerca da diferença entre os coeficientes angulares de machos e fêmeas com nível de cofiança de 95%.</p>
 </section>
 <section id="intervalo-de-confiança-para-resposta-esperada" class="level5">
 <h5 class="anchored" data-anchor-id="intervalo-de-confiança-para-resposta-esperada">Intervalo de Confiança para Resposta Esperada</h5>
+<p>Calcularemos o intervalo de confiança para <code>diameter</code> = 90 para cada valor de <code>sex</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
-<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
-<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
-<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb73-6"><a href="#cb73-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb73-7"><a href="#cb73-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb78-6"><a href="#cb78-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb78-7"><a href="#cb78-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr     upr
 1 114.8382 114.6414 115.035</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
-<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
-<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 114.7026 114.4788 114.9265</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb82-5"><a href="#cb82-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb82-6"><a href="#cb82-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb82-7"><a href="#cb82-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 115.6464 115.3126 115.9803</code></pre>
 </div>
 </div>
+<p>Novamente, concluímos que, para abalones não identificados, garante-se com 95% de confiança que seu intervalo de confiança que o valor da resposta média de <code>length</code> deve estar entre 115.31 e 115.98. O mesmo vale para indivíduos masculinos, de 114.64 a 115.032 e femininos de 114.47 a 114.92. Percebe-se aqui que a grande interseção entre os intervalos de confiança dos abalones machos e fêmeas, de tal forma que não se pode concluir com esse nível de confiança que a resposta média dos machos é maior que das fêmeas para <code>diameter</code> = 90.</p>
 </section>
 <section id="intervalo-de-previsão" class="level5">
 <h5 class="anchored" data-anchor-id="intervalo-de-previsão">Intervalo de Previsão</h5>
+<p>Vamos agora calcular intervalos de previsão associados a abalones de <code>diameter</code>= 90 para cada valor de <code>sex</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
-<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
-<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
-<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb84-4"><a href="#cb84-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb84-5"><a href="#cb84-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb84-6"><a href="#cb84-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb84-7"><a href="#cb84-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit     lwr      upr
 1 114.8382 107.204 122.4724</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
-<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
-<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
-<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 114.7026 106.6254 122.7799</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
-<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
-<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
-<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 115.6464 108.5393 122.7535</code></pre>
 </div>
 </div>
+<p>Observa-se que, como esperado, os intervalos de previsão são significativamente maiores que os intervalos de confiança para um mesmo valor de <code>diameter</code>. Dessa análise, podemos esperar que, dado um abalone de sexo masculino com <code>diameter</code> = 90, com 95% de confiança, seu valor de <code>length</code> deve estar entre 107.20 e 122.47. Para do sexo feminino com o mesmo valor de <code>diameter</code>, <code>length</code> deve estar entre 106.63 e 122.78 (95% de confiança) e para aqueles não identificáveis, de 108.54 a 122.75. Percebe-se que os intervalos de confiança são relativamente parecidos, com o intervalo dos não identificados iniciando um pouco depois dos demais e os três acabando próximos a 122.5.</p>
 </section>
 </section>
 <section id="terceira-etapa" class="level4">
 <h4 class="anchored" data-anchor-id="terceira-etapa">Terceira Etapa</h4>
 <p>blabla</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separando os abalones por sexo</span></span>
-<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>abalone_m <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"M"</span>,]</span>
-<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>abalone_f <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"F"</span>,]</span>
-<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>abalone_i <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"I"</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separando os abalones por sexo</span></span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>abalone_m <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"M"</span>,]</span>
+<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>abalone_f <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"F"</span>,]</span>
+<span id="cb90-4"><a href="#cb90-4" aria-hidden="true" tabindex="-1"></a>abalone_i <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"I"</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="masculino-1" class="level5">
 <h5 class="anchored" data-anchor-id="masculino-1">Masculino</h5>
 <hr>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao masculino</span></span>
-<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_m)</span>
-<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>m_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao masculino</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_m)</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>m_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)     shell_w 
  73.7352210   0.6834597 </code></pre>
@@ -835,9 +849,9 @@ diameter    1.207390 1.229402</code></pre>
 <h5 class="anchored" data-anchor-id="feminino-1">Feminino</h5>
 <hr>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao feminino</span></span>
-<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>f_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_f)</span>
-<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>f_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao feminino</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>f_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_f)</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>f_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)     shell_w 
  79.9965859   0.5930613 </code></pre>
@@ -848,42 +862,42 @@ diameter    1.207390 1.229402</code></pre>
 <h5 class="anchored" data-anchor-id="não-identificado-1">Não Identificado</h5>
 <hr>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao nao identificado</span></span>
-<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>i_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_i)</span>
-<span id="cb90-3"><a href="#cb90-3" aria-hidden="true" tabindex="-1"></a>i_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao nao identificado</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>i_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_i)</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>i_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>(Intercept)     shell_w 
   55.508314    1.173876 </code></pre>
 </div>
 </div>
 </section>
-<section id="mse-1" class="level5">
-<h5 class="anchored" data-anchor-id="mse-1">MSE</h5>
+<section id="mse" class="level5">
+<h5 class="anchored" data-anchor-id="mse">MSE</h5>
 <hr>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
-<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb92-4"><a href="#cb92-4" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="intervalo-de-confiança-do-coeficiente-angular-1" class="level5">
-<h5 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular-1">Intervalo de Confiança do Coeficiente Angular</h5>
+<section id="intervalo-de-confiança-do-coeficiente-angular" class="level5">
+<h5 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular">Intervalo de Confiança do Coeficiente Angular</h5>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
-<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                2.5 %     97.5 %
 (Intercept) 72.530228 74.9402140
 shell_w      0.664076  0.7028434</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                 2.5 %     97.5 %
 (Intercept) 78.7737305 81.2194414
 shell_w      0.5743682  0.6117545</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                2.5 %    97.5 %
 (Intercept) 54.649261 56.367367
@@ -894,63 +908,125 @@ shell_w      1.145899  1.201853</code></pre>
 <section id="intervalo-de-confiança-para-resposta-esperada-1" class="level5">
 <h5 class="anchored" data-anchor-id="intervalo-de-confiança-para-resposta-esperada-1">Intervalo de Confiança para Resposta Esperada</h5>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
-<span id="cb99-3"><a href="#cb99-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
-<span id="cb99-4"><a href="#cb99-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb99-5"><a href="#cb99-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb99-6"><a href="#cb99-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb99-7"><a href="#cb99-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb104-6"><a href="#cb104-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb104-7"><a href="#cb104-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 107.9082 107.3862 108.4302</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb101"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
-<span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
-<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
-<span id="cb101-4"><a href="#cb101-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb101-5"><a href="#cb101-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb101-6"><a href="#cb101-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb101-7"><a href="#cb101-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
+<span id="cb106-3"><a href="#cb106-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
+<span id="cb106-4"><a href="#cb106-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb106-5"><a href="#cb106-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb106-6"><a href="#cb106-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb106-7"><a href="#cb106-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 109.6497 109.1414 110.1579</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
-<span id="cb103-3"><a href="#cb103-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
-<span id="cb103-4"><a href="#cb103-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb103-5"><a href="#cb103-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
-<span id="cb103-6"><a href="#cb103-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
-<span id="cb103-7"><a href="#cb103-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
+<span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
+<span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb108-6"><a href="#cb108-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb108-7"><a href="#cb108-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>       fit      lwr      upr
 1 114.2021 113.3711 115.0331</code></pre>
 </div>
 </div>
-<table class="table">
-<colgroup>
-<col style="width: 5%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td>socorro me mata nao aguento mais aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</td>
-</tr>
-<tr class="even">
-<td>::: {.cell}</td>
-</tr>
-<tr class="odd">
-<td><code>{.r .cell-code} ggplot(abalone, aes(x = shell_w ^ (1/3), y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)</code></td>
-</tr>
-<tr class="even">
-<td>::: {.cell-output-display} <img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-60-1.png" class="img-fluid" width="672"> ::: :::</td>
-</tr>
-</tbody>
-</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>), <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-120-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>###Terceira etapa refeita</p>
+</section>
+<section id="masculino-2" class="level5">
+<h5 class="anchored" data-anchor-id="masculino-2">Masculino</h5>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao masculino</span></span>
+<span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_m)</span>
+<span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>m_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     shell_w 
+ 73.7352210   0.6834597 </code></pre>
+</div>
+</div>
+</section>
+<section id="feminino-2" class="level5">
+<h5 class="anchored" data-anchor-id="feminino-2">Feminino</h5>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao feminino</span></span>
+<span id="cb113-2"><a href="#cb113-2" aria-hidden="true" tabindex="-1"></a>f_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_f)</span>
+<span id="cb113-3"><a href="#cb113-3" aria-hidden="true" tabindex="-1"></a>f_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     shell_w 
+ 79.9965859   0.5930613 </code></pre>
+</div>
+</div>
+</section>
+<section id="não-identificado-2" class="level5">
+<h5 class="anchored" data-anchor-id="não-identificado-2">Não Identificado</h5>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao nao identificado</span></span>
+<span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>i_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_i)</span>
+<span id="cb115-3"><a href="#cb115-3" aria-hidden="true" tabindex="-1"></a>i_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     shell_w 
+  55.508314    1.173876 </code></pre>
+</div>
+</div>
+</section>
+<section id="mse-1" class="level5">
+<h5 class="anchored" data-anchor-id="mse-1">MSE</h5>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb117-4"><a href="#cb117-4" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="intervalo-de-confiança-do-coeficiente-angular-1" class="level5">
+<h5 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular-1">Intervalo de Confiança do Coeficiente Angular</h5>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %     97.5 %
+(Intercept) 72.530228 74.9402140
+shell_w      0.664076  0.7028434</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %     97.5 %
+(Intercept) 78.7737305 81.2194414
+shell_w      0.5743682  0.6117545</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %    97.5 %
+(Intercept) 54.649261 56.367367
+shell_w      1.145899  1.201853</code></pre>
+</div>
+</div>
+<hr>
 </section>
 </section>
 </section>
