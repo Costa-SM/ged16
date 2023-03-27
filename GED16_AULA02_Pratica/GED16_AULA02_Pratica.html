@@ -876,7 +876,7 @@ diameter    1.207390 1.229402</code></pre>
   55.508314    1.173876 </code></pre>
 </div>
 </div>
-<p>Nota-se que as funções geradas são consideravelmente diferentes, com valores de coeficientes angular e linear diferentes entre si. Pode-se também analisar o valor de MSE para cada um dos modelos.</p>
+<p>Nota-se que as funções geradas são consideravelmente diferentes, com valores de coeficientes angular e linear distoantes. Pode-se também analisar o valor de MSE para cada um dos modelos.</p>
 </section>
 <section id="mse-1" class="level3">
 <h3 class="anchored" data-anchor-id="mse-1">MSE</h3>
@@ -928,7 +928,7 @@ shell_w      0.5743682  0.6117545</code></pre>
 shell_w      1.145899  1.201853</code></pre>
 </div>
 </div>
-<p>Através da comparação entre os resultados obtidos, nota-se que os intervalos contendo 95% dos Abalones femininos encontra-se aproximadamente entre [0.57, 0.61], dos masculinos entre [0.66, 0.70], e dos não identificados, entre [1.14, 1.20], de maneira que não há interseção entre nenhum dos três. Devido a isso, pode-se afirmar, com 95% de certeza, que os coeficientes angulares de cada um dos modelos é diferente. O mesmo acontece para os intervalos referentes aos interceptos de cada um dos modelos obtidos.</p>
+<p>Através da comparação entre os resultados obtidos, nota-se que o intervalo de Coeficiente Angular que contém 95% dos Abalones femininos encontra-se aproximadamente entre [0.57, 0.61], masculinos, entre [0.66, 0.70], e não identificados, entre [1.14, 1.20], de maneira que não existe interseção em nenhum dos três. Assim, pode-se afirmar, com 95% de certeza, que os coeficientes angulares de cada um dos modelos é diferente, com o feminino sendo inferior ao masculino, e este, por sua vez, ao não identificado. O mesmo acontece para os intervalos referentes aos interceptos de cada um dos modelos obtidos, mas, nesse caso, o coeficiente linear dos não identificados é inferior ao dos masculinos e este, ao dos femininos.</p>
 </section>
 <section id="intervalo-de-confiança-para-resposta-esperada-1" class="level3">
 <h3 class="anchored" data-anchor-id="intervalo-de-confiança-para-resposta-esperada-1">Intervalo de Confiança para Resposta Esperada</h3>
@@ -972,12 +972,12 @@ shell_w      1.145899  1.201853</code></pre>
 1 114.2021 113.3711 115.0331</code></pre>
 </div>
 </div>
-<p>Analisando-se os cada um dos casos, nota-se que 95% dos Abalones masculinos estão contidos no intervalo [107.39, 108.43], dos femininos, no intervalo [109.14, 110.16], e dos não identificados, no intervalo [113.37, 115.03]. Dessa maneira, pode-se concluir, com uma confiança de 95%, que a resposta média dos Abalones machos é inferior à das fêmeas, que, por sua vez, é inferior ao dos não identificados.</p>
+<p>Analisando-se os cada um dos casos, nota-se que 95% dos Abalones masculinos com <code>shell_w</code> igual a 50 estão contidos no intervalo [107.39, 108.43], dos femininos, no intervalo [109.14, 110.16], e dos não identificados, no intervalo [113.37, 115.03]. Dessa maneira, pode-se concluir, com uma confiança de 95%, que a resposta média dos Abalones masculinos é inferior à dos femininos, que, por sua vez, é inferior ao dos não identificados.</p>
 </section>
 </section>
 <section id="terceira-etapa-refeita" class="level2">
 <h2 class="anchored" data-anchor-id="terceira-etapa-refeita">Terceira Etapa Refeita</h2>
-<p>Primeiramente, é necessário determinar se vale a pena realizar a análise feita antes novamente, mas com uma transformação na variável explicativa. Para tal, pode-se gerar o gráfico relacionando a variável <code>length</code> à <code>shell_w</code> e, em seguida, o que relaciona <code>length</code> e a raiz cúbica de <code>shell_w</code>, transformação escolhida com base no fato de o peso do abalone ser uma função do produto de uma densidade média, suposta constante, e uma medida de volume, que tentaremos reproduzir como o cubo da variável <code>length</code>.</p>
+<p>Primeiramente, é necessário determinar se vale a pena realizar a análise novamente, com uma transformação na variável explicativa. Para tal, pode-se gerar o gráfico relacionando a variável <code>length</code> a <code>shell_w</code> e, em seguida, o que relaciona <code>length</code> e a raiz cúbica de <code>shell_w</code>, transformação escolhida com base no fato de o peso do abalone ser uma função do produto de uma densidade média, suposta constante, e uma medida de volume, que tentaremos reproduzir como o cubo da variável <code>length</code>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb115"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb115-1"><a href="#cb115-1" aria-hidden="true" tabindex="-1"></a>plot_normal <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb115-2"><a href="#cb115-2" aria-hidden="true" tabindex="-1"></a>plot_cubic <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>), <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
@@ -987,7 +987,7 @@ shell_w      1.145899  1.201853</code></pre>
 <p><img src="GED16_AULA02_Pratica_files/figure-html/unnamed-chunk-62-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Através da comparação de ambos os gráficos gerados, nota-se que o segundo conjunto de pontos aparenta adequar-se significativamente melhor ao formato de uma reta que o primeiro. Com base nisto, supõe-se que refazer a análise com uma transformação de variável pode valer a pena. Assim, construímos uma nova variável para o conjunto de dados utilizado, contendo a raiz cúbica de <code>shell_w</code>. Usaremos os mesmos nomes de variável de antes no intuito de realizar menos alterações no código.</p>
+<p>Através da comparação de ambos os gráficos gerados, nota-se que o segundo conjunto de pontos aparenta adequar-se significativamente melhor ao formato de uma reta que o primeiro. Com base nisto, supõe-se que refazer a análise com uma transformação de variável pode valer a pena. Assim, construímos uma nova variável para o conjunto de dados utilizado, contendo a raiz cúbica de <code>shell_w</code>. Usaremos os mesmos nomes para as variáveis subsequentes, no intuito de realizar menos alterações no código.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>abalone_m<span class="sc">$</span>shell_w_cubic <span class="ot">&lt;-</span> abalone_m<span class="sc">$</span>shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span>
 <span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>abalone_f<span class="sc">$</span>shell_w_cubic <span class="ot">&lt;-</span> abalone_f<span class="sc">$</span>shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span>
@@ -1031,7 +1031,7 @@ shell_w      1.145899  1.201853</code></pre>
     0.8956089    30.3911939 </code></pre>
 </div>
 </div>
-<p>Primeiramente, nota-se um grande aumento no valor dos coeficientes angulares de cada um dos modelos obtidos, decorrentes da diminuição no valor da variável explicativa. Apesar disso, nota-se que ainda há uma diferença considerável nos coeficientes lineares de cada um destes, e que os angulares estão, a princípio, relativamente próximos. A seguir, realizaremos novamente a análise do valor de MSE.</p>
+<p>Primeiramente, nota-se um grande aumento no valor dos coeficientes angulares de cada um dos modelos obtidos, decorrentes da diminuição na magnitude da variável explicativa. Apesar disso, nota-se que ainda há uma diferença considerável nos coeficientes lineares de cada um destes, e que os angulares estão, a princípio, relativamente próximos. A seguir, realizaremos novamente a análise do valor de MSE.</p>
 </section>
 <section id="mse-2" class="level3">
 <h3 class="anchored" data-anchor-id="mse-2">MSE</h3>
@@ -1058,7 +1058,7 @@ shell_w      1.145899  1.201853</code></pre>
 <pre><code>[1] 24.2529</code></pre>
 </div>
 </div>
-<p>Nota-se, nesse caso, que os valores dos Abalones masculinos e femininos são próximos, enquanto o não identificado é consideravelmente inferior. A liderança no valor de MSE do sexo masculino parece se manter, entretanto. A seguir, temos a análise dos intervalos de confiança dos modelos.</p>
+<p>Primeiramente, ressalta-se a redução nos valores de MSE, quando comparados aos modelos originais, o que comprova que a transformação valeu a pena. Ademais, nota-se, nesse caso, que os valores dos Abalones masculinos e femininos são próximos, enquanto o não identificado é consideravelmente inferior. Com base nisto, pode-se supor que os abalones não identificados adequam-se melhor à relação cúbica. A liderança no valor de MSE do sexo masculino parece se manter, entretanto. A seguir, temos a análise dos intervalos de confiança dos modelos.</p>
 </section>
 <section id="intervalo-de-confiança-do-coeficiente-angular-2" class="level3">
 <h3 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular-2">Intervalo de Confiança do Coeficiente Angular</h3>
