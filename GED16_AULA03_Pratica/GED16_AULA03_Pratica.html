@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt" xml:lang="pt"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Prof.&nbsp;Denise B. Ferrari">
+
+<title>GED-16: Análise de Regressão</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="GED16_AULA03_Pratica_files/libs/clipboard/clipboard.min.js"></script>
+<script src="GED16_AULA03_Pratica_files/libs/quarto-html/quarto.js"></script>
+<script src="GED16_AULA03_Pratica_files/libs/quarto-html/popper.min.js"></script>
+<script src="GED16_AULA03_Pratica_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="GED16_AULA03_Pratica_files/libs/quarto-html/anchor.min.js"></script>
+<link href="GED16_AULA03_Pratica_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="GED16_AULA03_Pratica_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="GED16_AULA03_Pratica_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="GED16_AULA03_Pratica_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="GED16_AULA03_Pratica_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GED-16: Análise de Regressão</h1>
+<p class="subtitle lead">AULA03: Prática (1o. semestre/2023)</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Autor</div>
+    <div class="quarto-title-meta-contents">
+             <p>Prof.&nbsp;Denise B. Ferrari </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Data de Publicação</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">22 de março de 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p>Abalone é um tipo de molusco que vive em águas marinhas costeiras em diversas regiões do globo. A concha do abalone apresenta tamanho que varia entre 10 a 25cm e sua coloração interior iridescente nacarada é muito valorizada na confecção de jóias e ornamentos; além disso, a carne do animal é considerada uma iguaria em muitos países. Devido ao seu alto valor comercial e consequente pesca excessiva, além da degradação de seu habitat pela ação humana, diversas espécies de abalone atualmente correm risco de extinção. Existem mais de 100 espécies de abalone ao redor do mundo, das quais cerca de 15 são produzidas por meio de aquicultura. Determinar a idade do abalone de maneira acurada é importante tanto em termos comerciais (o valor comercial do abalone está associado à sua idade) bem como em termos ambientais (condições ambientais podem afetar a saúde do animal). A idade do animal pode ser determinada a partir da contagem do número de anéis na concha, utilizando um microscópio, a partir de um procedimento delicado e trabalhoso.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/abalone.jpg" class="img-fluid figure-img" style="width:80.0%"></p>
+<p></p><figcaption class="figure-caption">Abalone (Image by <a href="https://pixabay.com/users/lisaleo-3220940/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4919586">Lisa Yount</a> from <a href="https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4919586">Pixabay</a>)</figcaption><p></p>
+</figure>
+</div>
+<p>Os dados disponíveis no arquivo <code>data/abalone/abalone.data</code> foram obtidos no <a href="https://archive.ics.uci.edu/ml/datasets/Abalone">UCI Machine Learning Repository</a> e são bastante utilizados na investigação de métodos de Machine Learning. Tais dados foram coletados a partir do estudo original:</p>
+<p>Warwick J Nash, Tracy L Sellers, Simon R Talbot, Andrew J Cawthorn and Wes B Ford (1994) “The Population Biology of Abalone (<em>Haliotis</em> species) in Tasmania. I. Blacklip Abalone (<em>H. rubra</em>) from the North Coast and Islands of Bass Strait”, Sea Fisheries Division, Technical Report No.&nbsp;48 (ISSN 1034-3288).</p>
+<p>O principal objetivo do projeto era determinar a idade do molusco a partir de medidas físicas do animal mais fáceis de serem obtidas. Os dados originais foram pré-processados no sentido de remover observações faltantes e os valores das variáveis contínuas foram dividos por 200. Há um total de 4177 observações coletadas para 9 variáveis:</p>
+<ol type="1">
+<li><code>sex</code>: sexo do animal (M, F, I)</li>
+<li><code>length</code>: maior comprimento da concha (mm)</li>
+<li><code>diameter</code>: comprimento perpendicular à <code>length</code> (mm)</li>
+<li><code>height</code>: comprimento da carne da concha (mm)</li>
+<li><code>whole_w</code>: peso do animal (g)</li>
+<li><code>shucked_w</code>: peso da carne (g)</li>
+<li><code>viscera_w</code>: peso das vísceras (g)</li>
+<li><code>shell_w</code>: peso da concha (g)</li>
+<li><code>rings</code>: número de anéis (a idade é obtida somando 1.5)</li>
+</ol>
+<p>Mais informações a respeito dos dados podem ser obtidas no arquivo <code>data/abalone/abalone.names</code>.</p>
+<hr>
+<section id="análise-exploratória-de-dados" class="level1">
+<h1>Análise Exploratória de Dados</h1>
+<p>Conduza a análise exploratória da massa de dados <code>abalone</code>, a fim de compreender suas características principais.<br>
+Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/abalone/abalone.data"</span>, <span class="at">col_names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(abalone) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sex"</span>, <span class="st">"length"</span>, <span class="st">"diameter"</span>, <span class="st">"height"</span>, <span class="st">"whole_w"</span>, <span class="st">"shucked_w"</span>, <span class="st">"viscera_w"</span>, <span class="st">"shell_w"</span>, <span class="st">"rings"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Começamos identificando a estrutura dos dados:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>spc_tbl_ [4,177 × 9] (S3: spec_tbl_df/tbl_df/tbl/data.frame)
+ $ sex      : chr [1:4177] "M" "M" "F" "M" ...
+ $ length   : num [1:4177] 0.455 0.35 0.53 0.44 0.33 0.425 0.53 0.545 0.475 0.55 ...
+ $ diameter : num [1:4177] 0.365 0.265 0.42 0.365 0.255 0.3 0.415 0.425 0.37 0.44 ...
+ $ height   : num [1:4177] 0.095 0.09 0.135 0.125 0.08 0.095 0.15 0.125 0.125 0.15 ...
+ $ whole_w  : num [1:4177] 0.514 0.226 0.677 0.516 0.205 ...
+ $ shucked_w: num [1:4177] 0.2245 0.0995 0.2565 0.2155 0.0895 ...
+ $ viscera_w: num [1:4177] 0.101 0.0485 0.1415 0.114 0.0395 ...
+ $ shell_w  : num [1:4177] 0.15 0.07 0.21 0.155 0.055 0.12 0.33 0.26 0.165 0.32 ...
+ $ rings    : num [1:4177] 15 7 9 10 7 8 20 16 9 19 ...
+ - attr(*, "spec")=
+  .. cols(
+  ..   X1 = col_character(),
+  ..   X2 = col_double(),
+  ..   X3 = col_double(),
+  ..   X4 = col_double(),
+  ..   X5 = col_double(),
+  ..   X6 = col_double(),
+  ..   X7 = col_double(),
+  ..   X8 = col_double(),
+  ..   X9 = col_double()
+  .. )
+ - attr(*, "problems")=&lt;externalptr&gt; </code></pre>
+</div>
+</div>
+<p>Percebemos que as variáveis já possuem nomes explicativos. Porém, percebe-se que <code>sex</code> está com tipo <code>char</code> quando deveria ser <code>Factor</code>. Vamos também obter a idade, a partir do número de anéis do Abalone, e retornar os valores contínuos para suas escalas originais (multiplicar por 200).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone <span class="sc">%&gt;%</span> <span class="fu">mutate_at</span>(<span class="st">"sex"</span>, as.factor)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>age <span class="ot">&lt;-</span> abalone<span class="sc">$</span>rings <span class="sc">+</span> <span class="fl">1.5</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>length <span class="ot">&lt;-</span> abalone<span class="sc">$</span>length <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>diameter <span class="ot">&lt;-</span> abalone<span class="sc">$</span>diameter <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>height <span class="ot">&lt;-</span> abalone<span class="sc">$</span>height <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>whole_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>whole_w <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>shucked_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shucked_w <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>viscera_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>viscera_w <span class="sc">*</span> <span class="dv">200</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>abalone<span class="sc">$</span>shell_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shell_w <span class="sc">*</span> <span class="dv">200</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dessa forma, temos o sumário do conjunto de dados:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> sex          length         diameter          height         whole_w     
+ F:1307   Min.   : 15.0   Min.   : 11.00   Min.   :  0.0   Min.   :  0.4  
+ I:1342   1st Qu.: 90.0   1st Qu.: 70.00   1st Qu.: 23.0   1st Qu.: 88.3  
+ M:1528   Median :109.0   Median : 85.00   Median : 28.0   Median :159.9  
+          Mean   :104.8   Mean   : 81.58   Mean   : 27.9   Mean   :165.7  
+          3rd Qu.:123.0   3rd Qu.: 96.00   3rd Qu.: 33.0   3rd Qu.:230.6  
+          Max.   :163.0   Max.   :130.00   Max.   :226.0   Max.   :565.1  
+   shucked_w        viscera_w         shell_w           rings       
+ Min.   :  0.20   Min.   :  0.10   Min.   :  0.30   Min.   : 1.000  
+ 1st Qu.: 37.20   1st Qu.: 18.70   1st Qu.: 26.00   1st Qu.: 8.000  
+ Median : 67.20   Median : 34.20   Median : 46.80   Median : 9.000  
+ Mean   : 71.87   Mean   : 36.12   Mean   : 47.77   Mean   : 9.934  
+ 3rd Qu.:100.40   3rd Qu.: 50.60   3rd Qu.: 65.80   3rd Qu.:11.000  
+ Max.   :297.60   Max.   :152.00   Max.   :201.00   Max.   :29.000  
+      age       
+ Min.   : 2.50  
+ 1st Qu.: 9.50  
+ Median :10.50  
+ Mean   :11.43  
+ 3rd Qu.:12.50  
+ Max.   :30.50  </code></pre>
+</div>
+</div>
+<p>Percebe-se que algumas observações possuem altura zero. Avaliando essas observações:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>abalone[abalone<span class="sc">$</span>height<span class="sc">==</span><span class="dv">0</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 10
+  sex   length diameter height whole_w shucked_w viscera_w shell_w rings   age
+  &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 I         86       68      0    85.6      41.3      17.2    23       8   9.5
+2 I         63       46      0    26.8      11.5       5.7    70.1     6   7.5</code></pre>
+</div>
+</div>
+<p>Obtemos duas observações que não fazem sentido (altura zero e pesos diferentes de zero). Podemos retirá-las do conjunto de dados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>height<span class="sc">!=</span><span class="dv">0</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Assim, temos um sumário dos dados atualizados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(abalone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> sex          length         diameter          height          whole_w      
+ F:1307   Min.   : 15.0   Min.   : 11.00   Min.   :  2.00   Min.   :  0.40  
+ I:1340   1st Qu.: 90.0   1st Qu.: 70.00   1st Qu.: 23.00   1st Qu.: 88.45  
+ M:1528   Median :109.0   Median : 85.00   Median : 28.00   Median :160.00  
+          Mean   :104.8   Mean   : 81.59   Mean   : 27.92   Mean   :165.80  
+          3rd Qu.:123.0   3rd Qu.: 96.00   3rd Qu.: 33.00   3rd Qu.:230.70  
+          Max.   :163.0   Max.   :130.00   Max.   :226.00   Max.   :565.10  
+   shucked_w        viscera_w         shell_w           rings       
+ Min.   :  0.20   Min.   :  0.10   Min.   :  0.30   Min.   : 1.000  
+ 1st Qu.: 37.25   1st Qu.: 18.70   1st Qu.: 26.00   1st Qu.: 8.000  
+ Median : 67.20   Median : 34.20   Median : 46.80   Median : 9.000  
+ Mean   : 71.90   Mean   : 36.13   Mean   : 47.77   Mean   : 9.935  
+ 3rd Qu.:100.40   3rd Qu.: 50.60   3rd Qu.: 65.75   3rd Qu.:11.000  
+ Max.   :297.60   Max.   :152.00   Max.   :201.00   Max.   :29.000  
+      age       
+ Min.   : 2.50  
+ 1st Qu.: 9.50  
+ Median :10.50  
+ Mean   :11.44  
+ 3rd Qu.:12.50  
+ Max.   :30.50  </code></pre>
+</div>
+</div>
+<p>Dado o sumário, analisaremos agora a distribuição de algumas das grandezas de interesse no conjunto de dados. Começaremos pela idade dos Abalones, a partir da qual pode ser construído o histograma abaixo, juntamente com a sua curva de densidade estimada. Pela análise destes, nota-se que há um grande número de Abalones com uma idade próxima a 10 anos, com os mais velhos podendo ter até próximo de 30 anos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma de `age`</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="fu">aes</span>(<span class="at">y =</span> <span class="fu">after_stat</span>(density))) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona linha de densidade estimada (suavização)</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">colour =</span> <span class="dv">4</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">fill =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.25</span>, <span class="at">bw =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona dispersão unidimensional de `age`</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Pode-se, também, construir um conjunto de gráficos para analisar a relação entre cada uma das características do conjunto de dados. Nota-se, entretanto, que esse conjunto não conta com os valores de correlação das variáveis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>)])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Dessa maneira, pode-se, com base na figura anterior, construir a próxima, que conta com os valores de correlação entre as diferentes variáveis, bem como gráficos mais informativos relacionando o sexo dos Abalones com as suas outras características.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">library</span>(GGally)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggpairs</span>(abalone[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">9</span>,<span class="dv">9</span>)])</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Com base nesse apanhado geral de gráficos, pode-se realizar uma análise focada nas relações mais interessantes. Um desses casos consiste em comparar o valor do peso total do Abalone com os diferentes valores de pesos registrados posteriormente (<em>whole</em>, <em>shucked</em>, <em>viscera</em> e <em>shell</em>). Como pode-se constatar no conjunto de observações abaixo, a soma dos diferentes valores de peso nem sempre resulta no peso total registrado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>abalone[<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 10
+  sex   length diameter height whole_w shucked_w viscera_w shell_w rings   age
+  &lt;fct&gt;  &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 M         91       73     19   103.       44.9      20.2      30    15  16.5
+2 M         70       53     18    45.1      19.9       9.7      14     7   8.5
+3 F        106       84     27   135.       51.3      28.3      42     9  10.5</code></pre>
+</div>
+</div>
+<p>Assim, pode-se gerar o gráfico da variável <code>whole_w</code> <em>versus</em> a soma das variáveis <code>shucked_w</code>, <code>viscera_w</code> e <code>shell_w</code>. Bem como o valor de correlação das duas grandezas obtidas. Por fim, nota-se que este último é de aproximadamente 99.51%, um valor bastante alto.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  abalone<span class="sc">$</span>sum_w <span class="ot">&lt;-</span> abalone<span class="sc">$</span>shucked_w <span class="sc">+</span> abalone<span class="sc">$</span>viscera_w <span class="sc">+</span> abalone<span class="sc">$</span>shell_w</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>sum_w)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>sum_w)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9951057</code></pre>
+</div>
+</div>
+<p>Podemos também analisar a distribuição da idade dos Abalones, o que é feito abaixo, através da geração de um <em>boxplot</em>. Nota-se, através deste, que 50% dos Abalones encontram-se na faixa entre 9 e 13 anos de idade. Além disso, existem vários <em>outliers</em> com idades superiores a 18 anos de idade.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplot de `age`</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> <span class="st">""</span>)) <span class="sc">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona barras de erros</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="at">stat =</span> <span class="st">"boxplot"</span>, <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona boxplot</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span> () <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona dispersão unidimensional de `age`</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rug</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona rótulo aos eixos</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">""</span>, <span class="at">x =</span> <span class="st">"age"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, <em>boxplots</em> da idade para cada um dos sexos. Não há grandes diferenças na distribuição de idades de machos e fêmeas. Nota-se, porém, que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma evidência de se existir uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, sendo esta tarefa possivelmente mais fácil conforme estes envelhecem.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplots</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> sex)) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Ainda com base nos gráficos de relação entre as características, podemos analisar mais a fundo a relação entre o tamanho e o peso dos abalones. Tomando as variáveis <code>whole_w</code> e <code>diameter</code>, podemos percaber uma grande correlação entre essas variáveis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> diameter))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>diameter)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9254144</code></pre>
+</div>
+</div>
+<p>Podemos também hipotetizar que os abalones tem densidade aproximadamente constante. Assim, analisando o gráfico entre <code>whole_w</code> <em>versus</em> <code>height</code>*<code>diameter</code>^2, encontramos um gráfico que lembra uma reta. Também podemos perceber que encontra-se uma correlação ainda maior que a do caso anterior.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> height<span class="sc">*</span>diameter<span class="sc">**</span><span class="dv">2</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>length<span class="sc">*</span>abalone<span class="sc">$</span>diameter<span class="sc">**</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9685146</code></pre>
+</div>
+</div>
+<p>Podemos hipotetizar também que abalones mais velhos sejam mais pesados. Ainda que exista alguma relação entre essas variáveis, parece que ela é mais forte quando os abalones são mais novos, porém quanto mais velhos eles ficam, mais dispersos ficam os pesos. Percebe-se uma correlação significativamente menor entre essas variáveis se comparados aos casos anteriormente analisados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone)<span class="sc">+</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>whole_w, <span class="at">y =</span> age))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>whole_w, abalone<span class="sc">$</span>age)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5401508</code></pre>
+</div>
+</div>
+</section>
+<section id="análise-de-regressão" class="level1">
+<h1>Análise de Regressão</h1>
+<ol type="1">
+<li>Assuma que um modelo de regressão linear simples é adequado para modelar a relação da variável de resposta <code>length</code> a cada uma das variáveis explicativas <code>diameter</code>, <code>shucked_w</code>, <code>shell_w</code> e <code>rings</code>.</li>
+</ol>
+<ul>
+<li>Construa um modelo de regressão para cada um desses pares de variáveis;<br>
+</li>
+<li>Construa gráficos de dispersão (separados) com as retas de regressão ajustadas para cada caso;<br>
+</li>
+<li>Calcule o MSE para cada modelo. Que variável explicativa produz menor variabilidade em torno da reta de regressão ajustada?<br>
+</li>
+<li>Utilizando R<sup>2</sup> como critério, qual das variáveis explicativas contribui para a maior redução na variabilidade da resposta <code>length</code>?</li>
+</ul>
+<ol start="2" type="1">
+<li>Para cada nível da variável <code>sex</code>, construa um modelo de regressão para a variável de resposta <code>length</code> em função de <code>diameter</code>. Assuma que o modelo de 1a. ordem é adequado para modelar essas relações.</li>
+</ol>
+<ul>
+<li>Obtenha os modelos de regressão ajustados.<br>
+</li>
+<li>As funções de regressão estimadas são semelhantes para todos os níveis da variável <code>sex</code>? Discuta.</li>
+<li>Calcule o MSE para cada nível da variável <code>sex</code>. A variabilidade em torno da reta de regressão ajustada é semelhante para todos os níveis?<br>
+</li>
+<li>Construa intervalos de confiança 95% para o coeficiente angular da reta de regressão para cada nível da variável <code>sex</code>. As retas de regressão para diferentes níveis parecem ter mesma inclinação? O que se pode concluir?<br>
+</li>
+<li>Construa intervalos de confiança para a resposta esperada correspondendo a <code>diameter = 90</code>, para cada nível da variável <code>sex</code>. O que se pode concluir?<br>
+</li>
+<li>Construa intervalos de previsão para um novo animal de cada sexo que tenha <code>diameter = 90</code>. O que se pode concluir?</li>
+</ul>
+<ol start="3" type="1">
+<li>Para cada nível da variável <code>sex</code>, construa um modelo de regressão para a variável de resposta <code>length</code> em função de <code>shell_w</code>. Assuma que o modelo de 1a. ordem é adequado para modelar essas relações.</li>
+</ol>
+<ul>
+<li>Obtenha os modelos de regressão ajustados.<br>
+</li>
+<li>As funções de regressão estimadas são semelhantes para todos os níveis da variável <code>sex</code>? Discuta.</li>
+<li>Calcule o MSE para cada nível da variável <code>sex</code>. A variabilidade em torno da reta de regressão ajustada é semelhante para todos os níveis?<br>
+</li>
+<li>Construa intervalos de confiança 95% para o coeficiente angular da reta de regressão para cada nível da variável <code>sex</code>. As retas de regressão para diferentes níveis parecem ter mesma inclinação? O que se pode concluir?<br>
+</li>
+<li>Construa intervalos de confiança para a resposta esperada correspondendo a <code>shell_w = 50</code>, para cada nível da variável <code>sex</code>. O que se pode concluir?</li>
+<li>Faz sentido aplicar alguma transformação à variável explicativa? Em caso positivo, replique os itens anteriores para um modelo para a variável explicativa transformada.</li>
+</ul>
+<section id="primeira-etapa" class="level2">
+<h2 class="anchored" data-anchor-id="primeira-etapa">Primeira Etapa</h2>
+<p>Primeiramente, faremos essa etapa para a variável explicativa <code>diameter</code>, descrevendo o processo conforme ele acontece. Posteriormente, ele será repetido para as demais. Começamos criando o modelo de regressão linear simples relacionando-a com a variável de resposta <code>length</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo o modelo de regressao linear simples relacionando length e diameter</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>lm_diameter <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> diameter, <span class="at">data =</span> abalone)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>lm_diameter</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ diameter, data = abalone)
+
+Coefficients:
+(Intercept)     diameter  
+      7.384        1.194  </code></pre>
+</div>
+</div>
+<p>Percebe-se que os coeficientes do modelo são ambos não nulos. Como nenhum abalone tem <code>diameter</code> = 0, o valor do intercepto não tem significado prática. Geramos o gráfico de dispersão para avaliar o modelo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Percebe-se que a reta de regressão parece ser adequada à distribuição dos dados. Parece existir uma clara relação linear entre <code>length</code> e <code>diameter</code>.</p>
+<p>Agora, podemos calcular o MSE para a variável analisada. Analisaremos qual modelo gera a menor variabilidade posteriomente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>lm_diameter_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(lm_diameter<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>lm_diameter_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15.11816</code></pre>
+</div>
+</div>
+<p>Podemos também calcular o valor de <span class="math inline">\(R^2\)</span> referente ao modelo <code>lm_diameter</code>. Determinaremos qual das variáveis explicativas contribui para a maior redução na variabilidade da resposta ao final do processo.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do R^2</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>r2_diameter <span class="ot">&lt;-</span> <span class="fu">summary</span>(lm_diameter)<span class="sc">$</span>r.squared</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>r2_diameter</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9737772</code></pre>
+</div>
+</div>
+<section id="demais-variáveis-explicativas" class="level3">
+<h3 class="anchored" data-anchor-id="demais-variáveis-explicativas">Demais Variáveis Explicativas</h3>
+<hr>
+<p>Começaremos analisando <code>shucked_w</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo o modelo de regressao linear simples relacionando length e shucked_w</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>lm_shucked <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shucked_w, <span class="at">data =</span> abalone)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>lm_shucked</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ shucked_w, data = abalone)
+
+Coefficients:
+(Intercept)    shucked_w  
+    69.8927       0.4857  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shucked_w, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>A relção entre <code>shucked_w</code> e <code>length</code> não parece ser tão linear quanto <code>diameter</code> e <code>length</code>. Avaliaremos os valores de MSE e <span class="math inline">\(R^2\)</span> para confirmar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>lm_shucked_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(lm_shucked<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>lm_shucked_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 111.7593</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do R^2</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>r2_shucked <span class="ot">&lt;-</span> <span class="fu">summary</span>(lm_shucked)<span class="sc">$</span>r.squared</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>r2_shucked</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8061509</code></pre>
+</div>
+</div>
+<hr>
+<p>Seguiremos analisando a relação de <code>shell_w</code> com <code>length</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo o modelo de regressao linear simples relacionando length e shell_w</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>lm_shell <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>lm_shell</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ shell_w, data = abalone)
+
+Coefficients:
+(Intercept)      shell_w  
+    67.7995       0.7749  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>O gráfico de dispersão tem formato similar ao anterior, provavelmente devido a uma forte correlação entre <code>shucked_w</code> e <code>shell_w</code>, como analisado na Análise Exploratória de Dados.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>lm_shell_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(lm_shell<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>lm_shell_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 111.179</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do R^2</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>r2_shell <span class="ot">&lt;-</span> <span class="fu">summary</span>(lm_shell)<span class="sc">$</span>r.squared</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>r2_shell</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.8071573</code></pre>
+</div>
+</div>
+<p>De fato, os valores de MSE e <span class="math inline">\(R^2\)</span> são muito similares ao caso anterior.</p>
+<hr>
+<p>Por fim, analisaremos a relação de <code>length</code> e <code>rings</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo o modelo de regressao linear simples relacionando length e rings</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>lm_rings <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> rings, <span class="at">data =</span> abalone)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>lm_rings</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ rings, data = abalone)
+
+Coefficients:
+(Intercept)        rings  
+     63.637        4.145  </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera o grafico de dispersao</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> rings, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>O gráfico de dispersão de <code>rings</code> <em>versus</em> <code>length</code> parece ser o “menos linear” entre os analisados. Vejamos os valores de MSE e <span class="math inline">\(R^2\)</span> para esse caso:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>lm_rings_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(lm_rings<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>lm_rings_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 398.004</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do R^2</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>r2_rings <span class="ot">&lt;-</span> <span class="fu">summary</span>(lm_rings)<span class="sc">$</span>r.squared</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>r2_rings</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3096526</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="comparação" class="level3">
+<h3 class="anchored" data-anchor-id="comparação">Comparação</h3>
+<p>Temos abaixo os valores de MSE e <span class="math inline">\(R^2\)</span> agrupados em uma tablea, para cada um dos modelos gerados. Percebe-se que a variável explicativa <code>diameter</code> tem o menor valor de MSE, e o maior valor de <span class="math inline">\(R^2\)</span>, de maneira que, usando esse critério, ela mais contribui para a redução na variabilidade da resposta.</p>
+<table class="table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 24%">
+<col style="width: 22%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variável</th>
+<th>diameter</th>
+<th>shucked_w</th>
+<th>shell_w</th>
+<th>rings</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MSE</td>
+<td>15.1181553</td>
+<td>111.7592693</td>
+<td>111.1790452</td>
+<td>398.0040264</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(R^2\)</span></td>
+<td>0.9737772</td>
+<td>0.8061509</td>
+<td>0.8071573</td>
+<td>0.3096526</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="segunda-etapa" class="level2">
+<h2 class="anchored" data-anchor-id="segunda-etapa">Segunda Etapa</h2>
+<p>Faremos agora uma análise separando os sexos dos abalones. Nessa análise, consideraremos indefinido também como um dos tipos da variável <code>sex</code>, uma vez que, possivelmente, existam relações entre abalones de sexo indefinido/não identificado que sejam interessantes para análise.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separando os abalones por sexo</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>abalone_m <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"M"</span>,]</span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>abalone_f <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"F"</span>,]</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>abalone_i <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"I"</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="sexo-masculino" class="level3">
+<h3 class="anchored" data-anchor-id="sexo-masculino">Sexo Masculino</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao masculino</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> diameter, <span class="at">data =</span> abalone_m)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>m_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)    diameter 
+   7.305770    1.194805 </code></pre>
+</div>
+</div>
+</section>
+<section id="sexo-feminino" class="level3">
+<h3 class="anchored" data-anchor-id="sexo-feminino">Sexo Feminino</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao feminino</span></span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>f_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> diameter, <span class="at">data =</span> abalone_f)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>f_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)    diameter 
+   8.576335    1.179181 </code></pre>
+</div>
+</div>
+</section>
+<section id="não-identificado" class="level3">
+<h3 class="anchored" data-anchor-id="não-identificado">Não Identificado</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao nao identificado</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>i_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> diameter, <span class="at">data =</span> abalone_i)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>i_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)    diameter 
+   5.990772    1.218396 </code></pre>
+</div>
+</div>
+<p>Podemos analisar os três modelos lado a lado:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone,  <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>, <span class="at">se=</span><span class="cn">FALSE</span>) <span class="sc">+</span> <span class="fu">facet_wrap</span>(<span class="sc">~</span> sex)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Percebe-se que as inclinações são similares, porém o intercepto feminino é maior que o masculino que, por sua vez, é maior que o não identificado.</p>
+</section>
+<section id="mse" class="level3">
+<h3 class="anchored" data-anchor-id="mse">MSE</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>m_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15.11766</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>f_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16.91334</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Não identificado</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>i_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 13.07654</code></pre>
+</div>
+</div>
+<p>Percebe-se que o MSE é menor entre os abalones não identificados, enquanto é maior para o sexo feminino.</p>
+</section>
+<section id="intervalo-de-confiança-do-coeficiente-angular" class="level3">
+<h3 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular">Intervalo de Confiança do Coeficiente Angular</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               2.5 %   97.5 %
+(Intercept) 6.270673 8.340868
+diameter    1.183235 1.206375</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Feminino</span></span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               2.5 %    97.5 %
+(Intercept) 7.127150 10.025520
+diameter    1.163437  1.194925</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Não identificadp</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>               2.5 %   97.5 %
+(Intercept) 5.246228 6.735315
+diameter    1.207390 1.229402</code></pre>
+</div>
+</div>
+<p>Conclui-se que, com 95% de confiança, o coeficiente angular dos indivíduos não identificados é diferente do coeficiente angular de machos e fêmeas, visto que o intervalo de confiança 95% dos não identificados se inicia em 1.21, enquanto dos machos acaba em 1.20 e das fêmeas acaba em 1.19. Da análise desses intervalos de confiança, não se pode tomar conclusões acerca da diferença entre os coeficientes angulares de machos e fêmeas com nível de cofiança de 95%.</p>
+</section>
+<section id="intervalo-de-confiança-para-resposta-esperada" class="level3">
+<h3 class="anchored" data-anchor-id="intervalo-de-confiança-para-resposta-esperada">Intervalo de Confiança para Resposta Esperada</h3>
+<p>Calcularemos o intervalo de confiança para <code>diameter</code> = 90 para cada valor de <code>sex</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb79-3"><a href="#cb79-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb79-4"><a href="#cb79-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb79-5"><a href="#cb79-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb79-6"><a href="#cb79-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb79-7"><a href="#cb79-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr     upr
+1 114.8382 114.6414 115.035</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 114.7026 114.4788 114.9265</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb83-7"><a href="#cb83-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 115.6464 115.3126 115.9803</code></pre>
+</div>
+</div>
+<p>Novamente, concluímos que, para abalones não identificados, garante-se com 95% de confiança que seu intervalo de confiança que o valor da resposta média de <code>length</code> deve estar entre 115.31 e 115.98. O mesmo vale para indivíduos masculinos, de 114.64 a 115.032 e femininos de 114.47 a 114.92. Percebe-se aqui que a grande interseção entre os intervalos de confiança dos abalones machos e fêmeas, de tal forma que não se pode concluir com esse nível de confiança que a resposta média dos machos é maior que das fêmeas para <code>diameter</code> = 90.</p>
+</section>
+<section id="intervalo-de-previsão" class="level3">
+<h3 class="anchored" data-anchor-id="intervalo-de-previsão">Intervalo de Previsão</h3>
+<p>Vamos agora calcular intervalos de previsão associados a abalones de <code>diameter</code>= 90 para cada valor de <code>sex</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de previsão</span></span>
+<span id="cb85-6"><a href="#cb85-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb85-7"><a href="#cb85-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit     lwr      upr
+1 114.8382 107.204 122.4724</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de previsão</span></span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 114.7026 106.6254 122.7799</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
+<span id="cb89-2"><a href="#cb89-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (diameter = 90)</span></span>
+<span id="cb89-3"><a href="#cb89-3" aria-hidden="true" tabindex="-1"></a>x0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">diameter =</span> <span class="dv">90</span>)</span>
+<span id="cb89-4"><a href="#cb89-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb89-5"><a href="#cb89-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de previsão</span></span>
+<span id="cb89-6"><a href="#cb89-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> x0, <span class="at">interval =</span> <span class="st">"prediction"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb89-7"><a href="#cb89-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 115.6464 108.5393 122.7535</code></pre>
+</div>
+</div>
+<p>Observa-se que, como esperado, os intervalos de previsão são significativamente maiores que os intervalos de confiança para um mesmo valor de <code>diameter</code>. Dessa análise, podemos esperar que, dado um abalone de sexo masculino com <code>diameter</code> = 90, com 95% de confiança, seu valor de <code>length</code> deve estar entre 107.20 e 122.47. Para do sexo feminino com o mesmo valor de <code>diameter</code>, <code>length</code> deve estar entre 106.63 e 122.78 (95% de confiança) e para aqueles não identificáveis, de 108.54 a 122.75. Percebe-se que os intervalos de confiança são relativamente parecidos, com o intervalo dos não identificados iniciando um pouco depois dos demais e os três acabando próximos a 122.5.</p>
+</section>
+</section>
+<section id="terceira-etapa" class="level2">
+<h2 class="anchored" data-anchor-id="terceira-etapa">Terceira Etapa</h2>
+<p>Assim como foi feito na segunda etapa, pode-se dividir o conjunto de dados em cada uma das categorias de sexo existentes, sendo elas, masculino, feminino, e não identificado. Ademais, são obtidos os modelos lineares para cada um dos casos.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Separando os abalones por sexo</span></span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>abalone_m <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"M"</span>,]</span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>abalone_f <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"F"</span>,]</span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>abalone_i <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>sex <span class="sc">==</span> <span class="st">"I"</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="masculino" class="level3">
+<h3 class="anchored" data-anchor-id="masculino">Masculino</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao masculino</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_m)</span>
+<span id="cb92-3"><a href="#cb92-3" aria-hidden="true" tabindex="-1"></a>m_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     shell_w 
+ 73.7352210   0.6834597 </code></pre>
+</div>
+</div>
+</section>
+<section id="feminino" class="level3">
+<h3 class="anchored" data-anchor-id="feminino">Feminino</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao feminino</span></span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>f_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_f)</span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>f_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     shell_w 
+ 79.9965859   0.5930613 </code></pre>
+</div>
+</div>
+</section>
+<section id="não-identificado-1" class="level3">
+<h3 class="anchored" data-anchor-id="não-identificado-1">Não Identificado</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao nao identificado</span></span>
+<span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>i_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w, <span class="at">data =</span> abalone_i)</span>
+<span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a>i_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)     shell_w 
+  55.508314    1.173876 </code></pre>
+</div>
+</div>
+<p>Nota-se que as funções geradas são consideravelmente diferentes, com valores de coeficientes angular e linear distoantes. Pode-se também analisar o valor de MSE para cada um dos modelos.</p>
+</section>
+<section id="mse-1" class="level3">
+<h3 class="anchored" data-anchor-id="mse-1">MSE</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE Masculino</span></span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>m_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 101.967</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE Feminino</span></span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 74.76817</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE Não Identificado</span></span>
+<span id="cb102-2"><a href="#cb102-2" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb102-3"><a href="#cb102-3" aria-hidden="true" tabindex="-1"></a>i_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 78.16387</code></pre>
+</div>
+</div>
+<p>Nota-se que os valores de MSE para o sexo feminino, e o não identificado, são próximos, enquanto o masculino é mais elevado que ambos. Analisaremos, então, o intervalo de confiança dos Coeficientes Angulares de cada um dos modelos gerados.</p>
+</section>
+<section id="intervalo-de-confiança-do-coeficiente-angular-1" class="level3">
+<h3 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular-1">Intervalo de Confiança do Coeficiente Angular</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %     97.5 %
+(Intercept) 72.530228 74.9402140
+shell_w      0.664076  0.7028434</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb106-2"><a href="#cb106-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 2.5 %     97.5 %
+(Intercept) 78.7737305 81.2194414
+shell_w      0.5743682  0.6117545</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb108"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Não identificado</span></span>
+<span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %    97.5 %
+(Intercept) 54.649261 56.367367
+shell_w      1.145899  1.201853</code></pre>
+</div>
+</div>
+<p>Através da comparação entre os resultados obtidos, nota-se que o intervalo de Coeficiente Angular que contém 95% dos Abalones femininos encontra-se aproximadamente entre [0.57, 0.61], masculinos, entre [0.66, 0.70], e não identificados, entre [1.14, 1.20], de maneira que não existe interseção em nenhum dos três. Assim, pode-se afirmar, com 95% de certeza, que os coeficientes angulares de cada um dos modelos é diferente, com o feminino sendo inferior ao masculino, e este, por sua vez, ao não identificado. O mesmo acontece para os intervalos referentes aos interceptos de cada um dos modelos obtidos, mas, nesse caso, o coeficiente linear dos não identificados é inferior ao dos masculinos e este, ao dos femininos.</p>
+</section>
+<section id="intervalo-de-confiança-para-resposta-esperada-1" class="level3">
+<h3 class="anchored" data-anchor-id="intervalo-de-confiança-para-resposta-esperada-1">Intervalo de Confiança para Resposta Esperada</h3>
+<p>Pode-se gerar os intervalos de confiança para uma resposta de <code>shell_w</code> igual a 50, conforme foi solicitado para a análise.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Masculino</span></span>
+<span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
+<span id="cb110-4"><a href="#cb110-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb110-5"><a href="#cb110-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb110-6"><a href="#cb110-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(m_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb110-7"><a href="#cb110-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 107.9082 107.3862 108.4302</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Feminino</span></span>
+<span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
+<span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
+<span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(f_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb112-7"><a href="#cb112-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 109.6497 109.1414 110.1579</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Nao identificado</span></span>
+<span id="cb114-2"><a href="#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Valor da variavel explicativa (shell_w = 50)</span></span>
+<span id="cb114-3"><a href="#cb114-3" aria-hidden="true" tabindex="-1"></a>xh <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">shell_w =</span> <span class="dv">50</span>)</span>
+<span id="cb114-4"><a href="#cb114-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb114-5"><a href="#cb114-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca</span></span>
+<span id="cb114-6"><a href="#cb114-6" aria-hidden="true" tabindex="-1"></a>ip <span class="ot">&lt;-</span> <span class="fu">predict.lm</span>(i_lm, <span class="at">newdata =</span> xh, <span class="at">interval =</span> <span class="st">"confidence"</span>, <span class="at">level =</span> <span class="fl">0.95</span>)</span>
+<span id="cb114-7"><a href="#cb114-7" aria-hidden="true" tabindex="-1"></a>ip</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit      lwr      upr
+1 114.2021 113.3711 115.0331</code></pre>
+</div>
+</div>
+<p>Analisando-se os cada um dos casos, nota-se que 95% dos Abalones masculinos com <code>shell_w</code> igual a 50 estão contidos no intervalo [107.39, 108.43], dos femininos, no intervalo [109.14, 110.16], e dos não identificados, no intervalo [113.37, 115.03]. Dessa maneira, pode-se concluir, com uma confiança de 95%, que a resposta média dos Abalones masculinos é inferior à dos femininos, que, por sua vez, é inferior ao dos não identificados.</p>
+</section>
+</section>
+<section id="terceira-etapa-refeita" class="level2">
+<h2 class="anchored" data-anchor-id="terceira-etapa-refeita">Terceira Etapa Refeita</h2>
+<p>Primeiramente, é necessário determinar se vale a pena realizar a análise novamente, com uma transformação na variável explicativa. Para tal, pode-se gerar o gráfico relacionando a variável <code>length</code> a <code>shell_w</code> e, em seguida, o que relaciona <code>length</code> e a raiz cúbica de <code>shell_w</code>, transformação escolhida com base no fato de o peso do abalone ser uma função do produto de uma densidade média, suposta constante, e uma medida de volume, que tentaremos reproduzir como o cubo da variável <code>length</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb116"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>plot_normal <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb116-2"><a href="#cb116-2" aria-hidden="true" tabindex="-1"></a>plot_cubic <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>), <span class="at">y =</span> length)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb116-3"><a href="#cb116-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb116-4"><a href="#cb116-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grid.arrange</span>(plot_normal, plot_cubic, <span class="at">ncol =</span> <span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-63-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Através da comparação de ambos os gráficos gerados, nota-se que o segundo conjunto de pontos aparenta adequar-se significativamente melhor ao formato de uma reta que o primeiro. Com base nisto, supõe-se que refazer a análise com uma transformação de variável pode valer a pena. Assim, construímos uma nova variável para o conjunto de dados utilizado, contendo a raiz cúbica de <code>shell_w</code>. Usaremos os mesmos nomes para as variáveis subsequentes, no intuito de realizar menos alterações no código.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb117"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb117-1"><a href="#cb117-1" aria-hidden="true" tabindex="-1"></a>abalone_m<span class="sc">$</span>shell_w_cubic <span class="ot">&lt;-</span> abalone_m<span class="sc">$</span>shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span>
+<span id="cb117-2"><a href="#cb117-2" aria-hidden="true" tabindex="-1"></a>abalone_f<span class="sc">$</span>shell_w_cubic <span class="ot">&lt;-</span> abalone_f<span class="sc">$</span>shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span>
+<span id="cb117-3"><a href="#cb117-3" aria-hidden="true" tabindex="-1"></a>abalone_i<span class="sc">$</span>shell_w_cubic <span class="ot">&lt;-</span> abalone_i<span class="sc">$</span>shell_w <span class="sc">^</span> (<span class="dv">1</span><span class="sc">/</span><span class="dv">3</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="masculino-1" class="level3">
+<h3 class="anchored" data-anchor-id="masculino-1">Masculino</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb118"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao masculino</span></span>
+<span id="cb118-2"><a href="#cb118-2" aria-hidden="true" tabindex="-1"></a>m_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w_cubic, <span class="at">data =</span> abalone_m)</span>
+<span id="cb118-3"><a href="#cb118-3" aria-hidden="true" tabindex="-1"></a>m_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept) shell_w_cubic 
+     5.827319     28.590949 </code></pre>
+</div>
+</div>
+</section>
+<section id="feminino-1" class="level3">
+<h3 class="anchored" data-anchor-id="feminino-1">Feminino</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb120"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao feminino</span></span>
+<span id="cb120-2"><a href="#cb120-2" aria-hidden="true" tabindex="-1"></a>f_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w_cubic, <span class="at">data =</span> abalone_f)</span>
+<span id="cb120-3"><a href="#cb120-3" aria-hidden="true" tabindex="-1"></a>f_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept) shell_w_cubic 
+     9.407269     27.688948 </code></pre>
+</div>
+</div>
+</section>
+<section id="não-identificado-2" class="level3">
+<h3 class="anchored" data-anchor-id="não-identificado-2">Não Identificado</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb122"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Construindo os modelos de regressao nao identificado</span></span>
+<span id="cb122-2"><a href="#cb122-2" aria-hidden="true" tabindex="-1"></a>i_lm <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> shell_w_cubic, <span class="at">data =</span> abalone_i)</span>
+<span id="cb122-3"><a href="#cb122-3" aria-hidden="true" tabindex="-1"></a>i_lm<span class="sc">$</span>coefficients</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  (Intercept) shell_w_cubic 
+    0.8956089    30.3911939 </code></pre>
+</div>
+</div>
+<p>Primeiramente, nota-se um grande aumento no valor dos coeficientes angulares de cada um dos modelos obtidos, decorrentes da diminuição na magnitude da variável explicativa. Apesar disso, nota-se que ainda há uma diferença considerável nos coeficientes lineares de cada um destes, e que os angulares estão, a princípio, relativamente próximos. A seguir, realizaremos novamente a análise do valor de MSE.</p>
+</section>
+<section id="mse-2" class="level3">
+<h3 class="anchored" data-anchor-id="mse-2">MSE</h3>
+<hr>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb124"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE Masculino</span></span>
+<span id="cb124-2"><a href="#cb124-2" aria-hidden="true" tabindex="-1"></a>m_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(m_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb124-3"><a href="#cb124-3" aria-hidden="true" tabindex="-1"></a>m_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 53.86313</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb126"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE Feminino</span></span>
+<span id="cb126-2"><a href="#cb126-2" aria-hidden="true" tabindex="-1"></a>f_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(f_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb126-3"><a href="#cb126-3" aria-hidden="true" tabindex="-1"></a>f_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 50.64225</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb128"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculo do MSE Não Identificado</span></span>
+<span id="cb128-2"><a href="#cb128-2" aria-hidden="true" tabindex="-1"></a>i_lm_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(i_lm<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb128-3"><a href="#cb128-3" aria-hidden="true" tabindex="-1"></a>i_lm_mse</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.2529</code></pre>
+</div>
+</div>
+<p>Primeiramente, ressalta-se a redução nos valores de MSE, quando comparados aos modelos originais, o que comprova que a transformação valeu a pena. Ademais, nota-se, nesse caso, que os valores dos Abalones masculinos e femininos são próximos, enquanto o não identificado é consideravelmente inferior. Com base nisto, pode-se supor que os abalones não identificados adequam-se melhor à relação cúbica. A liderança no valor de MSE do sexo masculino parece se manter, entretanto. A seguir, temos a análise dos intervalos de confiança dos modelos.</p>
+</section>
+<section id="intervalo-de-confiança-do-coeficiente-angular-2" class="level3">
+<h3 class="anchored" data-anchor-id="intervalo-de-confiança-do-coeficiente-angular-2">Intervalo de Confiança do Coeficiente Angular</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb130"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Intervalo de confianca dos coeficientes angulares</span></span>
+<span id="cb130-2"><a href="#cb130-2" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(m_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  2.5 %    97.5 %
+(Intercept)    3.748674  7.905964
+shell_w_cubic 28.041503 29.140395</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(f_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  2.5 %   97.5 %
+(Intercept)    6.757365 12.05717
+shell_w_cubic 27.006798 28.37110</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint.lm</span>(i_lm, <span class="at">level =</span> <span class="fl">0.95</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   2.5 %    97.5 %
+(Intercept)   -0.1914795  1.982697
+shell_w_cubic 30.0126895 30.769698</code></pre>
+</div>
+</div>
+<p>Nota-se, através da análise dos intervalos obtidos, que o Coeficiente Angular de 95% dos Abalones femininos encontra-se no intervalo [27.00, 28.37], dos masculinos no [28.04, 29.14], e dos não identificados no [30.01, 30.77]. Dessa forma, não podemos afirmar com 95% de confiança que o coeficiente angular do modelo gerado para Abalones masculinos é superior ao dos femininos. Isto, entretanto, não é o caso para Abalones não identificados, para os quais podemos afirmar, com 95% de certeza, que o coeficiente angular do modelo gerado é superior ao dos femininos e masculinos.</p>
+<hr>
+</section>
+</section>
+</section>
+<section id="diagnóstico" class="level1">
+<h1>Diagnóstico</h1>
+<ol type="1">
+<li><p>Para cada um dos modelos de regressão ajustados no item (1) da seção anterior, realize o diagnóstico através da análise dos resíduos e apresente um resumo de suas conclusões. O modelo de regressão linear simples clássico é adequado a alguma das situações investigadas?</p></li>
+<li><p>Ajuste um modelo de regressão linear simples para a variável <code>length</code> como função de <code>diameter</code> após excluir as observações 1211 (X = 0.375 e Y = 0.185) e 4088 (X = 0.365 e Y = 0.61). Obtenha intervalos de previsão de 95% de confiança para novas observações que apresentam valores da variável explicativa iguais a 0.375 e 0.365. As observações eliminadas encontram-se nos limites dos intervalos de previsão obtidos? Discuta o significado dos resultados obtidos.</p></li>
+<li><p>Para os modelos considerando cada nível da variável <code>sex</code> no item (2) da seção anterior, realize o diagnóstico através da análise dos resíduos. Todos aparentam ter mesma variância dos erros? Que conclusões é possível obter a partir da análise?</p></li>
+</ol>
+<section id="análise-dos-resíduos" class="level2">
+<h2 class="anchored" data-anchor-id="análise-dos-resíduos">Análise dos Resíduos</h2>
+<p>Os modelos a serem analisados são <code>lm_diameter</code>, <code>lm_shucked</code>, <code>lm_shell</code> e <code>lm_rings</code>. A análise será detalhada para o modelo <code>lm_diameter</code> e, posteriomente, será apenas reproduzida para os demais.</p>
+<section id="linearidade" class="level3">
+<h3 class="anchored" data-anchor-id="linearidade">Linearidade</h3>
+<div>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>lm_diameter <span class="ot">&lt;-</span> <span class="fu">lm</span>(length <span class="sc">~</span> diameter, <span class="at">data =</span> abalone)</span>
+<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo length ~ diameter</span></span>
+<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a>lm_diameter_data <span class="ot">&lt;-</span> abalone <span class="sc">%&gt;%</span></span>
+<span id="cb136-5"><a href="#cb136-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inclui coluna com valores ajustados</span></span>
+<span id="cb136-6"><a href="#cb136-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> lm_diameter<span class="sc">$</span>fit) <span class="sc">%&gt;%</span></span>
+<span id="cb136-7"><a href="#cb136-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid =</span> lm_diameter<span class="sc">$</span>res)</span>
+<span id="cb136-8"><a href="#cb136-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-9"><a href="#cb136-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos:</span></span>
+<span id="cb136-10"><a href="#cb136-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb136-11"><a href="#cb136-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb136-12"><a href="#cb136-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb136-13"><a href="#cb136-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"dados originais: modelo length ~ diameter"</span>) <span class="sc">+</span></span>
+<span id="cb136-14"><a href="#cb136-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (length)"</span>)</span>
+<span id="cb136-15"><a href="#cb136-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb136-16"><a href="#cb136-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb136-17"><a href="#cb136-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb136-18"><a href="#cb136-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"dados originais: modelo length ~ diameter"</span>) <span class="sc">+</span></span>
+<span id="cb136-19"><a href="#cb136-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (diameter)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-72-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-72-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="homoscedasticidade" class="level3">
+<h3 class="anchored" data-anchor-id="homoscedasticidade">Homoscedasticidade</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb137"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb137-1"><a href="#cb137-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Renomear labels x e y do gráfico</span></span>
+<span id="cb137-2"><a href="#cb137-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb137-3"><a href="#cb137-3" aria-hidden="true" tabindex="-1"></a><span class="co"># para dados transformados: resid x mpg_hat; resid x inv_hp</span></span>
+<span id="cb137-4"><a href="#cb137-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> <span class="fu">abs</span>(resid))) <span class="sc">+</span></span>
+<span id="cb137-5"><a href="#cb137-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb137-6"><a href="#cb137-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb137-7"><a href="#cb137-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"dados transformados: modelo mpg ~ inv_hp"</span>) <span class="sc">+</span></span>
+<span id="cb137-8"><a href="#cb137-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"|resíduos|"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (mpg)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-73-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> <span class="fu">abs</span>(resid))) <span class="sc">+</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"dados transformados: modelo mpg ~ inv_hp"</span>) <span class="sc">+</span></span>
+<span id="cb138-5"><a href="#cb138-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"|resíduos|"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (1/hp)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-73-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Teste de Breusch-Pagan</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb139"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb139-1"><a href="#cb139-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Teste de Homoscedasticidade de Breusch-Pagan</span></span>
+<span id="cb139-2"><a href="#cb139-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ho: sigma^2  = cte</span></span>
+<span id="cb139-3"><a href="#cb139-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ha: sigma^2 != cte</span></span>
+<span id="cb139-4"><a href="#cb139-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb139-5"><a href="#cb139-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb139-6"><a href="#cb139-6" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(lm_diameter)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  lm_diameter
+BP = 12.176, df = 1, p-value = 0.000484</code></pre>
+</div>
+</div>
+</section>
+<section id="outliers" class="level3">
+<h3 class="anchored" data-anchor-id="outliers">Outliers</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Renomear variaveis</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| layout-ncol: 2</span></span>
+<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Cria nova coluna na tabela para os dados do modelo mpg ~ inv_hp</span></span>
+<span id="cb141-4"><a href="#cb141-4" aria-hidden="true" tabindex="-1"></a>lm_diameter_data <span class="ot">&lt;-</span> lm_diameter_data <span class="sc">%&gt;%</span></span>
+<span id="cb141-5"><a href="#cb141-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># resíduos padronizados</span></span>
+<span id="cb141-6"><a href="#cb141-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid_pad =</span> <span class="fu">rstandard</span>(lm_diameter))</span>
+<span id="cb141-7"><a href="#cb141-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb141-8"><a href="#cb141-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos padronizados:</span></span>
+<span id="cb141-9"><a href="#cb141-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid_pad)) <span class="sc">+</span></span>
+<span id="cb141-10"><a href="#cb141-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb141-11"><a href="#cb141-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb141-12"><a href="#cb141-12" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb141-13"><a href="#cb141-13" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"black"</span>, <span class="st">"orange"</span>, <span class="st">"red"</span>) ) <span class="sc">+</span></span>
+<span id="cb141-14"><a href="#cb141-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">6</span>, <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb141-15"><a href="#cb141-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"dados transformados: modelo mpg ~ inv_hp"</span>) <span class="sc">+</span></span>
+<span id="cb141-16"><a href="#cb141-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos padronizados"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (mpg)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-75-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid_pad)) <span class="sc">+</span></span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">4</span>, <span class="sc">-</span><span class="dv">3</span>, <span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">4</span>),</span>
+<span id="cb142-4"><a href="#cb142-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>,</span>
+<span id="cb142-5"><a href="#cb142-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"red"</span>, <span class="st">"orange"</span>, <span class="st">"black"</span>, <span class="st">"orange"</span>, <span class="st">"red"</span>) ) <span class="sc">+</span></span>
+<span id="cb142-6"><a href="#cb142-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="sc">-</span><span class="dv">6</span>, <span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb142-7"><a href="#cb142-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"dados transformados: modelo mpg ~ inv_hp"</span>) <span class="sc">+</span></span>
+<span id="cb142-8"><a href="#cb142-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos padronizados"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (1/hp)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-75-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
+<section id="independência" class="level3">
+<h3 class="anchored" data-anchor-id="independência">Independência</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb143"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb143-1"><a href="#cb143-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Teste de Durbin-Watson para correlação nula dos erros</span></span>
+<span id="cb143-2"><a href="#cb143-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ho: corr  = 0</span></span>
+<span id="cb143-3"><a href="#cb143-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ha: corr != 0</span></span>
+<span id="cb143-4"><a href="#cb143-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb143-5"><a href="#cb143-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)</span>
+<span id="cb143-6"><a href="#cb143-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dwtest</span>(lm_diameter, <span class="at">alternative =</span> <span class="st">"two.sided"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Durbin-Watson test
+
+data:  lm_diameter
+DW = 1.7393, p-value &lt; 2.2e-16
+alternative hypothesis: true autocorrelation is not 0</code></pre>
+</div>
+</div>
+</section>
+<section id="normalidade" class="level3">
+<h3 class="anchored" data-anchor-id="normalidade">Normalidade</h3>
+<div>
+<div class="sourceCode cell-code" id="cb145"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb145-1"><a href="#cb145-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Histograma dos resíduos padronizados</span></span>
+<span id="cb145-2"><a href="#cb145-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">x =</span> resid_pad, <span class="at">y =</span> <span class="fu">after_stat</span>(density))) <span class="sc">+</span></span>
+<span id="cb145-3"><a href="#cb145-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>)</span>
+<span id="cb145-4"><a href="#cb145-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis</span></span>
+<span id="cb145-5"><a href="#cb145-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(lm_diameter_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid_pad)) <span class="sc">+</span></span>
+<span id="cb145-6"><a href="#cb145-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb145-7"><a href="#cb145-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-77-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-77-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Teste de Normalidade de Shapiro-Wilk</span></span>
+<span id="cb146-2"><a href="#cb146-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Ho: normal</span></span>
+<span id="cb146-3"><a href="#cb146-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ha: não-normal</span></span>
+<span id="cb146-4"><a href="#cb146-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb146-5"><a href="#cb146-5" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(lm_diameter_data<span class="sc">$</span>resid_pad)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  lm_diameter_data$resid_pad
+W = 0.94025, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</section>
+<section id="medidas-corretivas---transformação-box-cox" class="level3">
+<h3 class="anchored" data-anchor-id="medidas-corretivas---transformação-box-cox">Medidas Corretivas - Transformação Box-Cox</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformação Box-Cox</span></span>
+<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb148-3"><a href="#cb148-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb148-4"><a href="#cb148-4" aria-hidden="true" tabindex="-1"></a>bc <span class="ot">&lt;-</span> <span class="fu">boxcox</span>(<span class="fu">lm</span>(length <span class="sc">~</span> diameter, <span class="at">data =</span> lm_diameter_data),</span>
+<span id="cb148-5"><a href="#cb148-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">lambda =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.1</span>), <span class="at">plotit =</span> <span class="cn">TRUE</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA03_Pratica_files/figure-html/unnamed-chunk-79-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> bc<span class="sc">$</span>x[<span class="fu">which.max</span>(bc<span class="sc">$</span>y)]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><span class="math inline">\(\lambda\)</span> = 1.0707071</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: Verificar qual transformação deve ser aplicada com base no valor de Lambda</span></span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói nova base de dados</span></span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a><span class="co">#lm_diameter_bc_data &lt;-  lm_diameter_data %&gt;%</span></span>
+<span id="cb150-4"><a href="#cb150-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  mutate(mpg_bc = 1/sqrt(mpg)) # transforma da variável de resposta</span></span>
+<span id="cb150-5"><a href="#cb150-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-6"><a href="#cb150-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajusta modelo de regressão linear simples aos dados transformados</span></span>
+<span id="cb150-7"><a href="#cb150-7" aria-hidden="true" tabindex="-1"></a><span class="co">#auto_rls_mpg_hp_bc &lt;- lm(mpg_bc ~ hp, data = auto_rls_mpg_hp_bc_data)</span></span>
+<span id="cb150-8"><a href="#cb150-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb150-9"><a href="#cb150-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera resumo do modelo de regressão ajustado</span></span>
+<span id="cb150-10"><a href="#cb150-10" aria-hidden="true" tabindex="-1"></a><span class="co">#summary(auto_rls_mpg_hp_bc)</span></span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="ajuste-do-modelo-de-regressão-com-retirada-de-pontos" class="level2">
+<h2 class="anchored" data-anchor-id="ajuste-do-modelo-de-regressão-com-retirada-de-pontos">Ajuste do Modelo de Regressão com Retirada de Pontos</h2>
+<p>aasdadadd</p>
+</section>
+<section id="diagnóstico-para-valores-de-sex" class="level2">
+<h2 class="anchored" data-anchor-id="diagnóstico-para-valores-de-sex">Diagnóstico para Valores de <code>sex</code></h2>
+<p>asdadad</p>
+<hr>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copiada");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copiada");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
