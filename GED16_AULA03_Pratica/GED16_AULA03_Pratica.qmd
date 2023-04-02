@@ -54,19 +54,19 @@ Mais informações a respeito dos dados podem ser obtidas no arquivo `data/abalo
 Conduza a análise exploratória da massa de dados `abalone`, a fim de compreender suas características principais.   
 Voltaremos a utilizar essa massa de dados em atividades futuras.
 
-```{r}
+```{r eval=TRUE}
 rm(list=ls())
 abalone <- read_csv("data/abalone/abalone.data", col_names = FALSE)
 names(abalone) <- c("sex", "length", "diameter", "height", "whole_w", "shucked_w", "viscera_w", "shell_w", "rings")
 ```
 
 Começamos identificando a estrutura dos dados:
-```{r}
+```{r eval=TRUE}
 str(abalone)
 ```
 Percebemos que as variáveis já possuem nomes explicativos. Porém, percebe-se que `sex` está com tipo `char` quando deveria ser `Factor`. Vamos também obter a idade, a partir do número de anéis do Abalone, e retornar os valores contínuos para suas escalas originais (multiplicar por 200).
 
-```{r}
+```{r eval=TRUE}
 abalone <- abalone %>% mutate_at("sex", as.factor)
 abalone$age <- abalone$rings + 1.5
 
@@ -82,22 +82,22 @@ abalone$shell_w <- abalone$shell_w * 200
 Dessa forma, temos o sumário do conjunto de dados:
 
 
-```{r}
+```{r eval=TRUE}
 summary(abalone)
 ```
 
 Percebe-se que algumas observações possuem altura zero. Avaliando essas observações:
 
-```{r}
+```{r eval=TRUE}
 abalone[abalone$height==0,]
 ```
 Obtemos duas observações que não fazem sentido (altura zero e pesos diferentes de zero). Podemos retirá-las do conjunto de dados.
-```{r}
+```{r eval=TRUE}
 abalone <- abalone[abalone$height!=0,]
 ```
 
 Assim, temos um sumário dos dados atualizados.
-```{r}
+```{r eval=TRUE}
 summary(abalone)
 ```
 
@@ -129,22 +129,23 @@ Dessa maneira, pode-se, com base na figura anterior, construir a próxima, que c
 
 Com base nesse apanhado geral de gráficos, pode-se realizar uma análise focada nas relações mais interessantes. Um desses casos consiste em comparar o valor do peso total do Abalone com os diferentes valores de pesos registrados posteriormente (*whole*, *shucked*, *viscera* e *shell*). Como pode-se constatar no conjunto de observações abaixo, a soma dos diferentes valores de peso nem sempre resulta no peso total registrado.
 
-```{r}
+```{r eval=TRUE}
 abalone[c(1,2,3),]
 ```
 Assim, pode-se gerar o gráfico da variável `whole_w` *versus* a soma das variáveis `shucked_w`, `viscera_w` e `shell_w`. Bem como o valor de correlação das duas grandezas obtidas. Por fim, nota-se que este último é de aproximadamente 99.51\%, um valor bastante alto.
 
-```{r}
+```{r eval=FALSE}
   abalone$sum_w <- abalone$shucked_w + abalone$viscera_w + abalone$shell_w
   plot(abalone$whole_w, abalone$sum_w)
 ```
-```{r}
+
+```{r eval=FALSE}
   cor(abalone$whole_w, abalone$sum_w)
 ```
 
 Podemos também analisar a distribuição da idade dos Abalones, o que é feito abaixo, através da geração de um *boxplot*. Nota-se, através deste, que 50\% dos Abalones encontram-se na faixa entre 9 e 13 anos de idade. Além disso, existem vários *outliers* com idades superiores a 18 anos de idade.
 
-```{r}
+```{r eval=TRUE}
 # Boxplot de `age`
 ggplot(abalone, aes(x = age, y = "")) +
   # adiciona barras de erros
@@ -159,7 +160,7 @@ ggplot(abalone, aes(x = age, y = "")) +
 
 Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, *boxplots* da idade para cada um dos sexos. Não há grandes diferenças na distribuição de idades de machos e fêmeas. Nota-se, porém, que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma evidência de se existir uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, sendo esta tarefa possivelmente mais fácil conforme estes envelhecem.
 
-```{r}
+```{r eval=FALSE}
 # Boxplots
 ggplot(abalone, aes(x = age, y = sex)) +
   geom_boxplot()
@@ -167,29 +168,29 @@ ggplot(abalone, aes(x = age, y = sex)) +
 ```
 
 Ainda com base nos gráficos de relação entre as características, podemos analisar mais a fundo a relação entre o tamanho e o peso dos abalones. Tomando as variáveis `whole_w` e `diameter`, podemos percaber uma grande correlação entre essas variáveis.
-```{r}
+```{r eval=FALSE}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = diameter))
 ```
 
-```{r}
+```{r eval=FALSE}
 cor(abalone$whole_w, abalone$diameter)
 ```
 Podemos também hipotetizar que os abalones tem densidade aproximadamente constante. Assim, analisando o gráfico entre `whole_w` *versus* `height`*`diameter`^2, encontramos um gráfico que lembra uma reta. Também podemos perceber que encontra-se uma correlação ainda maior que a do caso anterior.
-```{r}
+```{r eval=FALSE}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = height*diameter**2))
 ```
 
-```{r}
+```{r eval=FALSE}
 cor(abalone$whole_w, abalone$length*abalone$diameter**2)
 ```
 Podemos hipotetizar também que abalones mais velhos sejam mais pesados. Ainda que exista alguma relação entre essas variáveis, parece que ela é mais forte quando os abalones são mais novos, porém quanto mais velhos eles ficam, mais dispersos ficam os pesos. Percebe-se uma correlação significativamente menor entre essas variáveis se comparados aos casos anteriormente analisados.
-```{r}
+```{r eval=FALSE}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = age))
 ```
-```{r}
+```{r eval=FALSE}
 cor(abalone$whole_w, abalone$age)
 ```
 
@@ -225,7 +226,7 @@ cor(abalone$whole_w, abalone$age)
 
 Primeiramente, faremos essa etapa para a variável explicativa `diameter`, descrevendo o processo conforme ele acontece. Posteriormente, ele será repetido para as demais. Começamos criando o modelo de regressão linear simples relacionando-a com a variável de resposta `length`.
 
-```{r}
+```{r eval=TRUE}
 # Construindo o modelo de regressao linear simples relacionando length e diameter
 lm_diameter <- lm(length ~ diameter, data = abalone)
 lm_diameter
@@ -233,7 +234,7 @@ lm_diameter
 
 Percebe-se que os coeficientes do modelo são ambos não nulos. Como nenhum abalone tem `diameter` = 0,  o valor do intercepto não tem significado prática. Geramos o gráfico de dispersão para avaliar o modelo.
 
-```{r}
+```{r eval=FALSE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = diameter, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
@@ -242,7 +243,7 @@ Percebe-se que a reta de regressão parece ser adequada à distribuição dos da
 
 Agora, podemos calcular o MSE para a variável analisada. Analisaremos qual modelo gera a menor variabilidade posteriomente.
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE
 lm_diameter_mse <- mean(lm_diameter$residuals^2)
 lm_diameter_mse
@@ -250,7 +251,7 @@ lm_diameter_mse
 
 Podemos também calcular o valor de $R^2$ referente ao modelo `lm_diameter`. Determinaremos qual das variáveis explicativas contribui para a maior redução na variabilidade da resposta ao final do processo.
 
-```{r}
+```{r eval=TRUE}
 # Calculo do R^2
 r2_diameter <- summary(lm_diameter)$r.squared
 r2_diameter
@@ -261,24 +262,24 @@ r2_diameter
 ---
 
 Começaremos analisando `shucked_w`:
-```{r}
+```{r eval=TRUE}
 # Construindo o modelo de regressao linear simples relacionando length e shucked_w
 lm_shucked <- lm(length ~ shucked_w, data = abalone)
 lm_shucked
 ```
 
-```{r}
+```{r eval=FALSE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shucked_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
 A relção entre `shucked_w` e `length` não parece ser tão linear quanto `diameter` e `length`. Avaliaremos os valores de MSE e $R^2$ para confirmar.
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE
 lm_shucked_mse <- mean(lm_shucked$residuals^2)
 lm_shucked_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do R^2
 r2_shucked <- summary(lm_shucked)$r.squared
 r2_shucked
@@ -287,26 +288,26 @@ r2_shucked
 ---
 
 Seguiremos analisando a relação de `shell_w` com `length`:
-```{r}
+```{r eval=TRUE}
 # Construindo o modelo de regressao linear simples relacionando length e shell_w
 lm_shell <- lm(length ~ shell_w, data = abalone)
 lm_shell
 ```
 
-```{r}
+```{r eval=FALSE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
 
 O gráfico de dispersão tem formato similar ao anterior, provavelmente devido a uma forte correlação entre `shucked_w` e `shell_w`, como analisado na Análise Exploratória de Dados.
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE
 lm_shell_mse <- mean(lm_shell$residuals^2)
 lm_shell_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do R^2
 r2_shell <- summary(lm_shell)$r.squared
 r2_shell
@@ -318,26 +319,26 @@ De fato, os valores de MSE e $R^2$ são muito similares ao caso anterior.
 
 Por fim, analisaremos a relação de `length` e `rings`:
 
-```{r}
+```{r eval=TRUE}
 # Construindo o modelo de regressao linear simples relacionando length e rings
 lm_rings <- lm(length ~ rings, data = abalone)
 lm_rings
 ```
 
-```{r}
+```{r eval=FALSE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = rings, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
 
 O gráfico de dispersão de `rings` *versus* `length` parece ser o "menos linear" entre os analisados. Vejamos os valores de MSE e $R^2$ para esse caso:
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE
 lm_rings_mse <- mean(lm_rings$residuals^2)
 lm_rings_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do R^2
 r2_rings <- summary(lm_rings)$r.squared
 r2_rings
@@ -359,7 +360,7 @@ Temos abaixo os valores de MSE e $R^2$ agrupados em uma tablea, para cada um dos
 
 Faremos agora uma análise separando os sexos dos abalones. Nessa análise, consideraremos indefinido também como um dos tipos da variável `sex`, uma vez que, possivelmente, existam relações entre abalones de sexo indefinido/não identificado que sejam interessantes para análise.
 
-```{r} 
+```{r eval=TRUE} 
 # Separando os abalones por sexo
 abalone_m <- abalone[abalone$sex == "M",]
 abalone_f <- abalone[abalone$sex == "F",]
@@ -370,7 +371,7 @@ abalone_i <- abalone[abalone$sex == "I",]
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao masculino
 m_lm <- lm(length ~ diameter, data = abalone_m)
 m_lm$coefficients
@@ -380,7 +381,7 @@ m_lm$coefficients
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao feminino
 f_lm <- lm(length ~ diameter, data = abalone_f)
 f_lm$coefficients
@@ -390,13 +391,15 @@ f_lm$coefficients
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao nao identificado
 i_lm <- lm(length ~ diameter, data = abalone_i)
 i_lm$coefficients
 ```
+
 Podemos analisar os três modelos lado a lado:
-```{r}
+
+```{r eval=FALSE}
 ggplot(abalone,  aes(x = diameter, y = length)) + geom_point() +
   geom_smooth(method="lm", se=FALSE) + facet_wrap(~ sex)
 ```
@@ -406,7 +409,7 @@ Percebe-se que as inclinações são similares, porém o intercepto feminino é 
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE
 m_lm_mse <- mean(m_lm$residuals^2)
 f_lm_mse <- mean(f_lm$residuals^2)
@@ -425,7 +428,7 @@ Percebe-se que o MSE é menor entre os abalones não identificados, enquanto é 
 ### Intervalo de Confiança do Coeficiente Angular
 
 
-```{r}
+```{r eval=TRUE}
 # Intervalo de confianca dos coeficientes angulares
 
 # Masculino
@@ -441,7 +444,7 @@ Conclui-se que, com 95% de confiança, o coeficiente angular dos indivíduos nã
 
 Calcularemos o intervalo de confiança para `diameter` = 90 para cada valor de `sex`:
 
-```{r}
+```{r eval=TRUE}
 # Masculino
 # Valor da variavel explicativa (diameter = 90)
 xh <- data.frame(diameter = 90)
@@ -451,7 +454,7 @@ ip <- predict.lm(m_lm, newdata = xh, interval = "confidence", level = 0.95)
 ip
 ```
 
-```{r}
+```{r eval=TRUE}
 # Feminino
 # Valor da variavel explicativa (diameter = 90)
 xh <- data.frame(diameter = 90)
@@ -461,7 +464,7 @@ ip <- predict.lm(f_lm, newdata = xh, interval = "confidence", level = 0.95)
 ip
 ```
 
-```{r}
+```{r eval=TRUE}
 # Nao identificado
 # Valor da variavel explicativa (diameter = 90)
 xh <- data.frame(diameter = 90)
@@ -476,7 +479,7 @@ Novamente, concluímos que, para abalones não identificados, garante-se com 95%
 
 Vamos agora calcular intervalos de previsão associados a abalones de `diameter`= 90 para cada valor de `sex`:
 
-```{r}
+```{r eval=TRUE}
 # Masculino
 # Valor da variavel explicativa (diameter = 90)
 x0 <- data.frame(diameter = 90)
@@ -486,7 +489,7 @@ ip <- predict.lm(m_lm, newdata = x0, interval = "prediction", level = 0.95)
 ip
 ```
 
-```{r}
+```{r eval=TRUE}
 # Feminino
 # Valor da variavel explicativa (diameter = 90)
 x0 <- data.frame(diameter = 90)
@@ -496,7 +499,7 @@ ip <- predict.lm(f_lm, newdata = x0, interval = "prediction", level = 0.95)
 ip
 ```
 
-```{r}
+```{r eval=TRUE}
 # Nao identificado
 # Valor da variavel explicativa (diameter = 90)
 x0 <- data.frame(diameter = 90)
@@ -511,7 +514,7 @@ Observa-se que, como esperado, os intervalos de previsão são significativament
 
 Assim como foi feito na segunda etapa, pode-se dividir o conjunto de dados em cada uma das categorias de sexo existentes, sendo elas, masculino, feminino, e não identificado. Ademais, são obtidos os modelos lineares para cada um dos casos.
 
-```{r} 
+```{r eval=TRUE} 
 # Separando os abalones por sexo
 abalone_m <- abalone[abalone$sex == "M",]
 abalone_f <- abalone[abalone$sex == "F",]
@@ -523,7 +526,7 @@ abalone_i <- abalone[abalone$sex == "I",]
 ---
 
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao masculino
 m_lm <- lm(length ~ shell_w, data = abalone_m)
 m_lm$coefficients
@@ -533,7 +536,7 @@ m_lm$coefficients
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao feminino
 f_lm <- lm(length ~ shell_w, data = abalone_f)
 f_lm$coefficients
@@ -543,7 +546,7 @@ f_lm$coefficients
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao nao identificado
 i_lm <- lm(length ~ shell_w, data = abalone_i)
 i_lm$coefficients
@@ -555,19 +558,19 @@ Nota-se que as funções geradas são consideravelmente diferentes, com valores 
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE Masculino
 m_lm_mse <- mean(m_lm$residuals^2)
 m_lm_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE Feminino
 f_lm_mse <- mean(f_lm$residuals^2)
 f_lm_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE Não Identificado
 i_lm_mse <- mean(i_lm$residuals^2)
 i_lm_mse
@@ -578,7 +581,7 @@ Nota-se que os valores de MSE para o sexo feminino, e o não identificado, são 
 ### Intervalo de Confiança do Coeficiente Angular
 
 
-```{r}
+```{r eval=TRUE}
 # Intervalo de confianca dos coeficientes angulares
 
 # Masculino
@@ -596,7 +599,7 @@ Através da comparação entre os resultados obtidos, nota-se que o intervalo de
 Pode-se gerar os intervalos de confiança para uma resposta de `shell_w` igual a 50, conforme foi solicitado para a análise.
 
 
-```{r}
+```{r eval=TRUE}
 # Masculino
 # Valor da variavel explicativa (shell_w = 50)
 xh <- data.frame(shell_w = 50)
@@ -606,7 +609,7 @@ ip <- predict.lm(m_lm, newdata = xh, interval = "confidence", level = 0.95)
 ip
 ```
 
-```{r}
+```{r eval=TRUE}
 # Feminino
 # Valor da variavel explicativa (shell_w = 50)
 xh <- data.frame(shell_w = 50)
@@ -616,7 +619,7 @@ ip <- predict.lm(f_lm, newdata = xh, interval = "confidence", level = 0.95)
 ip
 ```
 
-```{r}
+```{r eval=TRUE}
 # Nao identificado
 # Valor da variavel explicativa (shell_w = 50)
 xh <- data.frame(shell_w = 50)
@@ -632,7 +635,7 @@ Analisando-se os cada um dos casos, nota-se que 95% dos Abalones masculinos com 
 
 Primeiramente, é necessário determinar se vale a pena realizar a análise novamente, com uma transformação na variável explicativa. Para tal, pode-se gerar o gráfico relacionando a variável `length` a `shell_w` e, em seguida, o que relaciona `length` e a raiz cúbica de `shell_w`, transformação escolhida com base no fato de o peso do abalone ser uma função do produto de uma densidade média, suposta constante, e uma medida de volume, que tentaremos reproduzir como o cubo da variável `length`.
 
-```{r}
+```{r eval=FALSE}
 plot_normal <- ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 plot_cubic <- ggplot(abalone, aes(x = shell_w ^ (1/3), y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 
@@ -641,7 +644,7 @@ grid.arrange(plot_normal, plot_cubic, ncol = 2)
 
 Através da comparação de ambos os gráficos gerados, nota-se que o segundo conjunto de pontos aparenta adequar-se significativamente melhor ao formato de uma reta que o primeiro. Com base nisto, supõe-se que refazer a análise com uma transformação de variável pode valer a pena. Assim, construímos uma nova variável para o conjunto de dados utilizado, contendo a raiz cúbica de `shell_w`. Usaremos os mesmos nomes para as variáveis subsequentes, no intuito de realizar menos alterações no código.
 
-```{r}
+```{r eval=TRUE}
 abalone_m$shell_w_cubic <- abalone_m$shell_w ^ (1/3)
 abalone_f$shell_w_cubic <- abalone_f$shell_w ^ (1/3)
 abalone_i$shell_w_cubic <- abalone_i$shell_w ^ (1/3)
@@ -653,7 +656,7 @@ abalone_i$shell_w_cubic <- abalone_i$shell_w ^ (1/3)
 ---
 
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao masculino
 m_lm <- lm(length ~ shell_w_cubic, data = abalone_m)
 m_lm$coefficients
@@ -663,7 +666,7 @@ m_lm$coefficients
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao feminino
 f_lm <- lm(length ~ shell_w_cubic, data = abalone_f)
 f_lm$coefficients
@@ -673,7 +676,7 @@ f_lm$coefficients
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Construindo os modelos de regressao nao identificado
 i_lm <- lm(length ~ shell_w_cubic, data = abalone_i)
 i_lm$coefficients
@@ -685,19 +688,19 @@ Primeiramente, nota-se um grande aumento no valor dos coeficientes angulares de 
 
 ---
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE Masculino
 m_lm_mse <- mean(m_lm$residuals^2)
 m_lm_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE Feminino
 f_lm_mse <- mean(f_lm$residuals^2)
 f_lm_mse
 ```
 
-```{r}
+```{r eval=TRUE}
 # Calculo do MSE Não Identificado
 i_lm_mse <- mean(i_lm$residuals^2)
 i_lm_mse
@@ -708,7 +711,7 @@ Primeiramente, ressalta-se a redução nos valores de MSE, quando comparados aos
 ### Intervalo de Confiança do Coeficiente Angular
 
 
-```{r}
+```{r eval=TRUE}
 # Intervalo de confianca dos coeficientes angulares
 confint.lm(m_lm, level = 0.95)
 confint.lm(f_lm, level = 0.95)
@@ -733,7 +736,7 @@ Os modelos a serem analisados são `lm_diameter`, `lm_shucked`, `lm_shell` e `lm
 
 ### Linearidade
 
-```{r}
+```{r eval=TRUE}
 #| layout-ncol: 2
 
 lm_diameter <- lm(length ~ diameter, data = abalone)
@@ -760,7 +763,7 @@ ggplot(lm_diameter_data, aes(x = diameter, y = resid)) +
 
 ### Homoscedasticidade
 
-```{r}
+```{r eval=TRUE}
 # TODO: Renomear labels x e y do gráfico
 #| layout-ncol: 2
 # para dados transformados: resid x mpg_hat; resid x inv_hp
@@ -778,7 +781,7 @@ ggplot(lm_diameter_data, aes(x = diameter, y = abs(resid))) +
 
 Teste de Breusch-Pagan
 
-```{r}
+```{r eval=TRUE}
 # Teste de Homoscedasticidade de Breusch-Pagan
 # Ho: sigma^2  = cte
 # Ha: sigma^2 != cte
@@ -790,7 +793,7 @@ bptest(lm_diameter)
 
 ### Outliers
 
-```{r}
+```{r eval=TRUE}
 # TODO: Renomear variaveis
 #| layout-ncol: 2
 # Cria nova coluna na tabela para os dados do modelo mpg ~ inv_hp
@@ -820,7 +823,7 @@ ggplot(lm_diameter_data, aes(x = diameter, y = resid_pad)) +
 
 ### Independência
 
-```{r}
+```{r eval=TRUE}
 # Teste de Durbin-Watson para correlação nula dos erros
 # Ho: corr  = 0
 # Ha: corr != 0
@@ -831,7 +834,7 @@ dwtest(lm_diameter, alternative = "two.sided")
 
 ### Normalidade
 
-```{r}
+```{r eval=TRUE}
 #| layout-ncol: 2
 # Histograma dos resíduos padronizados
 ggplot(lm_diameter_data, aes(x = resid_pad, y = after_stat(density))) +
@@ -842,7 +845,7 @@ ggplot(lm_diameter_data, aes(sample = resid_pad)) +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)")
 ```
 
-```{r}
+```{r eval=TRUE}
 # Teste de Normalidade de Shapiro-Wilk
 # Ho: normal
 # Ha: não-normal
@@ -852,20 +855,20 @@ shapiro.test(lm_diameter_data$resid_pad)
 
 ### Medidas Corretivas - Transformação Box-Cox
 
-```{r}
+```{r eval=TRUE}
 # Transformação Box-Cox
 
 library(MASS)
 bc <- boxcox(lm(length ~ diameter, data = lm_diameter_data),
              lambda = seq(-2, 2, by = 0.1), plotit = TRUE)
 ```
-```{r}
+```{r eval=TRUE}
 lambda <- bc$x[which.max(bc$y)]
 ```
 
 $\lambda$ = `r lambda`
 
-```{r}
+```{r eval=TRUE}
 # TODO: Verificar qual transformação deve ser aplicada com base no valor de Lambda
 # Constrói nova base de dados
 #lm_diameter_bc_data <-  lm_diameter_data %>%
@@ -885,6 +888,330 @@ aasdadadd
 
 ## Diagnóstico para Valores de `sex`
 
-asdadad
+Primeiramente, para realizar a análise dos resíduos para cada um dos níveis da variável `sex`, devemos, novamente, separar o conjunto de dados em três subconjuntos correspondentes. Iremos criá-los novamente no intuito de realizar uma análise livre de interferências anteriores.
+
+```{r eval=TRUE}
+# Separando os abalones por sexo
+abalone_m <- abalone[abalone$sex == "M",]
+abalone_f <- abalone[abalone$sex == "F",]
+abalone_i <- abalone[abalone$sex == "I",]
+
+# Gerando os modelos de regressão length ~ diameter
+m_lm <- lm(length ~ diameter, data = abalone_m)
+f_lm <- lm(length ~ diameter, data = abalone_f)
+i_lm <- lm(length ~ diameter, data = abalone_i)
+```
+
+### Linearidade
+
+Novamente, iremos construir os gráficos de resíduos do modelo linear, mas, dessa
+vez, para cada um dos níveis da variável `sex`. 
+
+```{r eval=TRUE}
+#| layout-ncol: 3
+# Constrói tabela com dados do modelo length ~ diameter para cada nível da variável sexo
+m_data <- abalone_m %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = m_lm$fit) %>%
+  mutate(resid = m_lm$res)
+
+f_data <- abalone_f %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = f_lm$fit) %>%
+  mutate(resid = f_lm$res)
+
+i_data <- abalone_i %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = i_lm$fit) %>%
+  mutate(resid = i_lm$res)
+
+# Gera gráficos dos resíduos:
+# Respostas ajustadas
+ggplot(m_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Masculino: modelo length ~ diameter") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+ggplot(f_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Feminino: modelo length ~ diameter") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+ggplot(i_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Não Identificado: modelo length ~ diameter") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+# Variáveis explicativas
+ggplot(m_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Masculino: modelo length ~ diameter") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+
+ggplot(f_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Feminino: modelo length ~ diameter") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+
+ggplot(i_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Não Identificado: modelo length ~ diameter") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+```
+
+Nota-se, através da análise dos gráficos anteriores, que os três modelos aparentam
+ter uma distribuição razoavelmente linear. Não se percebe a presença de curvaturas
+significativas na distribuição dos pontos. Ademais, constata-se que o conjunto de
+pontos correspondente ao nível Não Identificado da variável `sex` aparenta ter 
+resíduos de módulo consideravelmente menor que os demais. Feita esta ressalva, 
+continuaremos a análise utilizando os modelos construídos nesta etapa.
+
+### Homoscedasticidade
+
+```{r eval=TRUE}
+#| layout-ncol: 3
+# Gerar gráficos com os módulos dos resíduos para cada nível
+ggplot(m_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Masculino: modelo length ~ diameter") +
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
+
+ggplot(f_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Feminino: modelo length ~ diameter") +
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
+
+ggplot(i_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Não Identificado: modelo length ~ diameter") +
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
+```
+
+Analisando-se os gráficos de resíduos absolutos apresentados, nota-se que, a
+princípio, temos a presença de um "efeito cone" nos níveis Masculino e Feminino,
+que não está presente no nível Não Identificado.
+
+Dessa forma, espera-se que a variância dos erros para os níveis Masculino e 
+Feminino não seja constante, e para o Não Identificado, sim. Para determinar a
+veracidade desta afirmação, podemos realizar um teste.
+
+#### Testes de Breusch-Pagan
+
+Considerando $H_0: \sigma^2=\text{cte}$, e $H_a: \sigma^2\neq\text{cte}$, temos 
+os seguintes valores para o teste de Breusch-Pagan, para cada um dos níveis da
+variável `sex`.
+
+| Nível da Variável    | Estatística BP             | p-valor                  |
+|----------------------|----------------------------|--------------------------|
+| Masculino            | `r bptest(m_lm)$statistic` | `r bptest(m_lm)$p.value` |
+| Feminino             | `r bptest(f_lm)$statistic` | `r bptest(f_lm)$p.value` |
+| Não Identificado     | `r bptest(i_lm)$statistic` | `r bptest(i_lm)$p.value` |
+
+Dessa maneira, analisando os resultados, concluímos que, segundo o teste de 
+Breusch-Pagan, a hipótese levantada anteriormente, de que a variância do nível
+Não Identificado é constante, enquanto a dos níveis Masculino e Feminino não é, 
+é válida, dado que os p-valores Masculino e Feminino são inferiores a 5\%, e o
+Não Identificado é superior.
+
+### Outliers
+
+```{r eval=TRUE}
+#| layout-ncol: 3
+# Cria nova coluna na tabela para os dados do modelo length ~ diameter
+m_data <- m_data %>%
+  # resíduos padronizados
+  mutate(resid_pad = rstandard(m_lm))
+
+f_data <- f_data %>%
+  # resíduos padronizados
+  mutate(resid_pad = rstandard(f_lm))
+
+i_data <- i_data %>%
+  # resíduos padronizados
+  mutate(resid_pad = rstandard(i_lm))
+
+# Gráficos dos resíduos padronizados
+# Resposta Ajustada
+# Masculino
+ggplot(m_data, aes(x = fitted, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  ggtitle("Masculino: modelo length ~ diameter") +
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
+
+# Feminino
+ggplot(f_data, aes(x = fitted, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  ggtitle("Feminino: modelo length ~ diameter") +
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
+
+# Não Identificado
+ggplot(i_data, aes(x = fitted, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  ggtitle("Não Identificado: modelo length ~ diameter") +
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
+
+# Variável Explicativa
+# Masculino
+ggplot(m_data, aes(x = diameter, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  ggtitle("Masculino: modelo length ~ diameter") +
+  labs(y = "resíduos padronizados", x = "variável explicativa (diameter)")
+
+ggplot(f_data, aes(x = diameter, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  ggtitle("Feminino: modelo length ~ diameter") +
+  labs(y = "resíduos padronizados", x = "variável explicativa (diameter)")
+
+ggplot(i_data, aes(x = diameter, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  ggtitle("Não Identificado: modelo length ~ diameter") +
+  labs(y = "resíduos padronizados", x = "variável explicativa (diameter)")
+```
+
+Analisando-se os pares de gráficos gerados para cada um dos níveis da variável
+`sex`, constata-se que há uma quantidade considerável de valores extremos (com
+módulo do resíduo padronizado superior a $3\sigma$).
+
+### Independência
+
+Para a medida dessa métrica, usaremos o teste de Durbin-Watson. Os resultados para
+cada nível da variável `sex` estão agrupados na tabela abaixo.
+
+| Nível da Variável    | Estatística DW             | p-valor                  |
+|----------------------|----------------------------|--------------------------|
+| Masculino            | `r dwtest(m_lm)$statistic` | `r dwtest(m_lm)$p.value` |
+| Feminino             | `r dwtest(f_lm)$statistic` | `r dwtest(f_lm)$p.value` |
+| Não Identificado     | `r dwtest(i_lm)$statistic` | `r dwtest(i_lm)$p.value` |
+
+Observa-se que os p-valores dos três níveis da variável `sex` são inferiores a
+5\%. Dessa forma, com base no resultado do teste de Durbin-Watson, rejeitamos
+a hipótese nula para os três casos, o que nos leva a concluir que há evidência
+de correlação não nula entre os erros.
+
+### Normalidade
+
+Para uma análise preliminar, geramos os histogramas e gráficos de quantis para
+cada um dos níveis da variável `sex`.
+
+```{r eval=TRUE}
+#| layout-ncol: 3
+# Histograma dos resíduos padronizados
+# Masculino
+ggplot(m_data, aes(x = resid_pad, y = after_stat(density))) +
+  geom_histogram(bins = 40) +
+  # adiciona linha de densidade estimada (suavização)
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.6)
+
+# Feminino
+ggplot(f_data, aes(x = resid_pad, y = after_stat(density))) +
+  geom_histogram(bins = 40) +
+  # adiciona linha de densidade estimada (suavização)
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.6)
+
+# Não Identificado
+ggplot(i_data, aes(x = resid_pad, y = after_stat(density))) +
+  geom_histogram(bins = 40) +
+  # adiciona linha de densidade estimada (suavização)
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.6)
+
+# Gráfico de quantis
+# Masculino
+ggplot(m_data, aes(sample = resid_pad)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "Quantis Amostrais", x = "Quantis Teóricos (dist. normal)")
+
+# Feminino
+ggplot(f_data, aes(sample = resid_pad)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "Quantis Amostrais", x = "Quantis Teóricos (dist. normal)")
+
+# Não Identificado
+ggplot(i_data, aes(sample = resid_pad)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "Quantis Amostrais", x = "Quantis Teóricos (dist. normal)")
+
+```
+
+As curvas aparentam ser um tanto concentradas para que a distribuição seja normal.
+Porém, para avaliar se este é o caso, realizamos o teste de normalidade de 
+Shapiro-Wilk, cujos resultados estão agrupados na tabela abaixo.
+
+| Nível da Variável    | Estatística W                                | p-valor                                    |
+|----------------------|----------------------------------------------|--------------------------------------------|
+| Masculino            | `r shapiro.test(m_data$resid_pad)$statistic` | `r shapiro.test(m_data$resid_pad)$p.value` |
+| Feminino             | `r shapiro.test(f_data$resid_pad)$statistic` | `r shapiro.test(f_data$resid_pad)$p.value` |
+| Não Identificado     | `r shapiro.test(i_data$resid_pad)$statistic` | `r shapiro.test(i_data$resid_pad)$p.value` |
+
+Assim, observando os p-valores produzidos pelo teste para cada um dos níveis da 
+variável `sex`, nota-se que os três casos são inferiores a 5\%, o que nos leva
+a rejeitar a hipótese nula, e concluir que os erros não são normalmente distribuídos.
+
+### Transformação Box-Cox
+
+```{r eval=TRUE}
+#| layout-ncol: 3
+library(MASS)
+
+# Gerar gráficos box-cox
+bc_m <- boxcox(lm(length ~ diameter, data = m_data),
+             lambda = seq(-2, 2, by = 0.1), plotit = TRUE)
+bc_f <- boxcox(lm(length ~ diameter, data = f_data),
+             lambda = seq(-2, 2, by = 0.1), plotit = TRUE)
+bc_i <- boxcox(lm(length ~ diameter, data = i_data),
+             lambda = seq(-2, 2, by = 0.1), plotit = TRUE)
+
+# Gerar valores de lambda
+lambda_m <- bc_m$x[which.max(bc_m$y)]
+lambda_f <- bc_f$x[which.max(bc_f$y)]
+lambda_i <- bc_i$x[which.max(bc_i$y)]
+```
+
+| Nível da Variável    | Valor de $\lambda$ |
+|----------------------|------------------- |
+| Masculino            | `r lambda_m`       | 
+| Feminino             | `r lambda_f`       |
+| Não Identificado     | `r lambda_i`       |
+
+Analisando-se os valores de $\lambda$ obtidos para cada um dos níveis da variável
+`sex`, pode-se constatar que os valores, para todos os níveis da variável `sex`,
+são bastante próximos de 1, o que implica uma relação linear. Assim, com base no
+procedimento Box-Cox, tem-se que não se deve ser aplicada uma transformação nos
+modelos obtidos, de maneira que estes permanecem como modelos lineares simples.
 
 ----
