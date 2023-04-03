@@ -1640,4 +1640,16 @@ são bastante próximos de 1, o que implica uma relação linear. Assim, com bas
 procedimento Box-Cox, tem-se que não se deve ser aplicada uma transformação nos
 modelos obtidos, de maneira que estes permanecem como modelos lineares simples.
 
+### Conclusão
+
+Com base nos dados obtidos anteriormente, temos que, de acordo com o
+resultado do testes de Breusch-Pagan, os resíduos dos níveis Masculino
+e Feminino da variável `sex` não possuem uma variância constante, mas o nível
+Não Determinado possui $\sigma^2$ constante.
+
+Ademais, a partir dos valores de $\lambda$ obtidos durante a Transformação Box-Cox,
+pode-se afirmar que os modelos lineares simples utilizados para a previsão adequam-se
+moderadamente bem aos diferentes conjuntos de dados, referentes a cada um dos níveis
+da variável `sex`, dado que os valores são bastante próximos de $1$.
+
 ----
