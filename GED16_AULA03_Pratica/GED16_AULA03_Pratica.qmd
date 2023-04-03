@@ -729,9 +729,11 @@ Nota-se, através da análise dos intervalos obtidos, que o Coeficiente Angular 
 
 ## Análise dos Resíduos
 
-Os modelos a serem analisados são `lm_diameter`, `lm_shucked`, `lm_shell` e `lm_rings`. A análise será detalhada para o modelo `lm_diameter` e, posteriomente, será apenas reproduzida para os demais.
+Os modelos a serem analisados são `lm_diameter`, `lm_shucked`, `lm_shell` e `lm_rings`.Primeiramente será realizada a análise de `lm_diameter` e, posteriomente, será  reproduzida para os demais. Ao final da análise de cada modelo haverá um resumo das conclusões sobre a adquação do modelo de regressão linear simples à situação investgada.
 
-### Linearidade
+### LM Diameter
+
+#### Linearidade
 
 ```{r}
 #| layout-ncol: 2
@@ -748,35 +750,28 @@ lm_diameter_data <- abalone %>%
 ggplot(lm_diameter_data, aes(x = fitted, y = resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("dados originais: modelo length ~ diameter") +
   labs(y = "resíduos", x = "resposta ajustada (length)")
 
 ggplot(lm_diameter_data, aes(x = diameter, y = resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("dados originais: modelo length ~ diameter") +
   labs(y = "resíduos", x = "variável explicativa (diameter)")
 ```
 
-### Homoscedasticidade
+A análise gráfica da distribuição dos resíduos indica linearidade entre a variável explicativa `diameter` e a variável `length`. Observa-se que ambos os gráficos de dispersão de resíduos *versus* variável explicativa e resíduos *versus* resposta ajustada parecem estar dispostos em uma faixa horizontal centrada no zero.
 
+#### Homoscedasticidade
+Avaliaremos o gráfico de módulo dos resíduos para avaliar a hipótese de homoscedasticidade dos erros:
 ```{r}
-# TODO: Renomear labels x e y do gráfico
 #| layout-ncol: 2
 # para dados transformados: resid x mpg_hat; resid x inv_hp
 ggplot(lm_diameter_data, aes(x = fitted, y = abs(resid))) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("dados transformados: modelo mpg ~ inv_hp") +
-  labs(y = "|resíduos|", x = "resposta ajustada (mpg)")
-ggplot(lm_diameter_data, aes(x = diameter, y = abs(resid))) +
-  geom_point() +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("dados transformados: modelo mpg ~ inv_hp") +
-  labs(y = "|resíduos|", x = "variável explicativa (1/hp)")
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
 ```
 
-Teste de Breusch-Pagan
+Percebe-se uma certa tendência de aumento da variância dos erros com o aumento do valor da resposta ajustada. Podemos então, realizar um teste de hipótese a cerca da constância da variância dos erros:
 
 ```{r}
 # Teste de Homoscedasticidade de Breusch-Pagan
@@ -786,12 +781,12 @@ Teste de Breusch-Pagan
 library(lmtest)
 bptest(lm_diameter)
 ```
+Observa-se que pode-se rejeitar a hipótese nula com elevado grau de certeza. Sendo assim, conclui-se que a variância não é constante. Devemos, portanto ter atenção aos intervalos de confiança dos coeficientes do modelo de regressão, visto que a hipótese da homoscedasticidade não é adequada para esse conjunto de dados. Uma transformação nas variáveis também pode ser adequada, embora isso possa causar a perda da linearidade.
 
-
-### Outliers
+#### Outliers
+Vamos avaliar a presença de outliers, novamente, utilizando gráficos de dispersão dos resíduos, porém, desta vez, padronizados.
 
 ```{r}
-# TODO: Renomear variaveis
 #| layout-ncol: 2
 # Cria nova coluna na tabela para os dados do modelo mpg ~ inv_hp
 lm_diameter_data <- lm_diameter_data %>%
@@ -805,8 +800,7 @@ ggplot(lm_diameter_data, aes(x = fitted, y = resid_pad)) +
              linetype = "dashed",
              color = c("red", "orange", "black", "orange", "red") ) +
   ylim(-6, 6) +
-  ggtitle("dados transformados: modelo mpg ~ inv_hp") +
-  labs(y = "resíduos padronizados", x = "resposta ajustada (mpg)")
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
 
 ggplot(lm_diameter_data, aes(x = diameter, y = resid_pad)) +
   geom_point() +
@@ -814,12 +808,12 @@ ggplot(lm_diameter_data, aes(x = diameter, y = resid_pad)) +
              linetype = "dashed",
              color = c("red", "orange", "black", "orange", "red") ) +
   ylim(-6, 6) +
-  ggtitle("dados transformados: modelo mpg ~ inv_hp") +
-  labs(y = "resíduos padronizados", x = "variável explicativa (1/hp)")
+  labs(y = "resíduos padronizados", x = "variável explicativa (diameter)")
 ```
+Percebem-se aqui alguns outliers acima de 4 desvios padrão da média inclusive. Ainda assim, a grande maioria dos pontos possui resíduos inferiores a 3 desvios padrão.
 
-### Independência
-
+#### Independência
+Vamos agora avaliar a hipótese da independência dos erros utilizando o Teste de Durbin-Watson: 
 ```{r}
 # Teste de Durbin-Watson para correlação nula dos erros
 # Ho: corr  = 0
@@ -828,20 +822,24 @@ ggplot(lm_diameter_data, aes(x = diameter, y = resid_pad)) +
 library(lmtest)
 dwtest(lm_diameter, alternative = "two.sided")
 ```
+O teste rejeita a hipótese nula, indicando que os erros são correlacionados. A utilização de modelos autorregressivos pode ser adequada para a modelagem da relação das variáveis `length` e `diameter`.
 
-### Normalidade
-
+#### Normalidade
+Por fim, avaliaremos a normalidade dos erros, primeiramente a partir da análise gráfica.
 ```{r}
 #| layout-ncol: 2
 # Histograma dos resíduos padronizados
 ggplot(lm_diameter_data, aes(x = resid_pad, y = after_stat(density))) +
-  geom_histogram(bins = 10)
+  geom_histogram(bins = 100) + 
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.3) + 
+  xlim(-6, 6)
 # Gráfico de quantis
 ggplot(lm_diameter_data, aes(sample = resid_pad)) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)")
 ```
-
+O histograma apresenta certa fuga de normalidade dos erros. Isso é confirmado pela análise do gráfico de quartis que dá a entender que a ditribuição é simétrica com caudas mais longas que a distribuição normal. Podemos melhor avaliar a hipótese da normalidade dos resíduos com o Teste de Shapiro-Wilk.
 ```{r}
 # Teste de Normalidade de Shapiro-Wilk
 # Ho: normal
@@ -849,6 +847,384 @@ ggplot(lm_diameter_data, aes(sample = resid_pad)) +
 
 shapiro.test(lm_diameter_data$resid_pad)
 ```
+O teste rejeita a hipótese nula com elevado grau de confiança. Conclui-se então que os erros não são normalmente distribuídos. Embora esse não seja um problema tão grande quanto os previamente analisados, algumas transformações podem ajudar a corrigir o problema.
+
+#### Conclusões
+
+Nota-se que o modelo `lm_diameter` tem tendência linear e poucos outliers. Ainda que possa-se rejeitar as hipóteses de homoscedasticidade, de correlação nula dos erros e de normalidade, em termos práticos o modelo de regressão linear simples parece ser adequado para essa situação. Possivelmente a adição de mais variáveis explicativas e a remoção de outliers pode causar a melhoria do modelo. 
+
+---
+
+### LM Shucked
+Seguiremos avaliando o modelo de regressão linear entre a variável explicativa `shucked_w` e a variável de resposta `length`.
+#### Linearidade
+
+```{r}
+#| layout-ncol: 2
+
+# Constrói tabela com dados do modelo length ~ shucked_w
+lm_shucked_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = lm_shucked$fit) %>%
+  mutate(resid = lm_shucked$res)
+
+# Gera gráficos dos resíduos:
+ggplot(lm_shucked_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+ggplot(lm_shucked_data, aes(x = shucked_w, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "variável explicativa (shucked_w)")
+```
+
+A análise gráfica da distribuição dos resíduos indica forte fuga de linearidade entre a variável explicativa `shucked_w` e a variável `length`. Observa-se que ambos os gráficos de dispersão de resíduos *versus* variável explicativa e resíduos *versus* resposta ajustada tem formato curvo, muito diferente do esperado para um bom modelo de regresão linear. Isso indica que serão necessárias ações (adição de variáveis, transformação de variáveis ou novo tipo de modelo) para tornar o modelo efetivo, caso exista alguma relação entre as variáveis.
+
+#### Homoscedasticidade
+Avaliaremos o gráfico de módulo dos resíduos para avaliar a hipótese de homoscedasticidade dos erros:
+```{r}
+#| layout-ncol: 2
+# para dados transformados: resid x mpg_hat; resid x inv_hp
+ggplot(lm_shucked_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
+```
+
+Percebe-se uma tendência de maiores módulos de resíduos para os dois extremos dos valores de resposta ajustada. Podemos avaliar a hipótese de variância homscedasticidade com o teste de Breusch-Pagan:
+
+```{r}
+# Teste de Homoscedasticidade de Breusch-Pagan
+# Ho: sigma^2  = cte
+# Ha: sigma^2 != cte
+
+library(lmtest)
+bptest(lm_shucked)
+```
+O teste aponta que temos uma probabilidade de 2,4% de errar ao rejeitar a hipótese nula. Assim, podemos rejeitá-la com mais de 95% de confiança, levando-nos a aceitar a hipótese alternativa de que os erros não tem variância constante.
+
+#### Outliers
+Vamos avaliar a presença de outliers utilizando gráficos de dispersão dos resíduos padronizados.
+
+```{r}
+#| layout-ncol: 2
+# Cria nova coluna na tabela para os dados do modelo mpg ~ inv_hp
+lm_shucked_data <- lm_shucked_data %>%
+  # resíduos padronizados
+  mutate(resid_pad = rstandard(lm_shucked))
+
+# Gera gráficos dos resíduos padronizados:
+ggplot(lm_shucked_data, aes(x = fitted, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
+
+ggplot(lm_shucked_data, aes(x = shucked_w, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  labs(y = "resíduos padronizados", x = "variável explicativa (shucked_w)")
+```
+Percebem-se aqui poucos outliers acima de 4 desvios padrão, sendo todos estes na parte inferior do gráfico. Em geral, os pontos estão localizados próximos da média, tendo dispersões maiores para os extremos da variável explicativa.
+
+#### Independência
+Vamos agora avaliar a hipótese da independência dos erros utilizando o Teste de Durbin-Watson: 
+```{r}
+# Teste de Durbin-Watson para correlação nula dos erros
+# Ho: corr  = 0
+# Ha: corr != 0
+
+library(lmtest)
+dwtest(lm_shucked, alternative = "two.sided")
+```
+O teste rejeita a hipótese nula, indicando que os erros são correlacionados. Talvez a utilização de modelos autorregressivos pode ajudar na modelagem entre as variáveis `length` e `shucked_w` e resolver outros problemas.
+
+#### Normalidade
+Por fim, avaliaremos a normalidade dos erros, primeiramente a partir da análise gráfica.
+```{r}
+#| layout-ncol: 2
+# Histograma dos resíduos padronizados
+ggplot(lm_shucked_data, aes(x = resid_pad, y = after_stat(density))) +
+  geom_histogram(bins = 100) + 
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.3) + 
+  xlim(-6, 6)
+# Gráfico de quantis
+ggplot(lm_shucked_data, aes(sample = resid_pad)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)")
+```
+O histograma apresenta fuga de normalidade, principalmente para a cauda esquerda. Isso é confirmado pelo gráfico de quartis, que mostra um forte desvio de normalidade na esquerda, indicando uma cauda esquerda muito mais alargada do que curvas normais.
+```{r}
+# Teste de Normalidade de Shapiro-Wilk
+# Ho: normal
+# Ha: não-normal
+
+shapiro.test(lm_shucked_data$resid_pad)
+```
+O teste rejeita a hipótese nula com elevado grau de confiança. Conclui-se então que os erros não são normalmente distribuídos.
+
+#### Conclusões
+
+Nota-se que o modelo `lm_shucked` não tem tendência linear e é possível rejeitar as hipóteses de homoscedasticidade, de correlação nula dos erros e de normalidade. A utilização de uma regressão linear simples não parece ser adequada para essa situação, visto que ele não atende muito bem nenhum critério, especialmente o de linearidade. Possivelmente será necessário transformar uma das variáveis para que o modelo de refressão simples seja adequado.
+
+---
+
+### LM Shell
+Avaliaremos agora o modelo de regressão linear entre a variável explicativa `shell_w` e a variável de resposta `length`.
+
+#### Linearidade
+
+```{r}
+#| layout-ncol: 2
+
+# Constrói tabela com dados do modelo length ~ shell_w
+lm_shell_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = lm_shell$fit) %>%
+  mutate(resid = lm_shell$res)
+
+# Gera gráficos dos resíduos:
+ggplot(lm_shell_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+ggplot(lm_shell_data, aes(x = shell_w, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "variável explicativa (shell_w)")
+```
+
+Como as variáveis `shell_w` e `shucked_w` são fortemente correlacionadas, espera-se que as análise sejam semelhantes para o diagnóstico de modelo. De fato, para a linearidade, os mesmos comentários da seção anterior são válidos, havendo um forte desvio de linearidade.
+
+#### Homoscedasticidade
+Seguiremos avaliando o gráfico de módulo dos resíduos para avaliar a hipótese de homoscedasticidade dos erros:
+```{r}
+#| layout-ncol: 2
+# para dados transformados: resid x mpg_hat; resid x inv_hp
+ggplot(lm_shell_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
+```
+
+Assim como para o modelo `lm_shucked`, percebe-se uma tendência de maiores módulos de resíduos para os dois extremos dos valores de resposta ajustada. Podemos avaliar a hipótese de variância homscedasticidade com o teste de Breusch-Pagan:
+
+```{r}
+# Teste de Homoscedasticidade de Breusch-Pagan
+# Ho: sigma^2  = cte
+# Ha: sigma^2 != cte
+
+library(lmtest)
+bptest(lm_shell)
+```
+O teste rejeita a hipótese nula com p-valor ainda maior que no caso anterior. Podemos afirmar que os erros não tem variância constante com alta confiança.
+
+#### Outliers
+Vamos avaliar a presença de outliers utilizando gráficos de dispersão dos resíduos padronizados.
+
+```{r}
+#| layout-ncol: 2
+# Cria nova coluna na tabela para os dados do modelo mpg ~ inv_hp
+lm_shell_data <- lm_shell_data %>%
+  # resíduos padronizados
+  mutate(resid_pad = rstandard(lm_shell))
+
+# Gera gráficos dos resíduos padronizados:
+ggplot(lm_shell_data, aes(x = fitted, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
+
+ggplot(lm_shell_data, aes(x = shell_w, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  labs(y = "resíduos padronizados", x = "variável explicativa (shell_w)")
+```
+Poucos outliers são identificados. Assim como no caso anterior, a maioria está na parte inferior do gráfico.
+
+#### Independência
+Teste de Durbin-Watson: 
+```{r}
+# Teste de Durbin-Watson para correlação nula dos erros
+# Ho: corr  = 0
+# Ha: corr != 0
+
+library(lmtest)
+dwtest(lm_shell, alternative = "two.sided")
+```
+O teste rejeita a hipótese nula, indicando que os erros são correlacionados, como era esperado dado a similaridae com o caso anterior.
+
+#### Normalidade
+Avaliaremos a normalidade dos erros, primeiramente a partir da análise gráfica.
+```{r}
+#| layout-ncol: 2
+# Histograma dos resíduos padronizados
+ggplot(lm_shell_data, aes(x = resid_pad, y = after_stat(density))) +
+  geom_histogram(bins = 100) + 
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.3) + 
+  xlim(-6, 6)
+# Gráfico de quantis
+ggplot(lm_shell_data, aes(sample = resid_pad)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)")
+```
+Temos uma análise muito similar ao caso anterior. Existe um desvio de normalidade, principalmente na cauda esquerda.
+```{r}
+# Teste de Normalidade de Shapiro-Wilk
+# Ho: normal
+# Ha: não-normal
+
+shapiro.test(lm_shell_data$resid_pad)
+```
+O teste rejeita a hipótese nula com elevado grau de confiança. Conclui-se então que os erros não são normalmente distribuídos.
+
+#### Conclusões
+
+Relembremos a correlação entre `shucked_w` e `shell_w`: 
+```{r}
+cor(abalone$shucked_w, abalone$shell_w)
+```
+
+Devido ao alto grau de correlação entre as variáveis, os modelos `lm_shucked` e `lm_shell` possuem problemas muito similares. Ambos não são pouco lineares e não satisfazem as hipóteses de homoscedasticidade, independência e normalidade dos erros. Assim, `lm_shell` também não é adequado para a situação.
+
+---
+
+### LM Rings
+Avaliaremos agora o modelo de regressão linear entre a variável explicativa `rings` e a variável de resposta `length`.
+
+#### Linearidade
+
+```{r}
+#| layout-ncol: 2
+
+# Constrói tabela com dados do modelo length ~ rings
+lm_rings_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = lm_rings$fit) %>%
+  mutate(resid = lm_rings$res)
+
+# Gera gráficos dos resíduos:
+ggplot(lm_rings_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+ggplot(lm_rings_data, aes(x = rings, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "variável explicativa (rings)")
+```
+
+Percebe-se que muitos erros estão relativamente distantes da média, além de existir uma certa curva com resíduos maiores no centro. Não se pode concluir que o modelo é linear.
+
+#### Homoscedasticidade
+Seguiremos avaliando o gráfico de módulo dos resíduos para avaliar a hipótese de homoscedasticidade dos erros:
+```{r}
+#| layout-ncol: 2
+# para dados transformados: resid x mpg_hat; resid x inv_hp
+ggplot(lm_rings_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
+```
+
+Ainda que os erros pareçam ter elevada variância, a distribuição do módulo dos erros parece ter variância constante. Vamos testar a hipótese:
+
+```{r}
+# Teste de Homoscedasticidade de Breusch-Pagan
+# Ho: sigma^2  = cte
+# Ha: sigma^2 != cte
+
+library(lmtest)
+bptest(lm_rings)
+```
+O teste não rejeita a hipótese nula. Assim, assumimos que a variância dos erros é constante.
+
+#### Outliers
+Vamos avaliar a presença de outliers utilizando gráficos de dispersão dos resíduos padronizados.
+
+```{r}
+#| layout-ncol: 2
+# Cria nova coluna na tabela para os dados do modelo mpg ~ inv_hp
+lm_rings_data <- lm_rings_data %>%
+  # resíduos padronizados
+  mutate(resid_pad = rstandard(lm_rings))
+
+# Gera gráficos dos resíduos padronizados:
+ggplot(lm_rings_data, aes(x = fitted, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  labs(y = "resíduos padronizados", x = "resposta ajustada (length)")
+
+ggplot(lm_rings_data, aes(x = rings, y = resid_pad)) +
+  geom_point() +
+  geom_hline(yintercept = c(-4, -3, 0, 3, 4),
+             linetype = "dashed",
+             color = c("red", "orange", "black", "orange", "red") ) +
+  ylim(-6, 6) +
+  labs(y = "resíduos padronizados", x = "variável explicativa (rings)")
+```
+Entre todos os modelos observados, esse é o que possui menos outliers. Não há observações com resíduos maiores que 4 desvios padrão e há poucas observações com mais de 3 desvios.
+
+#### Independência
+Teste de Durbin-Watson: 
+```{r}
+# Teste de Durbin-Watson para correlação nula dos erros
+# Ho: corr  = 0
+# Ha: corr != 0
+
+library(lmtest)
+dwtest(lm_rings, alternative = "two.sided")
+```
+O teste rejeita a hipótese nula, indicando que os erros são correlacionados. Um modelo autorregressivo pode ser mais adequado para essas variáveis.
+
+#### Normalidade
+Avaliaremos a normalidade dos erros, primeiramente a partir da análise gráfica.
+```{r}
+#| layout-ncol: 2
+# Histograma dos resíduos padronizados
+ggplot(lm_rings_data, aes(x = resid_pad, y = after_stat(density))) +
+  geom_histogram(bins = 100) + 
+  geom_density(lwd = 1, colour = 4,
+               fill = 4, alpha = 0.25, bw = 0.3) + 
+  xlim(-6, 6)
+# Gráfico de quantis
+ggplot(lm_rings_data, aes(sample = resid_pad)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)")
+```
+Há aqui, também, desvio de normalidade nas duas caudas.
+```{r}
+# Teste de Normalidade de Shapiro-Wilk
+# Ho: normal
+# Ha: não-normal
+
+shapiro.test(lm_rings_data$resid_pad)
+```
+O teste rejeita a hipótese nula com elevado grau de confiança. Conclui-se então que os erros não são normalmente distribuídos.
+
+#### Conclusões
+
+Embora esse seja o único modelo que satsisfaz a homoscedasticidade, o modelo não é muito linear, uma vez que os resíduos tem variância muito grandes. O modelo não parece ser muito adequado para a situação, além de não satisfazer as hipóteses de independência e normalidade dos erros. É possível que transformações nas variáveis ajude a reduzir a variância para melhorar o modelo.
 
 ### Medidas Corretivas - Transformação Box-Cox
 
