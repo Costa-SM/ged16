@@ -399,7 +399,7 @@ i_lm$coefficients
 
 Podemos analisar os três modelos lado a lado:
 
-```{r eval=FALSE}
+```{r}
 ggplot(abalone,  aes(x = diameter, y = length)) + geom_point() +
   geom_smooth(method="lm", se=FALSE) + facet_wrap(~ sex)
 ```
@@ -860,6 +860,23 @@ O teste rejeita a hipótese nula com elevado grau de confiança. Conclui-se ent�
 
 #### Conclusões
 
+Para confirmar que o modelo é adequado, podemos aplicar a transformação Box-Cox e avaliar o valor de $\lambda$:
+
+```{r eval=TRUE}
+# Transformação Box-Cox
+
+library(MASS)
+bc <- boxcox(lm(length ~ diameter, data = lm_diameter_data),
+             lambda = seq(-2, 2, by = 0.1), plotit = TRUE)
+```
+```{r eval=TRUE}
+lambda <- bc$x[which.max(bc$y)]
+```
+
+$\lambda$ = `r lambda`
+
+Obtemos um valor de $\lambda$ próximo de um, confirmando que a regressão linear é adequada.
+
 Nota-se que o modelo `lm_diameter` tem tendência linear e poucos outliers. Ainda que possa-se rejeitar as hipóteses de homoscedasticidade, de correlação nula dos erros e de normalidade, em termos práticos o modelo de regressão linear simples parece ser adequado para essa situação. Possivelmente a adição de mais variáveis explicativas e a remoção de outliers pode causar a melhoria do modelo. 
 
 ---
@@ -1235,38 +1252,65 @@ O teste rejeita a hipótese nula com elevado grau de confiança. Conclui-se ent�
 
 Embora esse seja o único modelo que satsisfaz a homoscedasticidade, o modelo não é muito linear, uma vez que os resíduos tem variância muito grandes. O modelo não parece ser muito adequado para a situação, além de não satisfazer as hipóteses de independência e normalidade dos erros. É possível que transformações nas variáveis ajude a reduzir a variância para melhorar o modelo.
 
-### Medidas Corretivas - Transformação Box-Cox
-
-```{r eval=TRUE}
-# Transformação Box-Cox
-
-library(MASS)
-bc <- boxcox(lm(length ~ diameter, data = lm_diameter_data),
-             lambda = seq(-2, 2, by = 0.1), plotit = TRUE)
-```
-```{r eval=TRUE}
-lambda <- bc$x[which.max(bc$y)]
-```
-
-$\lambda$ = `r lambda`
-
-```{r eval=TRUE}
-# TODO: Verificar qual transformação deve ser aplicada com base no valor de Lambda
-# Constrói nova base de dados
-#lm_diameter_bc_data <-  lm_diameter_data %>%
-#  mutate(mpg_bc = 1/sqrt(mpg)) # transforma da variável de resposta
-
-# Ajusta modelo de regressão linear simples aos dados transformados
-#auto_rls_mpg_hp_bc <- lm(mpg_bc ~ hp, data = auto_rls_mpg_hp_bc_data)
-
-# Gera resumo do modelo de regressão ajustado
-#summary(auto_rls_mpg_hp_bc)
-```
 
 ## Ajuste do Modelo de Regressão com Retirada de Pontos
 
+Seguiremos fazendo a regressão da variável de resposta `length` com `diameter`, mas, dessa vez, retirando outliers:
 
-aasdadadd
+```{r}
+abalone_no_outlier <- abalone[-c(1211, 4088),]
+```
+
+Criando o modelo
+
+```{r eval=TRUE}
+#| layout-ncol: 2
+
+lm_diameter_no_out <- lm(length ~ diameter, data = abalone_no_outlier)
+
+# Constrói tabela com dados do modelo length ~ diameter
+lm_diameter_no_out_data <- abalone_no_outlier %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = lm_diameter_no_out$fit) %>%
+  mutate(resid = lm_diameter_no_out$res)
+
+# Gera gráficos dos resíduos:
+ggplot(lm_diameter_no_out_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "resposta ajustada (length)")
+
+ggplot(lm_diameter_no_out_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+```
+Percebemos que os maiores outliers foram retirados
+
+Previsão para diameter = 75:
+```{r}
+x0 <- data.frame(diameter = 75)
+
+# Intervalo de previsão
+ip <- predict.lm(lm_diameter_no_out, newdata = x0, interval = "prediction", level = 0.95)
+ip
+```
+Percebe-se que o valor Y = 37 está fora do intervalo de confiança, indicando que, de fato, tratava-se de um outlier.
+
+Previsão para diameter = 73:
+```{r}
+x0 <- data.frame(diameter = 73)
+
+# Intervalo de previsão
+ip <- predict.lm(lm_diameter_no_out, newdata = x0, interval = "prediction", level = 0.95)
+ip
+```
+Aqui, também, o valor de Y = 122 está fora do intervalo de previsão, também indicando um outlier.
+
+Assim, percebe-se que retirar esses outliers é interessante pois evita que seus resíduos interfiram muito no valor dos coeficientes. O modelo sem outliers é observado abaixo:
+```{r}
+ggplot(abalone_no_outlier, aes(x = diameter, y = length)) + geom_point() + geom_smooth(method = "lm", se = FALSE)
+```
 
 ## Diagnóstico para Valores de `sex`
 
