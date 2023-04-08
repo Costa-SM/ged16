@@ -1687,8 +1687,241 @@ Dois modelos foram propostos para prever a idade de um abalone (`age`):
   + Analise os valores de MSE e $R^2_{aj}$ para cada modelo. Essas medidas são semelhantes para os três níveis de `sex`? Discuta.
   + Realize o diagnóstico dos modelos construídos. Interprete os gráficos e os resultados obtidos.
 
+## Modelo I
+### Matriz de Gráficos de Dispersão
+
+O primeiro dos modelos tradado é o de variáveis explicativas `length`, `diameter`e `shell_w`. 
+Como a variável `age` já foi atribuída, podemos começar a matriz de gráficos de dispersão do
+conjunto de dados analisado.
+
+```{r}
+plot(subset(abalone, select = c(length, diameter, shell_w, age)))
+```
+
+```{r}
+cor(subset(abalone, select = c(length, diameter, shell_w, age)))
+```
+
+Analisando-se a matriz de correlações, nota-se que, apesar de serem superiores a 
+50\%, os valores de correlação das variáveis explicativas com a resposta são 
+consideravelmente baixos, com o maior dentre estes sendo o da variável `shell_w`.
+
+Apesar dos baixos valores, daremos continuidade ao ajuste dos modelos de regressão
+de $1^a$ Ordem com as três variáveis explicativas consideradas.
+
+### Modelo de Regressão de Primeira Ordem
+```{r}
+# Constrói modelo de regressão linear multipla de 1a. ordem
+rlm_partone <- lm(age ~ length + diameter + shell_w, data = abalone)
+# variável de resposta: `age` 
+# variáveis explicativas: `length`, `diameter` e `shell_w`
+
+# Resumo do modelo ajustado
+summary(rlm_partone)
+```
+
+Realizaremos a análise do modelo obtido em uma seção subsequente.
+
+## Modelo II
+### Matriz de Gráficos de Dispersão
+
+O primeiro dos modelos tradado é o de variáveis explicativas `length`, `diameter`e `shell_w`. 
+Como a variável `age` já foi atribuída, podemos começar a matriz de gráficos de dispersão do
+conjunto de dados analisado.
+
+```{r}
+plot(subset(abalone, select = c(height, diameter, shell_w, age)))
+```
+
+```{r}
+cor(subset(abalone, select = c(height, diameter, shell_w, age)))
+```
+
+Analisando-se a matriz de correlações, nota-se que, novamente, apesar de serem 
+superiores a 50\%, os valores de correlação das variáveis explicativas com a 
+resposta são consideravelmente baixos, com o maior dentre estes sendo o da 
+variável `shell_w`.
+
+Apesar dos baixos valores, daremos continuidade ao ajuste dos modelos de regressão
+de $1^a$ Ordem com as três variáveis explicativas consideradas.
 
 
+### Modelo de Regressão de Primeira Ordem
+```{r}
+# Constrói modelo de regressão linear multipla de 1a. ordem
+rlm_parttwo <- lm(age ~ height + diameter + shell_w, data = abalone)
+# variável de resposta: `age` 
+# variáveis explicativas: `height`, `diameter` e `shell_w`
+
+# Resumo do modelo ajustado
+summary(rlm_parttwo)
+```
+
+Realizaremos a análise e comparação dos modelos obtidos a seguir.
+
+## Análise e Comparação dos Modelos
+
+Primeiramente, temos que os valores das variáveis `length`, `height` e
+`diameter`, estão ambos em centímetros. Já `shell_w`, está em gramas.
+
+### Interpretação dos Modelos
+
+Para o primeiro modelo ajustado, temos que, mantido um valor de comprimento e diâmetro
+constantes, quando aumentamos o peso da concha em 100g, deveremos ter um abalone 
+aproximadamente 7 anos mais velho. Concomitantemente, ao aumentarmos o seu diâmetro
+em 100 centímetros, mantendo as demais variáveis constantes, devemos ter um 
+abalone aproximadamente 8.9 anos mais velho. Sob condições análogas, aumentar o
+comprimento 100 centímetros, contrariamente, implica em um abalone aproximadamente
+7.1 anos mais novo.
+
+Analogamente, para o segundo modelo, um aumento na altura de 100 centímetros
+implica em um abalone aproximadamente 5.6 anos mais velho, de 100 gramas no
+peso da concha, 6.2 anos mais velho e, de 100 centímetros no diâmetro, 6.3 anos
+mais novo.
+
+### Diagnóstico dos Modelos
+
+A seguir, temos os gráficos de resíduos para os dois modelos gerados até então.
+
+```{r}
+#| layout-ncol: 2
+# Constrói tabela com dados do modelo age ~ length + diameter + shell_w
+rlm_partone_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = rlm_partone$fit) %>%
+  mutate(resid = rlm_partone$res)
+
+# Gera gráficos dos resíduos:
+# Grafico: resid x resposta ajustada (yhat)
+ggplot(rlm_partone_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos: modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "resposta ajustada (age)")
+
+# Grafico: |resid| x resposta ajustada (yhat)
+ggplot(rlm_partone_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos absolutos: modelo age ~ length + diameter + shell_w") +
+  labs(y = "|resíduos|", x = "resposta ajustada (age)")
+
+# Constrói tabela com dados do modelo age ~ height + diameter + shell_w
+rlm_parttwo_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = rlm_parttwo$fit) %>%
+  mutate(resid = rlm_parttwo$res)
+
+# Gera gráficos dos resíduos:
+# Grafico: resid x resposta ajustada (yhat)
+ggplot(rlm_parttwo_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos: modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "resposta ajustada (age)")
+
+# Grafico: |resid| x resposta ajustada (yhat)
+ggplot(rlm_parttwo_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos absolutos: modelo age ~ height + diameter + shell_w") +
+  labs(y = "|resíduos|", x = "resposta ajustada (age)")
+```
+
+Pode-se construir também gerar os gráficos de resíduos *versus* as diferentes
+variáveis dos modelos construídos.
+
+```{r}
+#| layout-ncol: 2
+# Grafico: resid x var. explic. length
+ggplot(rlm_partone_data, aes(x = length, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. length: modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "variável explicativa (length)")
+
+# Grafico: resid x var. explic. diameter
+ggplot(rlm_partone_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. diameter: modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+
+# Grafico: resid x var. explic. shell_w
+ggplot(rlm_partone_data, aes(x = shell_w, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. shell_w: modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "variável explicativa (shell_w)")
+
+
+# Grafico: resid x POP*RPC
+ggplot(rlm_partone_data, aes(x = length*diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "length x diameter x shell_w")
+```
+
+
+```{r}
+#| layout-ncol: 2
+# Grafico: resid x var. explic. length
+ggplot(rlm_parttwo_data, aes(x = length, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. length: modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "variável explicativa (height)")
+
+# Grafico: resid x var. explic. diameter
+ggplot(rlm_parttwo_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. diameter: modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+
+# Grafico: resid x var. explic. shell_w
+ggplot(rlm_parttwo_data, aes(x = shell_w, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. shell_w: modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "variável explicativa (shell_w)")
+
+
+# Grafico: resid x height*diameter*shell_w
+ggplot(rlm_parttwo_data, aes(x = height*diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (height x diameter x shell_w): modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "height x diameter x shell_w")
+```
+
+### Gráfico de Quantis
+
+```{r}
+#| layout-ncol: 2
+# Gráfico de quantis (para resíduos)
+ggplot(rlm_partone_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
+  ggtitle("Gráfico de quantis (resíduos)")
+# Gráfico de quantis (para resíduos semi-studentizados)
+ggplot(rlm_partone_data, aes(sample = resid/sd(resid))) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
+  ggtitle("Gráfico de quantis (resíduos padronizados)")
+
+# Gráfico de quantis (para resíduos)
+ggplot(rlm_parttwo_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
+  ggtitle("Gráfico de quantis (resíduos)")
+# Gráfico de quantis (para resíduos semi-studentizados)
+ggplot(rlm_parttwo_data, aes(sample = resid/sd(resid))) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
+  ggtitle("Gráfico de quantis (resíduos padronizados)")
+```
 
 
 ----

@@ -2358,7 +2358,330 @@ W = 0.98786, p-value &lt; 2.2e-16</code></pre>
 <li>Analise os valores de MSE e <span class="math inline">\(R^2_{aj}\)</span> para cada modelo. Essas medidas são semelhantes para os três níveis de <code>sex</code>? Discuta.</li>
 <li>Realize o diagnóstico dos modelos construídos. Interprete os gráficos e os resultados obtidos.</li>
 </ul>
+<section id="modelo-i" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-i">Modelo I</h2>
+<section id="matriz-de-gráficos-de-dispersão" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-gráficos-de-dispersão">Matriz de Gráficos de Dispersão</h3>
+<p>O primeiro dos modelos tradado é o de variáveis explicativas <code>length</code>, <code>diameter</code>e <code>shell_w</code>. Como a variável <code>age</code> já foi atribuída, podemos começar a matriz de gráficos de dispersão do conjunto de dados analisado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb191"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb191-1"><a href="#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">subset</span>(abalone, <span class="at">select =</span> <span class="fu">c</span>(length, diameter, shell_w, age)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-115-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb192"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb192-1"><a href="#cb192-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="fu">subset</span>(abalone, <span class="at">select =</span> <span class="fu">c</span>(length, diameter, shell_w, age)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            length  diameter   shell_w       age
+length   1.0000000 0.9868015 0.8984193 0.5485100
+diameter 0.9868015 1.0000000 0.9060836 0.5672066
+shell_w  0.8984193 0.9060836 1.0000000 0.6191524
+age      0.5485100 0.5672066 0.6191524 1.0000000</code></pre>
+</div>
+</div>
+<p>Analisando-se a matriz de correlações, nota-se que, apesar de serem superiores a 50%, os valores de correlação das variáveis explicativas com a resposta são consideravelmente baixos, com o maior dentre estes sendo o da variável <code>shell_w</code>.</p>
+<p>Apesar dos baixos valores, daremos continuidade ao ajuste dos modelos de regressão de <span class="math inline">\(1^a\)</span> Ordem com as três variáveis explicativas consideradas.</p>
+</section>
+<section id="modelo-de-regressão-de-primeira-ordem" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-de-regressão-de-primeira-ordem">Modelo de Regressão de Primeira Ordem</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb194"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb194-1"><a href="#cb194-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói modelo de regressão linear multipla de 1a. ordem</span></span>
+<span id="cb194-2"><a href="#cb194-2" aria-hidden="true" tabindex="-1"></a>rlm_partone <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> length <span class="sc">+</span> diameter <span class="sc">+</span> shell_w, <span class="at">data =</span> abalone)</span>
+<span id="cb194-3"><a href="#cb194-3" aria-hidden="true" tabindex="-1"></a><span class="co"># variável de resposta: `age` </span></span>
+<span id="cb194-4"><a href="#cb194-4" aria-hidden="true" tabindex="-1"></a><span class="co"># variáveis explicativas: `length`, `diameter` e `shell_w`</span></span>
+<span id="cb194-5"><a href="#cb194-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb194-6"><a href="#cb194-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumo do modelo ajustado</span></span>
+<span id="cb194-7"><a href="#cb194-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rlm_partone)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ length + diameter + shell_w, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.1644 -1.6323 -0.5094  0.9926 14.3811 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  8.287630   0.265664  31.196  &lt; 2e-16 ***
+length      -0.071508   0.010169  -7.032 2.37e-12 ***
+diameter     0.089213   0.012773   6.985 3.31e-12 ***
+shell_w      0.070418   0.003357  20.977  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.55 on 4171 degrees of freedom
+Multiple R-squared:  0.3908,    Adjusted R-squared:  0.3903 
+F-statistic: 891.8 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Realizaremos a análise do modelo obtido em uma seção subsequente.</p>
+</section>
+</section>
+<section id="modelo-ii" class="level2">
+<h2 class="anchored" data-anchor-id="modelo-ii">Modelo II</h2>
+<section id="matriz-de-gráficos-de-dispersão-1" class="level3">
+<h3 class="anchored" data-anchor-id="matriz-de-gráficos-de-dispersão-1">Matriz de Gráficos de Dispersão</h3>
+<p>O primeiro dos modelos tradado é o de variáveis explicativas <code>length</code>, <code>diameter</code>e <code>shell_w</code>. Como a variável <code>age</code> já foi atribuída, podemos começar a matriz de gráficos de dispersão do conjunto de dados analisado.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb196"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb196-1"><a href="#cb196-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">subset</span>(abalone, <span class="at">select =</span> <span class="fu">c</span>(height, diameter, shell_w, age)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-118-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb197"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb197-1"><a href="#cb197-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(<span class="fu">subset</span>(abalone, <span class="at">select =</span> <span class="fu">c</span>(height, diameter, shell_w, age)))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            height  diameter   shell_w       age
+height   1.0000000 0.8342984 0.8195962 0.5509139
+diameter 0.8342984 1.0000000 0.9060836 0.5672066
+shell_w  0.8195962 0.9060836 1.0000000 0.6191524
+age      0.5509139 0.5672066 0.6191524 1.0000000</code></pre>
+</div>
+</div>
+<p>Analisando-se a matriz de correlações, nota-se que, novamente, apesar de serem superiores a 50%, os valores de correlação das variáveis explicativas com a resposta são consideravelmente baixos, com o maior dentre estes sendo o da variável <code>shell_w</code>.</p>
+<p>Apesar dos baixos valores, daremos continuidade ao ajuste dos modelos de regressão de <span class="math inline">\(1^a\)</span> Ordem com as três variáveis explicativas consideradas.</p>
+</section>
+<section id="modelo-de-regressão-de-primeira-ordem-1" class="level3">
+<h3 class="anchored" data-anchor-id="modelo-de-regressão-de-primeira-ordem-1">Modelo de Regressão de Primeira Ordem</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb199"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb199-1"><a href="#cb199-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói modelo de regressão linear multipla de 1a. ordem</span></span>
+<span id="cb199-2"><a href="#cb199-2" aria-hidden="true" tabindex="-1"></a>rlm_parttwo <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> height <span class="sc">+</span> diameter <span class="sc">+</span> shell_w, <span class="at">data =</span> abalone)</span>
+<span id="cb199-3"><a href="#cb199-3" aria-hidden="true" tabindex="-1"></a><span class="co"># variável de resposta: `age` </span></span>
+<span id="cb199-4"><a href="#cb199-4" aria-hidden="true" tabindex="-1"></a><span class="co"># variáveis explicativas: `height`, `diameter` e `shell_w`</span></span>
+<span id="cb199-5"><a href="#cb199-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb199-6"><a href="#cb199-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Resumo do modelo ajustado</span></span>
+<span id="cb199-7"><a href="#cb199-7" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rlm_parttwo)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ height + diameter + shell_w, data = abalone)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-11.6537  -1.6230  -0.5399   0.9554  15.0925 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  7.382389   0.255703  28.871  &lt; 2e-16 ***
+height       0.056036   0.008927   6.277 3.81e-10 ***
+diameter    -0.006366   0.005084  -1.252    0.211    
+shell_w      0.062966   0.003487  18.059  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.553 on 4171 degrees of freedom
+Multiple R-squared:  0.3893,    Adjusted R-squared:  0.3889 
+F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Realizaremos a análise e comparação dos modelos obtidos a seguir.</p>
+</section>
+</section>
+<section id="análise-e-comparação-dos-modelos" class="level2">
+<h2 class="anchored" data-anchor-id="análise-e-comparação-dos-modelos">Análise e Comparação dos Modelos</h2>
+<p>Primeiramente, temos que os valores das variáveis <code>length</code>, <code>height</code> e <code>diameter</code>, estão ambos em centímetros. Já <code>shell_w</code>, está em gramas.</p>
+<section id="interpretação-dos-modelos" class="level3">
+<h3 class="anchored" data-anchor-id="interpretação-dos-modelos">Interpretação dos Modelos</h3>
+<p>Para o primeiro modelo ajustado, temos que, mantido um valor de comprimento e diâmetro constantes, quando aumentamos o peso da concha em 100g, deveremos ter um abalone aproximadamente 7 anos mais velho. Concomitantemente, ao aumentarmos o seu diâmetro em 100 centímetros, mantendo as demais variáveis constantes, devemos ter um abalone aproximadamente 8.9 anos mais velho. Sob condições análogas, aumentar o comprimento 100 centímetros, contrariamente, implica em um abalone aproximadamente 7.1 anos mais novo.</p>
+<p>Analogamente, para o segundo modelo, um aumento na altura de 100 centímetros implica em um abalone aproximadamente 5.6 anos mais velho, de 100 gramas no peso da concha, 6.2 anos mais velho e, de 100 centímetros no diâmetro, 6.3 anos mais novo.</p>
+</section>
+<section id="diagnóstico-dos-modelos" class="level3">
+<h3 class="anchored" data-anchor-id="diagnóstico-dos-modelos">Diagnóstico dos Modelos</h3>
+<p>A seguir, temos os gráficos de resíduos para os dois modelos gerados até então.</p>
+<div>
+<div class="sourceCode cell-code" id="cb201"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo age ~ length + diameter + shell_w</span></span>
+<span id="cb201-2"><a href="#cb201-2" aria-hidden="true" tabindex="-1"></a>rlm_partone_data <span class="ot">&lt;-</span> abalone <span class="sc">%&gt;%</span></span>
+<span id="cb201-3"><a href="#cb201-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inclui coluna com valores ajustados</span></span>
+<span id="cb201-4"><a href="#cb201-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> rlm_partone<span class="sc">$</span>fit) <span class="sc">%&gt;%</span></span>
+<span id="cb201-5"><a href="#cb201-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid =</span> rlm_partone<span class="sc">$</span>res)</span>
+<span id="cb201-6"><a href="#cb201-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb201-7"><a href="#cb201-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos:</span></span>
+<span id="cb201-8"><a href="#cb201-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x resposta ajustada (yhat)</span></span>
+<span id="cb201-9"><a href="#cb201-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb201-10"><a href="#cb201-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb201-11"><a href="#cb201-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb201-12"><a href="#cb201-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos: modelo age ~ length + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb201-13"><a href="#cb201-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span>
+<span id="cb201-14"><a href="#cb201-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: |resid| x resposta ajustada (yhat)</span></span>
+<span id="cb201-15"><a href="#cb201-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> <span class="fu">abs</span>(resid))) <span class="sc">+</span></span>
+<span id="cb201-16"><a href="#cb201-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb201-17"><a href="#cb201-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb201-18"><a href="#cb201-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos absolutos: modelo age ~ length + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb201-19"><a href="#cb201-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"|resíduos|"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span>
+<span id="cb201-20"><a href="#cb201-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo age ~ height + diameter + shell_w</span></span>
+<span id="cb201-21"><a href="#cb201-21" aria-hidden="true" tabindex="-1"></a>rlm_parttwo_data <span class="ot">&lt;-</span> abalone <span class="sc">%&gt;%</span></span>
+<span id="cb201-22"><a href="#cb201-22" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inclui coluna com valores ajustados</span></span>
+<span id="cb201-23"><a href="#cb201-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> rlm_parttwo<span class="sc">$</span>fit) <span class="sc">%&gt;%</span></span>
+<span id="cb201-24"><a href="#cb201-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid =</span> rlm_parttwo<span class="sc">$</span>res)</span>
+<span id="cb201-25"><a href="#cb201-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb201-26"><a href="#cb201-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos:</span></span>
+<span id="cb201-27"><a href="#cb201-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x resposta ajustada (yhat)</span></span>
+<span id="cb201-28"><a href="#cb201-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb201-29"><a href="#cb201-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb201-30"><a href="#cb201-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb201-31"><a href="#cb201-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb201-32"><a href="#cb201-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span>
+<span id="cb201-33"><a href="#cb201-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: |resid| x resposta ajustada (yhat)</span></span>
+<span id="cb201-34"><a href="#cb201-34" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> <span class="fu">abs</span>(resid))) <span class="sc">+</span></span>
+<span id="cb201-35"><a href="#cb201-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb201-36"><a href="#cb201-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb201-37"><a href="#cb201-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos absolutos: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb201-38"><a href="#cb201-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"|resíduos|"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-121-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-121-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-121-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-121-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Pode-se construir também gerar os gráficos de resíduos <em>versus</em> as diferentes variáveis dos modelos construídos.</p>
+<div>
+<div class="sourceCode cell-code" id="cb202"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a href="#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. length</span></span>
+<span id="cb202-2"><a href="#cb202-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> length, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb202-3"><a href="#cb202-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb202-4"><a href="#cb202-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb202-5"><a href="#cb202-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. length: modelo age ~ length + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb202-6"><a href="#cb202-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (length)"</span>)</span>
+<span id="cb202-7"><a href="#cb202-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. diameter</span></span>
+<span id="cb202-8"><a href="#cb202-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb202-9"><a href="#cb202-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb202-10"><a href="#cb202-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb202-11"><a href="#cb202-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. diameter: modelo age ~ length + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb202-12"><a href="#cb202-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (diameter)"</span>)</span>
+<span id="cb202-13"><a href="#cb202-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. shell_w</span></span>
+<span id="cb202-14"><a href="#cb202-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb202-15"><a href="#cb202-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb202-16"><a href="#cb202-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb202-17"><a href="#cb202-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. shell_w: modelo age ~ length + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb202-18"><a href="#cb202-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (shell_w)"</span>)</span>
+<span id="cb202-19"><a href="#cb202-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x POP*RPC</span></span>
+<span id="cb202-20"><a href="#cb202-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> length<span class="sc">*</span>diameter<span class="sc">*</span>shell_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb202-21"><a href="#cb202-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb202-22"><a href="#cb202-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb202-23"><a href="#cb202-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb202-24"><a href="#cb202-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"length x diameter x shell_w"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-122-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-122-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-122-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-122-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<div>
+<div class="sourceCode cell-code" id="cb203"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. length</span></span>
+<span id="cb203-2"><a href="#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> length, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb203-3"><a href="#cb203-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb203-4"><a href="#cb203-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb203-5"><a href="#cb203-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. length: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb203-6"><a href="#cb203-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (height)"</span>)</span>
+<span id="cb203-7"><a href="#cb203-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. diameter</span></span>
+<span id="cb203-8"><a href="#cb203-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb203-9"><a href="#cb203-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb203-10"><a href="#cb203-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb203-11"><a href="#cb203-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. diameter: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb203-12"><a href="#cb203-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (diameter)"</span>)</span>
+<span id="cb203-13"><a href="#cb203-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. shell_w</span></span>
+<span id="cb203-14"><a href="#cb203-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb203-15"><a href="#cb203-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb203-16"><a href="#cb203-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb203-17"><a href="#cb203-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. shell_w: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb203-18"><a href="#cb203-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (shell_w)"</span>)</span>
+<span id="cb203-19"><a href="#cb203-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x height*diameter*shell_w</span></span>
+<span id="cb203-20"><a href="#cb203-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> height<span class="sc">*</span>diameter<span class="sc">*</span>shell_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb203-21"><a href="#cb203-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb203-22"><a href="#cb203-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb203-23"><a href="#cb203-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. (height x diameter x shell_w): modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb203-24"><a href="#cb203-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"height x diameter x shell_w"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-123-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-123-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-123-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-123-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="gráfico-de-quantis" class="level3">
+<h3 class="anchored" data-anchor-id="gráfico-de-quantis">Gráfico de Quantis</h3>
+<div>
+<div class="sourceCode cell-code" id="cb204"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb204-1"><a href="#cb204-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos)</span></span>
+<span id="cb204-2"><a href="#cb204-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
+<span id="cb204-3"><a href="#cb204-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb204-4"><a href="#cb204-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb204-5"><a href="#cb204-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos)"</span>)</span>
+<span id="cb204-6"><a href="#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos semi-studentizados)</span></span>
+<span id="cb204-7"><a href="#cb204-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid<span class="sc">/</span><span class="fu">sd</span>(resid))) <span class="sc">+</span></span>
+<span id="cb204-8"><a href="#cb204-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb204-9"><a href="#cb204-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb204-10"><a href="#cb204-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados)"</span>)</span>
+<span id="cb204-11"><a href="#cb204-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos)</span></span>
+<span id="cb204-12"><a href="#cb204-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
+<span id="cb204-13"><a href="#cb204-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb204-14"><a href="#cb204-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb204-15"><a href="#cb204-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos)"</span>)</span>
+<span id="cb204-16"><a href="#cb204-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos semi-studentizados)</span></span>
+<span id="cb204-17"><a href="#cb204-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid<span class="sc">/</span><span class="fu">sd</span>(resid))) <span class="sc">+</span></span>
+<span id="cb204-18"><a href="#cb204-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb204-19"><a href="#cb204-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb204-20"><a href="#cb204-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-124-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-124-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-124-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-124-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
 <hr>
+</section>
+</section>
 </section>
 
 </main>
