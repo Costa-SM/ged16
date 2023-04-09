@@ -2490,7 +2490,7 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h3 class="anchored" data-anchor-id="diagnóstico-dos-modelos">Diagnóstico dos Modelos</h3>
 <p>Primeiramente, retomamos os valores dos coeficientes de determinação de ambos os modelos ajustados, sendo eles, para o primeiro, R2 = 0.3907867 e R2_aj = 0.3903485 e, para o segundo, R2 = 0.3893329 e R2_aj = 0.3903485.</p>
 <p>Assim, para o primeiro modelo, a inclusão das variáveis <code>length</code>, <code>diameter</code> e <code>shell_w</code> reduz a variação total de <code>age</code> em aproximadamente 39%. Ajustando para o número de variáveis explicativas no modelo tem pouco efeito no valor de R2. Assim, com base nessa variação, conclui-se que não há variáveis em excesso no modelo.</p>
-<p>Em seguidam, no segundo modelo, a inclusão de <code>height</code>, <code>diameter</code> e <code>shell_w</code> reduz a variação total de <code>age</code>em aproximadamente 38%. Novamente, com o ajuste, não há variação significativa e, portanto, não há evidências de variáveis em excesso no modelo.</p>
+<p>Em seguida, no segundo modelo, a inclusão de <code>height</code>, <code>diameter</code> e <code>shell_w</code> reduz a variação total de <code>age</code>em aproximadamente 38%. Novamente, com o ajuste, não há variação significativa e, portanto, não há evidências de variáveis em excesso no modelo.</p>
 <p>A seguir, temos os gráficos de resíduos para os dois modelos gerados até então.</p>
 <div>
 <div class="sourceCode cell-code" id="cb201"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo age ~ length + diameter + shell_w</span></span>
@@ -2700,7 +2700,407 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 <h2 class="anchored" data-anchor-id="conclusão-1">Conclusão</h2>
 <p>Nota-se que ambos os modelos construídos não parecem representar muito bem a massa de dados utilizada. Isso se torna especiamente evidente pela análise das correlações apresentadas anteriormente, e pelo desvio da normalidade nos quantis finais dos resíduos.</p>
 <p>Assim, conclui-se que não há um modelo dentre os dois apresentados que represente melhor a massa de dados, dado que ambos são incapazes de tal.</p>
+</section>
+<section id="divisões-por-sex" class="level2">
+<h2 class="anchored" data-anchor-id="divisões-por-sex">Divisões por <code>sex</code></h2>
+<p>A seguir, são construídos modelos para cada nível da variável sex de <code>length</code> como função de <code>length</code>, <code>diameter</code>, <code>shucked_w</code> e <code>shell_w</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb205"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb205-1"><a href="#cb205-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constroi os modelos</span></span>
+<span id="cb205-2"><a href="#cb205-2" aria-hidden="true" tabindex="-1"></a>rlm_length_m <span class="ot">&lt;-</span>  <span class="fu">lm</span>(length <span class="sc">~</span> age <span class="sc">+</span> diameter <span class="sc">+</span> shucked_w <span class="sc">+</span> shell_w, <span class="at">data =</span> abalone_m)</span>
+<span id="cb205-3"><a href="#cb205-3" aria-hidden="true" tabindex="-1"></a>rlm_length_f <span class="ot">&lt;-</span>  <span class="fu">lm</span>(length <span class="sc">~</span> age <span class="sc">+</span> diameter <span class="sc">+</span> shucked_w <span class="sc">+</span> shell_w, <span class="at">data =</span> abalone_f)</span>
+<span id="cb205-4"><a href="#cb205-4" aria-hidden="true" tabindex="-1"></a>rlm_length_i <span class="ot">&lt;-</span>  <span class="fu">lm</span>(length <span class="sc">~</span> age <span class="sc">+</span> diameter <span class="sc">+</span> shucked_w <span class="sc">+</span> shell_w, <span class="at">data =</span> abalone_i)</span>
+<span id="cb205-5"><a href="#cb205-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb205-6"><a href="#cb205-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rlm_length_m)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ age + diameter + shucked_w + shell_w, data = abalone_m)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-18.5881  -2.1728  -0.0634   2.2240  25.0498 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 13.4276511  0.8455218  15.881   &lt;2e-16 ***
+age          0.0004596  0.0408850   0.011    0.991    
+diameter     1.0736536  0.0139560  76.931   &lt;2e-16 ***
+shucked_w    0.0555733  0.0050865  10.926   &lt;2e-16 ***
+shell_w     -0.0052400  0.0092802  -0.565    0.572    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.708 on 1523 degrees of freedom
+Multiple R-squared:  0.9675,    Adjusted R-squared:  0.9674 
+F-statistic: 1.133e+04 on 4 and 1523 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb207"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb207-1"><a href="#cb207-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rlm_length_f)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ age + diameter + shucked_w + shell_w, data = abalone_f)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-19.8862  -2.3481   0.0246   2.2536  16.9533 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 21.028798   1.241538  16.938  &lt; 2e-16 ***
+age         -0.091039   0.041609  -2.188 0.028848 *  
+diameter     0.966312   0.019791  48.827  &lt; 2e-16 ***
+shucked_w    0.066383   0.006158  10.780  &lt; 2e-16 ***
+shell_w      0.035316   0.009897   3.568 0.000372 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.855 on 1302 degrees of freedom
+Multiple R-squared:  0.9501,    Adjusted R-squared:  0.9499 
+F-statistic:  6197 on 4 and 1302 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb209"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb209-1"><a href="#cb209-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(rlm_length_i)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = length ~ age + diameter + shucked_w + shell_w, data = abalone_i)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-59.846  -1.863   0.053   1.823  19.229 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  8.93355    0.69299  12.891  &lt; 2e-16 ***
+age         -0.02384    0.05862  -0.407 0.684266    
+diameter     1.14141    0.01525  74.825  &lt; 2e-16 ***
+shucked_w    0.03940    0.01053   3.741 0.000191 ***
+shell_w      0.03136    0.01867   1.680 0.093252 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 3.576 on 1335 degrees of freedom
+Multiple R-squared:  0.9731,    Adjusted R-squared:  0.973 
+F-statistic: 1.208e+04 on 4 and 1335 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Observa-se que, para abalones femininos, todos os coeficientes são estatisticamente diferentes de zero, enquanto que, para os masculinos, isso não pode ser afirmado para os coeficiente de <code>age</code> e <code>shell_w</code>. Para os não identificados ocorre algo similar aos masculinos, mas o coeficiente de <code>shell_w</code> é mais relevante. Os valores de <span class="math inline">\(R_{adj}^2\)</span> são todos superiores a 90%, sendo o modelo para SEX = I o que possui essa métrica cok maior valor.</p>
+<section id="análise-dos-betas" class="level3">
+<h3 class="anchored" data-anchor-id="análise-dos-betas">Análise dos betas</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb211"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb211-1"><a href="#cb211-1" aria-hidden="true" tabindex="-1"></a><span class="co"># IC para os coeficientes</span></span>
+<span id="cb211-2"><a href="#cb211-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb211-3"><a href="#cb211-3" aria-hidden="true" tabindex="-1"></a>ic_betas_m <span class="ot">&lt;-</span> <span class="fu">confint.lm</span>(rlm_length_m, <span class="at">level=</span><span class="fl">0.95</span>)</span>
+<span id="cb211-4"><a href="#cb211-4" aria-hidden="true" tabindex="-1"></a>ic_betas_m</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  2.5 %      97.5 %
+(Intercept) 11.76914081 15.08616136
+age         -0.07973734  0.08065652
+diameter     1.04627850  1.10102870
+shucked_w    0.04559603  0.06555053
+shell_w     -0.02344335  0.01296335</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb213"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb213-1"><a href="#cb213-1" aria-hidden="true" tabindex="-1"></a>ic_betas_f <span class="ot">&lt;-</span> <span class="fu">confint.lm</span>(rlm_length_f, <span class="at">level=</span><span class="fl">0.95</span>)</span>
+<span id="cb213-2"><a href="#cb213-2" aria-hidden="true" tabindex="-1"></a>ic_betas_f</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  2.5 %       97.5 %
+(Intercept) 18.59316446 23.464431217
+age         -0.17266581 -0.009411659
+diameter     0.92748680  1.005137167
+shucked_w    0.05430266  0.078463283
+shell_w      0.01590002  0.054731259</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb215"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb215-1"><a href="#cb215-1" aria-hidden="true" tabindex="-1"></a>ic_betas_i <span class="ot">&lt;-</span> <span class="fu">confint.lm</span>(rlm_length_i, <span class="at">level=</span><span class="fl">0.95</span>)</span>
+<span id="cb215-2"><a href="#cb215-2" aria-hidden="true" tabindex="-1"></a>ic_betas_i</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   2.5 %      97.5 %
+(Intercept)  7.574095088 10.29301185
+age         -0.138842224  0.09115562
+diameter     1.111483132  1.17133341
+shucked_w    0.018739110  0.06007046
+shell_w     -0.005266673  0.06799443</code></pre>
+</div>
+</div>
+<p>Pela análise dos intervalos de confiança 95%, percebe-se que, para diameter, o coeficiente dos não identificados é diferente dos demais (não há intercessão). Também, o coeficiente de <code>shucked_w</code> é diferente entre masculinos e femininos. Não se pode dizer o mesmo dos outros coeficientes, visto que a maioria possui intercessões, como por exemplo <code>age</code> dos masculinos e femininos.</p>
+</section>
+<section id="análise-de-métricas" class="level3">
+<h3 class="anchored" data-anchor-id="análise-de-métricas">Análise de métricas:</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb217"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb217-1"><a href="#cb217-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Cálculo dos MSEs</span></span>
+<span id="cb217-2"><a href="#cb217-2" aria-hidden="true" tabindex="-1"></a>rlm_length_m_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(rlm_length_m<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb217-3"><a href="#cb217-3" aria-hidden="true" tabindex="-1"></a>rlm_length_f_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(rlm_length_f<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb217-4"><a href="#cb217-4" aria-hidden="true" tabindex="-1"></a>rlm_length_i_mse <span class="ot">&lt;-</span> <span class="fu">mean</span>(rlm_length_i<span class="sc">$</span>residuals<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb217-5"><a href="#cb217-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb217-6"><a href="#cb217-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb217-7"><a href="#cb217-7" aria-hidden="true" tabindex="-1"></a>r2_adj_length_m <span class="ot">&lt;-</span> <span class="fu">summary</span>(rlm_length_m)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb217-8"><a href="#cb217-8" aria-hidden="true" tabindex="-1"></a>r2_adj_length_f <span class="ot">&lt;-</span> <span class="fu">summary</span>(rlm_length_f)<span class="sc">$</span>adj.r.squared</span>
+<span id="cb217-9"><a href="#cb217-9" aria-hidden="true" tabindex="-1"></a>r2_adj_length_i <span class="ot">&lt;-</span> <span class="fu">summary</span>(rlm_length_i)<span class="sc">$</span>adj.r.squared</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<table class="table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 24%">
+<col style="width: 22%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Variável</th>
+<th>rlm_length_m</th>
+<th>rlm_length_f</th>
+<th>rlm_length_i</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MSE</td>
+<td>13.7073099</td>
+<td>14.8067406</td>
+<td>12.7408549</td>
+<td></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(R_{aj}^2\)</span></td>
+<td>0.9674015</td>
+<td>0.9499439</td>
+<td>0.9730385</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Analisando-se as métricas, parece o modelo que melhor descreve o comportamento de <code>length</code> ocorre quando limitamos abalones em sexo não identificados, pois o modelo possui o menor MSE e o maior <span class="math inline">\(R_{adj}^2\)</span>. Por sua vez, o modelo masculino possui o menor <span class="math inline">\(R_{adj}^2\)</span> enquanto o modelo feminino possui o maior MSE.</p>
+</section>
+<section id="diagnósticos" class="level3">
+<h3 class="anchored" data-anchor-id="diagnósticos">Diagnósticos</h3>
+<p>Para os diagnósticos, nos limitaremos a apenas abalones masculinos e femininos</p>
+<section id="masculino-2" class="level4">
+<h4 class="anchored" data-anchor-id="masculino-2">Masculino</h4>
+<div>
+<div class="sourceCode cell-code" id="cb218"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb218-1"><a href="#cb218-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo length ~ age + diameter + shell_w + shucked_w</span></span>
+<span id="cb218-2"><a href="#cb218-2" aria-hidden="true" tabindex="-1"></a>rlm_length_m_data <span class="ot">&lt;-</span> abalone_m <span class="sc">%&gt;%</span></span>
+<span id="cb218-3"><a href="#cb218-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inclui coluna com valores ajustados</span></span>
+<span id="cb218-4"><a href="#cb218-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> rlm_length_m<span class="sc">$</span>fit) <span class="sc">%&gt;%</span></span>
+<span id="cb218-5"><a href="#cb218-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid =</span> rlm_length_m<span class="sc">$</span>res)</span>
+<span id="cb218-6"><a href="#cb218-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb218-7"><a href="#cb218-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos:</span></span>
+<span id="cb218-8"><a href="#cb218-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x resposta ajustada (yhat)</span></span>
+<span id="cb218-9"><a href="#cb218-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb218-10"><a href="#cb218-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb218-11"><a href="#cb218-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb218-12"><a href="#cb218-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos: modelo length ~ age + diameter + shell_w + shucked_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb218-13"><a href="#cb218-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span>
+<span id="cb218-14"><a href="#cb218-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: |resid| x resposta ajustada (yhat)</span></span>
+<span id="cb218-15"><a href="#cb218-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> <span class="fu">abs</span>(resid))) <span class="sc">+</span></span>
+<span id="cb218-16"><a href="#cb218-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb218-17"><a href="#cb218-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb218-18"><a href="#cb218-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos absolutos: modelo length ~ age + diameter + shell_w + shucked_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb218-19"><a href="#cb218-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"|resíduos|"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-128-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-128-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Os resíduos não aparentam clara falta de linearidade ou hetoroscedasticidade.</p>
+<div>
+<div class="sourceCode cell-code" id="cb219"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb219-1"><a href="#cb219-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. age</span></span>
+<span id="cb219-2"><a href="#cb219-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb219-3"><a href="#cb219-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb219-4"><a href="#cb219-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb219-5"><a href="#cb219-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. age: modelo length ~ age + diameter + shell_w + shucked_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb219-6"><a href="#cb219-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (age)"</span>)</span>
+<span id="cb219-7"><a href="#cb219-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. diameter</span></span>
+<span id="cb219-8"><a href="#cb219-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb219-9"><a href="#cb219-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb219-10"><a href="#cb219-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb219-11"><a href="#cb219-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. diameter: modelo length ~ age + diameter + shell_w + shucked_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb219-12"><a href="#cb219-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (diameter)"</span>)</span>
+<span id="cb219-13"><a href="#cb219-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. shell_w</span></span>
+<span id="cb219-14"><a href="#cb219-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb219-15"><a href="#cb219-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb219-16"><a href="#cb219-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb219-17"><a href="#cb219-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb219-18"><a href="#cb219-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (shell_w)"</span>)</span>
+<span id="cb219-19"><a href="#cb219-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. shucked_w</span></span>
+<span id="cb219-20"><a href="#cb219-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> shucked_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb219-21"><a href="#cb219-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb219-22"><a href="#cb219-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb219-23"><a href="#cb219-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb219-24"><a href="#cb219-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (shucked_w)"</span>)</span>
+<span id="cb219-25"><a href="#cb219-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x age*diameter*shell_w*shucked_w</span></span>
+<span id="cb219-26"><a href="#cb219-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> age<span class="sc">*</span>diameter<span class="sc">*</span>shell_w<span class="sc">*</span>shucked_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb219-27"><a href="#cb219-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb219-28"><a href="#cb219-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb219-29"><a href="#cb219-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = M"</span>) <span class="sc">+</span></span>
+<span id="cb219-30"><a href="#cb219-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"age x diameter x shell_w x shucked_w"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-129-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-129-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-129-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-129-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-129-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Analisando os desvios por variáveis explicativas, nota-se que age parece possuir maior variância para valores pequenos, o que tembém ocorre no produto das variáveis.</p>
+<div>
+<div class="sourceCode cell-code" id="cb220"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb220-1"><a href="#cb220-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos)</span></span>
+<span id="cb220-2"><a href="#cb220-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
+<span id="cb220-3"><a href="#cb220-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb220-4"><a href="#cb220-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb220-5"><a href="#cb220-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos) - Modelo 1"</span>)</span>
+<span id="cb220-6"><a href="#cb220-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos semi-studentizados)</span></span>
+<span id="cb220-7"><a href="#cb220-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid<span class="sc">/</span><span class="fu">sd</span>(resid))) <span class="sc">+</span></span>
+<span id="cb220-8"><a href="#cb220-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb220-9"><a href="#cb220-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb220-10"><a href="#cb220-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados) Sex = M"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-130-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-130-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Observa-se desvios de normalidade mais fortes no primeiro quartil, em relação ao último. #### Feminino</p>
+<div>
+<div class="sourceCode cell-code" id="cb221"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb221-1"><a href="#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo length ~ age + diameter + shell_w + shucked_w</span></span>
+<span id="cb221-2"><a href="#cb221-2" aria-hidden="true" tabindex="-1"></a>rlm_length_f_data <span class="ot">&lt;-</span> abalone_f <span class="sc">%&gt;%</span></span>
+<span id="cb221-3"><a href="#cb221-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inclui coluna com valores ajustados</span></span>
+<span id="cb221-4"><a href="#cb221-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> rlm_length_f<span class="sc">$</span>fit) <span class="sc">%&gt;%</span></span>
+<span id="cb221-5"><a href="#cb221-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid =</span> rlm_length_f<span class="sc">$</span>res)</span>
+<span id="cb221-6"><a href="#cb221-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb221-7"><a href="#cb221-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos:</span></span>
+<span id="cb221-8"><a href="#cb221-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x resposta ajustada (yhat)</span></span>
+<span id="cb221-9"><a href="#cb221-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_f_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb221-10"><a href="#cb221-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb221-11"><a href="#cb221-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb221-12"><a href="#cb221-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos: modelo length ~ age + diameter + shell_w + shucked_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb221-13"><a href="#cb221-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span>
+<span id="cb221-14"><a href="#cb221-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: |resid| x resposta ajustada (yhat)</span></span>
+<span id="cb221-15"><a href="#cb221-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_f_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> <span class="fu">abs</span>(resid))) <span class="sc">+</span></span>
+<span id="cb221-16"><a href="#cb221-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb221-17"><a href="#cb221-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb221-18"><a href="#cb221-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos absolutos: modelo length ~ age + diameter + shell_w + shucked_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb221-19"><a href="#cb221-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"|resíduos|"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-131-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-131-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Os resíduos parecem ser relaticamente bem distribuídos, sem nenhuma tendência clara de heteroscedasticidade.</p>
+<div>
+<div class="sourceCode cell-code" id="cb222"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb222-1"><a href="#cb222-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. age</span></span>
+<span id="cb222-2"><a href="#cb222-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_f_data, <span class="fu">aes</span>(<span class="at">x =</span> age, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb222-3"><a href="#cb222-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb222-4"><a href="#cb222-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb222-5"><a href="#cb222-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. age: modelo length ~ age + diameter + shell_w + shucked_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb222-6"><a href="#cb222-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (age)"</span>)</span>
+<span id="cb222-7"><a href="#cb222-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. diameter</span></span>
+<span id="cb222-8"><a href="#cb222-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_f_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb222-9"><a href="#cb222-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb222-10"><a href="#cb222-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb222-11"><a href="#cb222-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. diameter: modelo length ~ age + diameter + shell_w + shucked_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb222-12"><a href="#cb222-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (age)"</span>)</span>
+<span id="cb222-13"><a href="#cb222-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. shell_w</span></span>
+<span id="cb222-14"><a href="#cb222-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb222-15"><a href="#cb222-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb222-16"><a href="#cb222-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb222-17"><a href="#cb222-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb222-18"><a href="#cb222-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (shell_w)"</span>)</span>
+<span id="cb222-19"><a href="#cb222-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. shucked_w</span></span>
+<span id="cb222-20"><a href="#cb222-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_f_data, <span class="fu">aes</span>(<span class="at">x =</span> shucked_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb222-21"><a href="#cb222-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb222-22"><a href="#cb222-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb222-23"><a href="#cb222-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb222-24"><a href="#cb222-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (shucked_w)"</span>)</span>
+<span id="cb222-25"><a href="#cb222-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x age*diameter*shell_w*shucked_w</span></span>
+<span id="cb222-26"><a href="#cb222-26" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_f_data, <span class="fu">aes</span>(<span class="at">x =</span> age<span class="sc">*</span>diameter<span class="sc">*</span>shell_w<span class="sc">*</span>shucked_w, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb222-27"><a href="#cb222-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb222-28"><a href="#cb222-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb222-29"><a href="#cb222-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = F"</span>) <span class="sc">+</span></span>
+<span id="cb222-30"><a href="#cb222-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"age x diameter x shell_w x shucked_w"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-132-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-132-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-132-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-132-4.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-132-5.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Analisando os desvios por variáveis explicativas, nota-se que age parece possuir maior variância para valores pequenos, o que tembém ocorre no produto das variáveis.</p>
+<div>
+<div class="sourceCode cell-code" id="cb223"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb223-1"><a href="#cb223-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos)</span></span>
+<span id="cb223-2"><a href="#cb223-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
+<span id="cb223-3"><a href="#cb223-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb223-4"><a href="#cb223-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb223-5"><a href="#cb223-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos) - Modelo 1"</span>)</span>
+<span id="cb223-6"><a href="#cb223-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos semi-studentizados)</span></span>
+<span id="cb223-7"><a href="#cb223-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_length_m_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid<span class="sc">/</span><span class="fu">sd</span>(resid))) <span class="sc">+</span></span>
+<span id="cb223-8"><a href="#cb223-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb223-9"><a href="#cb223-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
+<span id="cb223-10"><a href="#cb223-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados) Sex = F"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-133-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA04_Pratica_files/figure-html/unnamed-chunk-133-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Observa-se desvios de normalidade mais fortes no primeiro quartil, em relação ao último.</p>
 <hr>
+</section>
+</section>
 </section>
 </section>
 
