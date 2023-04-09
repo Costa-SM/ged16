@@ -1781,6 +1781,20 @@ mais novo.
 
 ### Diagnóstico dos Modelos
 
+Primeiramente, retomamos os valores dos coeficientes de determinação de ambos os 
+modelos ajustados, sendo eles, para o primeiro, R2 = `r summary(rlm_partone)$r.squared`
+e R2_aj = `r summary(rlm_partone)$adj.r.squared` e, para o segundo, R2 = `r summary(rlm_parttwo)$r.squared` e R2_aj = `r summary(rlm_partone)$adj.r.squared`.
+
+Assim, para o primeiro modelo, a inclusão das variáveis `length`, `diameter` e 
+`shell_w` reduz a variação total de `age` em aproximadamente 39\%. Ajustando para
+o número de variáveis explicativas no modelo tem pouco efeito no valor de R2.
+Assim, com base nessa variação, conclui-se que não há variáveis em excesso no modelo.
+
+Em seguidam, no segundo modelo, a inclusão de `height`, `diameter` e `shell_w` 
+reduz a variação total de `age`em aproximadamente 38\%. Novamente, com o ajuste, 
+não há variação significativa e, portanto, não há evidências de variáveis em
+excesso no modelo.
+
 A seguir, temos os gráficos de resíduos para os dois modelos gerados até então.
 
 ```{r}
@@ -1828,8 +1842,20 @@ ggplot(rlm_parttwo_data, aes(x = fitted, y = abs(resid))) +
   labs(y = "|resíduos|", x = "resposta ajustada (age)")
 ```
 
+Nota-se que, para ambos os gráficos, a grande maioria dos pontos concentra-se
+em valores menores de `age`.
+
+Além dessa concentração de pontos, não parecem existir outras tendências na
+distribuição das variâncias para ambos os modelos. Por fim, ressalta-se a 
+presença de alguns *outliers* nos extremos à direita de ambos os gráficos,
+porém, novamente, não parecem existir desvios sistemáticos da resposta linear.
+
+---
+
 Pode-se construir também gerar os gráficos de resíduos *versus* as diferentes
 variáveis dos modelos construídos.
+
+#### Modelo I
 
 ```{r}
 #| layout-ncol: 2
@@ -1863,14 +1889,20 @@ ggplot(rlm_partone_data, aes(x = length*diameter*shell_w, y = resid)) +
   labs(y = "resíduos", x = "length x diameter x shell_w")
 ```
 
+Nota-se, pela análise dos gráficos gerados, em especial o referente à variável
+`length` e `diameter`, que parece existir uma relação não linear entre a variável
+explicativa e a resposta. Isso não parece ser o caso para a variável `shell_w`, e 
+para o produto das três explicativas.
+
+#### Modelo II
 
 ```{r}
 #| layout-ncol: 2
-# Grafico: resid x var. explic. length
-ggplot(rlm_parttwo_data, aes(x = length, y = resid)) +
+# Grafico: resid x var. explic. height
+ggplot(rlm_parttwo_data, aes(x = height, y = resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("Gráfico de resíduos vs. length: modelo age ~ height + diameter + shell_w") +
+  ggtitle("Gráfico de resíduos vs. height: modelo age ~ height + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (height)")
 
 # Grafico: resid x var. explic. diameter
@@ -1896,32 +1928,50 @@ ggplot(rlm_parttwo_data, aes(x = height*diameter*shell_w, y = resid)) +
   labs(y = "resíduos", x = "height x diameter x shell_w")
 ```
 
-### Gráfico de Quantis
+Embora menos evidente que o modelo I, nos gráficos referentes às variáveis `height` 
+e `diameter`, também parece existir uma relação não linear entre a variável
+explicativa e a resposta. Para a primeira, evidencia-se a existência de dois
+*outliers* bastante discrepantes da massa principal. Por fim, novamente, para as
+variáveis `shell_w`, e o produto das três explicativas, a tendência parece ser linear.
 
+### Gráfico de Quantis
+ 
 ```{r}
 #| layout-ncol: 2
 # Gráfico de quantis (para resíduos)
 ggplot(rlm_partone_data, aes(sample = resid)) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
-  ggtitle("Gráfico de quantis (resíduos)")
+  ggtitle("Gráfico de quantis (resíduos) - Modelo 1")
 # Gráfico de quantis (para resíduos semi-studentizados)
 ggplot(rlm_partone_data, aes(sample = resid/sd(resid))) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
-  ggtitle("Gráfico de quantis (resíduos padronizados)")
+  ggtitle("Gráfico de quantis (resíduos padronizados) - Modelo 1")
 
 # Gráfico de quantis (para resíduos)
 ggplot(rlm_parttwo_data, aes(sample = resid)) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
-  ggtitle("Gráfico de quantis (resíduos)")
+  ggtitle("Gráfico de quantis (resíduos) - Modelo 2")
 # Gráfico de quantis (para resíduos semi-studentizados)
 ggplot(rlm_parttwo_data, aes(sample = resid/sd(resid))) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
-  ggtitle("Gráfico de quantis (resíduos padronizados)")
+  ggtitle("Gráfico de quantis (resíduos padronizados) - Modelo 2")
 ```
 
+Analisando-se os gráficos de quantis, nota-se que os primeiros quantis não apresentam
+um desvio significativo da normalidade, o que não é o caso para os finais, que 
+evidenciam uma discrepância significativa.
+
+## Conclusão
+
+Nota-se que ambos os modelos construídos não parecem representar muito bem a massa 
+de dados utilizada. Isso se torna especiamente evidente pela análise das correlações
+apresentadas anteriormente, e pelo desvio da normalidade nos quantis finais dos resíduos.
+
+Assim, conclui-se que não há um modelo dentre os dois apresentados que represente
+melhor a massa de dados, dado que ambos são incapazes de tal.
 
 ----

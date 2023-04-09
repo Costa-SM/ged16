@@ -2488,6 +2488,9 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 </section>
 <section id="diagnóstico-dos-modelos" class="level3">
 <h3 class="anchored" data-anchor-id="diagnóstico-dos-modelos">Diagnóstico dos Modelos</h3>
+<p>Primeiramente, retomamos os valores dos coeficientes de determinação de ambos os modelos ajustados, sendo eles, para o primeiro, R2 = 0.3907867 e R2_aj = 0.3903485 e, para o segundo, R2 = 0.3893329 e R2_aj = 0.3903485.</p>
+<p>Assim, para o primeiro modelo, a inclusão das variáveis <code>length</code>, <code>diameter</code> e <code>shell_w</code> reduz a variação total de <code>age</code> em aproximadamente 39%. Ajustando para o número de variáveis explicativas no modelo tem pouco efeito no valor de R2. Assim, com base nessa variação, conclui-se que não há variáveis em excesso no modelo.</p>
+<p>Em seguidam, no segundo modelo, a inclusão de <code>height</code>, <code>diameter</code> e <code>shell_w</code> reduz a variação total de <code>age</code>em aproximadamente 38%. Novamente, com o ajuste, não há variação significativa e, portanto, não há evidências de variáveis em excesso no modelo.</p>
 <p>A seguir, temos os gráficos de resíduos para os dois modelos gerados até então.</p>
 <div>
 <div class="sourceCode cell-code" id="cb201"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb201-1"><a href="#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo age ~ length + diameter + shell_w</span></span>
@@ -2547,7 +2550,12 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
+<p>Nota-se que, para ambos os gráficos, a grande maioria dos pontos concentra-se em valores menores de <code>age</code>.</p>
+<p>Além dessa concentração de pontos, não parecem existir outras tendências na distribuição das variâncias para ambos os modelos. Por fim, ressalta-se a presença de alguns <em>outliers</em> nos extremos à direita de ambos os gráficos, porém, novamente, não parecem existir desvios sistemáticos da resposta linear.</p>
+<hr>
 <p>Pode-se construir também gerar os gráficos de resíduos <em>versus</em> as diferentes variáveis dos modelos construídos.</p>
+<section id="modelo-i-1" class="level4">
+<h4 class="anchored" data-anchor-id="modelo-i-1">Modelo I</h4>
 <div>
 <div class="sourceCode cell-code" id="cb202"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb202-1"><a href="#cb202-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. length</span></span>
 <span id="cb202-2"><a href="#cb202-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">x =</span> length, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
@@ -2592,12 +2600,16 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
+<p>Nota-se, pela análise dos gráficos gerados, em especial o referente à variável <code>length</code> e <code>diameter</code>, que parece existir uma relação não linear entre a variável explicativa e a resposta. Isso não parece ser o caso para a variável <code>shell_w</code>, e para o produto das três explicativas.</p>
+</section>
+<section id="modelo-ii-1" class="level4">
+<h4 class="anchored" data-anchor-id="modelo-ii-1">Modelo II</h4>
 <div>
-<div class="sourceCode cell-code" id="cb203"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. length</span></span>
-<span id="cb203-2"><a href="#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> length, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb203"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb203-1"><a href="#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. height</span></span>
+<span id="cb203-2"><a href="#cb203-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> height, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
 <span id="cb203-3"><a href="#cb203-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb203-4"><a href="#cb203-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb203-5"><a href="#cb203-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. length: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
+<span id="cb203-5"><a href="#cb203-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de resíduos vs. height: modelo age ~ height + diameter + shell_w"</span>) <span class="sc">+</span></span>
 <span id="cb203-6"><a href="#cb203-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"variável explicativa (height)"</span>)</span>
 <span id="cb203-7"><a href="#cb203-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Grafico: resid x var. explic. diameter</span></span>
 <span id="cb203-8"><a href="#cb203-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
@@ -2636,6 +2648,8 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
+<p>Embora menos evidente que o modelo I, nos gráficos referentes às variáveis <code>height</code> e <code>diameter</code>, também parece existir uma relação não linear entre a variável explicativa e a resposta. Para a primeira, evidencia-se a existência de dois <em>outliers</em> bastante discrepantes da massa principal. Por fim, novamente, para as variáveis <code>shell_w</code>, e o produto das três explicativas, a tendência parece ser linear.</p>
+</section>
 </section>
 <section id="gráfico-de-quantis" class="level3">
 <h3 class="anchored" data-anchor-id="gráfico-de-quantis">Gráfico de Quantis</h3>
@@ -2644,22 +2658,22 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 <span id="cb204-2"><a href="#cb204-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
 <span id="cb204-3"><a href="#cb204-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
 <span id="cb204-4"><a href="#cb204-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
-<span id="cb204-5"><a href="#cb204-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos)"</span>)</span>
+<span id="cb204-5"><a href="#cb204-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos) - Modelo 1"</span>)</span>
 <span id="cb204-6"><a href="#cb204-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos semi-studentizados)</span></span>
 <span id="cb204-7"><a href="#cb204-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_partone_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid<span class="sc">/</span><span class="fu">sd</span>(resid))) <span class="sc">+</span></span>
 <span id="cb204-8"><a href="#cb204-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
 <span id="cb204-9"><a href="#cb204-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
-<span id="cb204-10"><a href="#cb204-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados)"</span>)</span>
+<span id="cb204-10"><a href="#cb204-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados) - Modelo 1"</span>)</span>
 <span id="cb204-11"><a href="#cb204-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos)</span></span>
 <span id="cb204-12"><a href="#cb204-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
 <span id="cb204-13"><a href="#cb204-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
 <span id="cb204-14"><a href="#cb204-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
-<span id="cb204-15"><a href="#cb204-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos)"</span>)</span>
+<span id="cb204-15"><a href="#cb204-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos) - Modelo 2"</span>)</span>
 <span id="cb204-16"><a href="#cb204-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis (para resíduos semi-studentizados)</span></span>
 <span id="cb204-17"><a href="#cb204-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(rlm_parttwo_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid<span class="sc">/</span><span class="fu">sd</span>(resid))) <span class="sc">+</span></span>
 <span id="cb204-18"><a href="#cb204-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
 <span id="cb204-19"><a href="#cb204-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) <span class="sc">+</span></span>
-<span id="cb204-20"><a href="#cb204-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados)"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb204-20"><a href="#cb204-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Gráfico de quantis (resíduos padronizados) - Modelo 2"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell quarto-layout-panel">
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
@@ -2679,8 +2693,14 @@ F-statistic: 886.4 on 3 and 4171 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
-<hr>
+<p>Analisando-se os gráficos de quantis, nota-se que os primeiros quantis não apresentam um desvio significativo da normalidade, o que não é o caso para os finais, que evidenciam uma discrepância significativa.</p>
 </section>
+</section>
+<section id="conclusão-1" class="level2">
+<h2 class="anchored" data-anchor-id="conclusão-1">Conclusão</h2>
+<p>Nota-se que ambos os modelos construídos não parecem representar muito bem a massa de dados utilizada. Isso se torna especiamente evidente pela análise das correlações apresentadas anteriormente, e pelo desvio da normalidade nos quantis finais dos resíduos.</p>
+<p>Assim, conclui-se que não há um modelo dentre os dois apresentados que represente melhor a massa de dados, dado que ambos são incapazes de tal.</p>
+<hr>
 </section>
 </section>
 
