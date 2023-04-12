@@ -1977,6 +1977,9 @@ Analisando-se os gráficos de quantis, nota-se que os primeiros quantis não apr
 um desvio significativo da normalidade, o que não é o caso para os finais, que 
 evidenciam uma discrepância significativa.
 
+Assim, podemos concluir que a distribuição observada para ambos os modelos é similar
+a uma distribuição normal, mas com a cauda direita alongada.
+
 ## Conclusão
 
 Nota-se que ambos os modelos construídos não parecem representar muito bem a massa 
