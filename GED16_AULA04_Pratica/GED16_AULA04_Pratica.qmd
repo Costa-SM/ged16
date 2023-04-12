@@ -1991,7 +1991,7 @@ summary(rlm_length_i)
 
 ```
 
-Observa-se que, para abalones femininos, todos os coeficientes são estatisticamente diferentes de zero, enquanto que, para os masculinos, isso não pode ser afirmado para os coeficiente de `age` e `shell_w`. Para os não identificados ocorre algo similar aos masculinos, mas o coeficiente de `shell_w` é mais relevante. Os valores de $R_{adj}^2$ são todos superiores a 90%, sendo o modelo para SEX = I o que possui essa métrica cok maior valor. 
+Observa-se que, para abalones femininos, todos os coeficientes são estatisticamente diferentes de zero, enquanto que, para os masculinos, isso não pode ser afirmado para os coeficiente de `age` e `shell_w`. Para os não identificados ocorre algo similar aos masculinos, mas o coeficiente de `shell_w` é mais relevante, mas ainda pouco significativo. Os valores de $R_{adj}^2$ são todos superiores a 90%, sendo o modelo para `sex` = I o que possui essa métrica com maior valor. É interessante notar que o dados dão a entender que a idade dos abalones ajudam a explicar o tamanho de abalones femininos, enquanto isso não ocorre para os masculinos.
 
 ### Análise dos betas
 
@@ -2026,7 +2026,7 @@ r2_adj_length_i <- summary(rlm_length_i)$adj.r.squared
 |   MSE      | `r rlm_length_m_mse ` | `r rlm_length_f_mse` | `r rlm_length_i_mse` |
 |   $R_{aj}^2$    |   `r r2_adj_length_m `   | `r r2_adj_length_f`     | `r r2_adj_length_i`     |
 
-Analisando-se as métricas, parece o modelo que melhor descreve o comportamento de `length` ocorre quando limitamos abalones em sexo não identificados, pois o modelo possui o menor MSE e o maior $R_{adj}^2$. Por sua vez, o modelo masculino possui o menor $R_{adj}^2$ enquanto o modelo feminino possui o maior MSE.
+Analisando-se as métricas, parece o que modelo que melhor descreve o comportamento de `length` ocorre quando limitamos abalones em sexo não identificados, pois o modelo possui o menor MSE e o maior $R_{adj}^2$. Por sua vez, o modelo masculino possui o menor $R_{adj}^2$ enquanto o modelo feminino possui o maior MSE.
 
 ### Diagnósticos
 
