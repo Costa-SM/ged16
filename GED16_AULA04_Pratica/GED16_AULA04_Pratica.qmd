@@ -1690,8 +1690,8 @@ Dois modelos foram propostos para prever a idade de um abalone (`age`):
 ## Modelo I
 ### Matriz de Gráficos de Dispersão
 
-O primeiro dos modelos tradado é o de variáveis explicativas `length`, `diameter`e `shell_w`. 
-Como a variável `age` já foi atribuída, podemos começar a matriz de gráficos de dispersão do
+O primeiro dos modelos tratado é o de variáveis explicativas `length`, `diameter` e `shell_w`. 
+Como a variável `age` já foi atribuída, podemos construir a matriz de gráficos de dispersão do
 conjunto de dados analisado.
 
 ```{r}
@@ -1725,9 +1725,9 @@ Realizaremos a análise do modelo obtido em uma seção subsequente.
 ## Modelo II
 ### Matriz de Gráficos de Dispersão
 
-O primeiro dos modelos tradado é o de variáveis explicativas `length`, `diameter`e `shell_w`. 
-Como a variável `age` já foi atribuída, podemos começar a matriz de gráficos de dispersão do
-conjunto de dados analisado.
+Daremos prosseguimento ao tratamento do modelo com variáveis explicativas `length`, `diameter`
+e `shell_w`. Como, novamente, a variável `age` já foi atribuída, podemos construir a matriz 
+de gráficos de dispersão do conjunto de dados.
 
 ```{r}
 plot(subset(abalone, select = c(height, diameter, shell_w, age)))
@@ -1742,8 +1742,9 @@ superiores a 50\%, os valores de correlação das variáveis explicativas com a
 resposta são consideravelmente baixos, com o maior dentre estes sendo o da 
 variável `shell_w`.
 
-Apesar dos baixos valores, daremos continuidade ao ajuste dos modelos de regressão
-de $1^a$ Ordem com as três variáveis explicativas consideradas.
+Assim como no caso anterior, apesar dos baixos valores de correlação entre as variáveis,
+daremos continuidade ao ajuste dos modelos de regressão de $1^a$ Ordem com as três 
+variáveis explicativas consideradas.
 
 
 ### Modelo de Regressão de Primeira Ordem
@@ -1843,16 +1844,19 @@ ggplot(rlm_parttwo_data, aes(x = fitted, y = abs(resid))) +
 ```
 
 Nota-se que, para ambos os gráficos, a grande maioria dos pontos concentra-se
-em valores menores de `age`.
+em valores menores de `age`. Também observam-se claras tendências na distribuição
+dos resíduos para ambos os modelos, que possuem uma curvatura com concavidade
+para baixo. Por fim, ressalta-se apresença de alguns *outliers* nos extremos à 
+direita de ambos os gráficos.
 
-Além dessa concentração de pontos, não parecem existir outras tendências na
-distribuição das variâncias para ambos os modelos. Por fim, ressalta-se a 
-presença de alguns *outliers* nos extremos à direita de ambos os gráficos,
-porém, novamente, não parecem existir desvios sistemáticos da resposta linear.
+@TODO:VERIFICAR SE REALMENTE HÁ DESVIOS SISTEMÁTICOS NA RESPOSTA LINEAR
+
+Assim, nota-se que há fortes indícios de existirem desvios sistemáticos da resposta
+linear em ambos os modelos.
 
 ---
 
-Pode-se construir também gerar os gráficos de resíduos *versus* as diferentes
+A seguir, geram-se os gráficos de resíduos *versus* as diferentes
 variáveis dos modelos construídos.
 
 #### Modelo I
@@ -1862,6 +1866,7 @@ variáveis dos modelos construídos.
 # Grafico: resid x var. explic. length
 ggplot(rlm_partone_data, aes(x = length, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. length: modelo age ~ length + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (length)")
@@ -1869,6 +1874,7 @@ ggplot(rlm_partone_data, aes(x = length, y = resid)) +
 # Grafico: resid x var. explic. diameter
 ggplot(rlm_partone_data, aes(x = diameter, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. diameter: modelo age ~ length + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (diameter)")
@@ -1876,6 +1882,7 @@ ggplot(rlm_partone_data, aes(x = diameter, y = resid)) +
 # Grafico: resid x var. explic. shell_w
 ggplot(rlm_partone_data, aes(x = shell_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. shell_w: modelo age ~ length + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (shell_w)")
@@ -1884,15 +1891,16 @@ ggplot(rlm_partone_data, aes(x = shell_w, y = resid)) +
 # Grafico: resid x POP*RPC
 ggplot(rlm_partone_data, aes(x = length*diameter*shell_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w") +
   labs(y = "resíduos", x = "length x diameter x shell_w")
 ```
 
-Nota-se, pela análise dos gráficos gerados, em especial o referente à variável
-`length` e `diameter`, que parece existir uma relação não linear entre a variável
-explicativa e a resposta. Isso não parece ser o caso para a variável `shell_w`, e 
-para o produto das três explicativas.
+Ao analisar os gráficos gerados, pode-se perceber uma clara tendência em todos,
+dado que as curva suavizada referente a massa de pontos não é próxima de uma
+reta no zero. Portanto, temos fortes indícios da existência de uma relação não linear
+entre cada uma das variáveis explicativas e a resposta.
 
 #### Modelo II
 
@@ -1901,6 +1909,7 @@ para o produto das três explicativas.
 # Grafico: resid x var. explic. height
 ggplot(rlm_parttwo_data, aes(x = height, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. height: modelo age ~ height + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (height)")
@@ -1908,6 +1917,7 @@ ggplot(rlm_parttwo_data, aes(x = height, y = resid)) +
 # Grafico: resid x var. explic. diameter
 ggplot(rlm_parttwo_data, aes(x = diameter, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. diameter: modelo age ~ height + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (diameter)")
@@ -1915,6 +1925,7 @@ ggplot(rlm_parttwo_data, aes(x = diameter, y = resid)) +
 # Grafico: resid x var. explic. shell_w
 ggplot(rlm_parttwo_data, aes(x = shell_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. shell_w: modelo age ~ height + diameter + shell_w") +
   labs(y = "resíduos", x = "variável explicativa (shell_w)")
@@ -1923,16 +1934,17 @@ ggplot(rlm_parttwo_data, aes(x = shell_w, y = resid)) +
 # Grafico: resid x height*diameter*shell_w
 ggplot(rlm_parttwo_data, aes(x = height*diameter*shell_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. (height x diameter x shell_w): modelo age ~ height + diameter + shell_w") +
   labs(y = "resíduos", x = "height x diameter x shell_w")
 ```
 
-Embora menos evidente que o modelo I, nos gráficos referentes às variáveis `height` 
-e `diameter`, também parece existir uma relação não linear entre a variável
-explicativa e a resposta. Para a primeira, evidencia-se a existência de dois
-*outliers* bastante discrepantes da massa principal. Por fim, novamente, para as
-variáveis `shell_w`, e o produto das três explicativas, a tendência parece ser linear.
+Novamente, assim como no primeiro modelo, constata-se, através da análise da 
+curva suavizada referente a massa de pontos, que há fortes indícios de uma relação
+não linear entre a variável de resposta e as variáveis explicativas. Destaca-se
+também a presença de um _outlier_ extremo no gráfico de resíduos referente a 
+variável `height`, que distorce consideravelmente o gráfico final.
 
 ### Gráfico de Quantis
  
