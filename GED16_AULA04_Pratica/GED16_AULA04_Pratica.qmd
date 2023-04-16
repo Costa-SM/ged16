@@ -1888,13 +1888,29 @@ ggplot(rlm_partone_data, aes(x = shell_w, y = resid)) +
   labs(y = "resíduos", x = "variável explicativa (shell_w)")
 
 
-# Grafico: resid x POP*RPC
-ggplot(rlm_partone_data, aes(x = length*diameter*shell_w, y = resid)) +
+# Grafico: resid x length * diameter
+ggplot(rlm_partone_data, aes(x = length*diameter, y = resid)) +
   geom_point() +
   geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w") +
-  labs(y = "resíduos", x = "length x diameter x shell_w")
+  ggtitle("Gráfico de resíduos vs. (length x diameter): modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "length x diameter")
+
+# Grafico: resid x length * shell_w
+ggplot(rlm_partone_data, aes(x = length*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (length x shell_w): modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "length x shell_w")
+
+# Grafico: resid x diameter * shell_w
+ggplot(rlm_partone_data, aes(x = diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shell_w): modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "diameter x shell_w")
 ```
 
 Ao analisar os gráficos gerados, pode-se perceber uma clara tendência em todos,
@@ -1931,20 +1947,37 @@ ggplot(rlm_parttwo_data, aes(x = shell_w, y = resid)) +
   labs(y = "resíduos", x = "variável explicativa (shell_w)")
 
 
-# Grafico: resid x height*diameter*shell_w
-ggplot(rlm_parttwo_data, aes(x = height*diameter*shell_w, y = resid)) +
+# Grafico: resid x height * diameter
+ggplot(rlm_partone_data, aes(x = height*diameter, y = resid)) +
   geom_point() +
   geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("Gráfico de resíduos vs. (height x diameter x shell_w): modelo age ~ height + diameter + shell_w") +
-  labs(y = "resíduos", x = "height x diameter x shell_w")
+  ggtitle("Gráfico de resíduos vs. (height x diameter): modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "height x diameter")
+
+# Grafico: resid x height * shell_w
+ggplot(rlm_partone_data, aes(x = height*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (height x shell_w): modelo age ~ height + diameter + shell_w") +
+  labs(y = "resíduos", x = "height x shell_w")
+
+# Grafico: resid x diameter * shell_w
+ggplot(rlm_partone_data, aes(x = diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shell_w): modelo age ~ length + diameter + shell_w") +
+  labs(y = "resíduos", x = "diameter x shell_w")
 ```
 
 Novamente, assim como no primeiro modelo, constata-se, através da análise da 
 curva suavizada referente a massa de pontos, que há fortes indícios de uma relação
 não linear entre a variável de resposta e as variáveis explicativas. Destaca-se
-também a presença de um _outlier_ extremo no gráfico de resíduos referente a 
-variável `height`, que distorce consideravelmente o gráfico final.
+também a presença de dois pontos de registros extremos no gráfico de resíduos referente a 
+variável `height`, que aparecem novamente, embora de maneira menos exagerada, no
+gráfico de resíduos `height * diameter`.
 
 ### Gráfico de Quantis
  
@@ -1984,7 +2017,7 @@ a uma distribuição normal, mas com a cauda direita alongada.
 
 Nota-se que ambos os modelos construídos não parecem representar muito bem a massa 
 de dados utilizada. Isso se torna especiamente evidente pela análise das correlações
-apresentadas anteriormente, e pelo desvio da normalidade nos quantis finais dos resíduos.
+apresentadas anteriormente, pelos valores de R2, que mal chegam a 40\%.
 
 Assim, conclui-se que não há um modelo dentre os dois apresentados que represente
 melhor a massa de dados, dado que ambos são incapazes de tal.
