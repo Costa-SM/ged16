@@ -1849,8 +1849,6 @@ dos resíduos para ambos os modelos, que possuem uma curvatura com concavidade
 para baixo. Por fim, ressalta-se apresença de alguns *outliers* nos extremos à 
 direita de ambos os gráficos.
 
-@TODO:VERIFICAR SE REALMENTE HÁ DESVIOS SISTEMÁTICOS NA RESPOSTA LINEAR
-
 Assim, nota-se que há fortes indícios de existirem desvios sistemáticos da resposta
 linear em ambos os modelos.
 
