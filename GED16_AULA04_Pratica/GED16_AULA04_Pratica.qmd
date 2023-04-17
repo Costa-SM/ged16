@@ -2045,7 +2045,7 @@ Analisando-se as métricas, parece o que modelo que melhor descreve o comportame
 
 ### Diagnósticos
 
-Para os diagnósticos, nos limitaremos a apenas abalones masculinos e femininos
+Faremos agora o diagnóstico dos três modelos divididos por valor de `sex`.
 
 #### Masculino
 
@@ -2062,36 +2062,47 @@ rlm_length_m_data <- abalone_m %>%
 # Grafico: resid x resposta ajustada (yhat)
 ggplot(rlm_length_m_data, aes(x = fitted, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE)+
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos: modelo length ~ age + diameter + shell_w + shucked_w para sex = M") +
-  labs(y = "resíduos", x = "resposta ajustada (age)")
+  labs(y = "resíduos", x = "resposta ajustada (length)")
 # Grafico: |resid| x resposta ajustada (yhat)
 ggplot(rlm_length_m_data, aes(x = fitted, y = abs(resid))) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos absolutos: modelo length ~ age + diameter + shell_w + shucked_w para sex = M") +
-  labs(y = "|resíduos|", x = "resposta ajustada (age)")
+  labs(y = "|resíduos|", x = "resposta ajustada (length)")
 
 ```
-Os resíduos não aparentam clara falta de linearidade ou hetoroscedasticidade.
+O modelo aparenta ser linear em valores de `length` entre 80 e 120, tendo uma certa fuga de linearidade nas extremidades. Existe um forte outlier com resíduo próximo de 25 e alguns possíveis outliers com módulo superior a 15. O gráfico não dá uma noção muito clara a cerca da homoscedasticidade. Podemos realizar o teste de Breusch-Pagan para essa avaliação:
+
+```{r}
+bptest(rlm_length_m)
+```
+Podemos rejeitar a hipótese nula com elevado grau de certeza. Portanto os resíduos não satisfazem a hipótese de homoscedasticidade.
+
+A seguir, podemos analisar o gráfico de resíduos em função de cada variável explicativa individualmente: 
 ```{r}
 #| layout-ncol: 2
 
 # Grafico: resid x var. explic. age
 ggplot(rlm_length_m_data, aes(x = age, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. age: modelo length ~ age + diameter + shell_w + shucked_w para sex = M") +
   labs(y = "resíduos", x = "variável explicativa (age)")
 # Grafico: resid x var. explic. diameter
 ggplot(rlm_length_m_data, aes(x = diameter, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) + 
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. diameter: modelo length ~ age + diameter + shell_w + shucked_w para sex = M") +
   labs(y = "resíduos", x = "variável explicativa (diameter)")
 # Grafico: resid x var. explic. shell_w
 ggplot(rlm_length_m_data, aes(x = shell_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = M") +
   labs(y = "resíduos", x = "variável explicativa (shell_w)")
@@ -2099,18 +2110,69 @@ ggplot(rlm_length_m_data, aes(x = shell_w, y = resid)) +
 # Grafico: resid x var. explic. shucked_w
 ggplot(rlm_length_m_data, aes(x = shucked_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = M") +
   labs(y = "resíduos", x = "variável explicativa (shucked_w)")
-# Grafico: resid x age*diameter*shell_w*shucked_w
-ggplot(rlm_length_m_data, aes(x = age*diameter*shell_w*shucked_w, y = resid)) +
-  geom_point() +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = M") +
-  labs(y = "resíduos", x = "age x diameter x shell_w x shucked_w")
-```
-Analisando os desvios por variáveis explicativas, nota-se que age parece possuir maior variância para valores pequenos, o que tembém ocorre no produto das variáveis.
 
+```
+Percebemos que todas tem uma tendência linear em algum trecho, entretanto o gráfico da variável explicativa `diameter` foge um pouco da linearidade para valores mais baixos de `diameter`. Por outro lado, existe fuga de lineridade para valores altos de `shell_w` e `shucked_w`. Entretanto, as variáveis `diameter` e `shell_w` são justamente as que possuem coeficientes provavelmente nulos, dada a análise anterior. Como  `shucked_w` tem coeficente positivo, provavelmente ela é uma das responsáveis pela fuga de lineariade para altos valores de `diameter`. Também podemos perceber que `diameter` parece possuir tendência de aumento da variância dos resíduos com o aumento do valor da variável explicativa.Podemos também reforçar que o ponto tratado como maior outlier na análise anterior realmente o é, pois possui valores intermediários de cada variável explicativa (não tem valor extremo de nenhuma variável explicativa).
+
+A seguir, analisaremos os produtos dois a dois das variáveis explicativas *versus* resíduos.
+```{r}
+#| layout-ncol: 2
+
+# Grafico: resid x age*diameter
+ggplot(rlm_length_m_data, aes(x = age*diameter, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x diameter): modelo age ~ length + diameter + shell_w para sex = M") +
+  labs(y = "resíduos", x = "age x diameter")
+
+# Grafico: resid x age*shell_w
+ggplot(rlm_length_m_data, aes(x = age*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x shell_w): modelo age ~ length + diameter + shell_w para sex = M") +
+  labs(y = "resíduos", x = "age x shell_w")
+
+# Grafico: resid x age*shucked_w
+ggplot(rlm_length_m_data, aes(x = age*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x shucked_w): modelo age ~ length + diameter + shell_w para sex = M") +
+  labs(y = "resíduos", x = "age x shucked_w")
+
+# Grafico: resid x diameter*shell_w
+ggplot(rlm_length_m_data, aes(x = diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = M") +
+  labs(y = "resíduos", x = "diameter x shell_w")
+
+# Grafico: resid x diameter*shucked_w
+ggplot(rlm_length_m_data, aes(x = diameter*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shucked_w): modelo age ~ length + diameter + shell_w para sex = M") +
+  labs(y = "resíduos", x = "diameter x shell_w")
+
+# Grafico: resid x shell_w*shucked_w
+ggplot(rlm_length_m_data, aes(x = shell_w*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (shell_w x shucked_w): modelo age ~ length + diameter + shell_w para sex = M") +
+  labs(y = "resíduos", x = "shell_w x shell_w")
+```
+Nenhum padrão sistemático claro é notado nos gráficos, de tal forma que, provavelmente, não é necessário adiconar nenhum termo como produto de duas variáveis explicativas no modelo.
+
+Por fim, vamos analisar o gráfico de quantis:
 ```{r}
 #| layout-ncol: 2
 
@@ -2118,7 +2180,7 @@ Analisando os desvios por variáveis explicativas, nota-se que age parece possui
 ggplot(rlm_length_m_data, aes(sample = resid)) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
-  ggtitle("Gráfico de quantis (resíduos) - Modelo 1")
+  ggtitle("Gráfico de quantis (resíduos) - Para Sex = M")
 # Gráfico de quantis (para resíduos semi-studentizados)
 ggplot(rlm_length_m_data, aes(sample = resid/sd(resid))) +
   stat_qq() + stat_qq_line() +
@@ -2127,7 +2189,10 @@ ggplot(rlm_length_m_data, aes(sample = resid/sd(resid))) +
 
 ```
 
-Observa-se desvios de normalidade mais fortes no primeiro quartil, em relação ao último.
+O gráfico de quantis indica desvios de normalidade nas duas caudas, mais forte na cauda esquerda, que é bem mais alongada do que a da distribuição normal.
+
+---
+
 #### Feminino
 
 ```{r}
@@ -2154,25 +2219,35 @@ ggplot(rlm_length_f_data, aes(x = fitted, y = abs(resid))) +
   labs(y = "|resíduos|", x = "resposta ajustada (age)")
 
 ```
-Os resíduos parecem ser relaticamente bem distribuídos, sem nenhuma tendência clara de heteroscedasticidade.
+Os resíduos parecem ser relativamente bem distribuídos, sem nenhuma tendência clara de heteroscedasticidade. Porém, podemos realizar o teste de Breusch-Pagan para confirmar a hipótese:
+```{r}
+bptest(rlm_length_f)
+```
+Percebe-se que podemos rejeitar a hipótese nula com 97% de confiança. Assim, os resíduos desse modelo não são homoscedásticos. Possivelmete, transformações nas variáveis podem ajudar a resolver esse problema, embora ele não seja tão grave.
+
+A seguir, avaliaremos os gráficos de resíduos em função de cada variável explicativa para o modelo `rlm_length_f`:
+
 ```{r}
 #| layout-ncol: 2
 
 # Grafico: resid x var. explic. age
 ggplot(rlm_length_f_data, aes(x = age, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. age: modelo length ~ age + diameter + shell_w + shucked_w para sex = F") +
   labs(y = "resíduos", x = "variável explicativa (age)")
 # Grafico: resid x var. explic. diameter
 ggplot(rlm_length_f_data, aes(x = diameter, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. diameter: modelo length ~ age + diameter + shell_w + shucked_w para sex = F") +
-  labs(y = "resíduos", x = "variável explicativa (age)")
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
 # Grafico: resid x var. explic. shell_w
 ggplot(rlm_length_m_data, aes(x = shell_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = F") +
   labs(y = "resíduos", x = "variável explicativa (shell_w)")
@@ -2180,33 +2255,228 @@ ggplot(rlm_length_m_data, aes(x = shell_w, y = resid)) +
 # Grafico: resid x var. explic. shucked_w
 ggplot(rlm_length_f_data, aes(x = shucked_w, y = resid)) +
   geom_point() +
+  geom_smooth(se=FALSE) +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = F") +
   labs(y = "resíduos", x = "variável explicativa (shucked_w)")
-# Grafico: resid x age*diameter*shell_w*shucked_w
-ggplot(rlm_length_f_data, aes(x = age*diameter*shell_w*shucked_w, y = resid)) +
-  geom_point() +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  ggtitle("Gráfico de resíduos vs. (length x diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = F") +
-  labs(y = "resíduos", x = "age x diameter x shell_w x shucked_w")
 ```
-Analisando os desvios por variáveis explicativas, nota-se que age parece possuir maior variância para valores pequenos, o que tembém ocorre no produto das variáveis.
+Percebe-se que o gráfico de resíduos da variável explicativa `age` tem tendência linear mas tem variância média relativamente alta dos resíduos. Já a variável `shell_w` possui pontos de influência que fazem os resíduos perderem linearidade para altos valores da variável explicatica. Já as variáveis `diameter` e `shucked_w` são lineares apenas em alguns trechos. Existem poucos outliers. `age` parece possuir maior variância dos erros no trecho entre 10 e 15, enquanto `diameter` parece ter a mesma propriedade entre 80 e 100.
+
+Vamos avaliar os resíduos das combinações dois a dois:
+```{r}
+#| layout-ncol: 2
+
+# Grafico: resid x age*diameter
+ggplot(rlm_length_f_data, aes(x = age*diameter, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x diameter): modelo age ~ length + diameter + shell_w para sex = F") +
+  labs(y = "resíduos", x = "age x diameter")
+
+# Grafico: resid x age*shell_w
+ggplot(rlm_length_f_data, aes(x = age*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x shell_w): modelo age ~ length + diameter + shell_w para sex = F") +
+  labs(y = "resíduos", x = "age x shell_w")
+
+# Grafico: resid x age*shucked_w
+ggplot(rlm_length_f_data, aes(x = age*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x shucked_w): modelo age ~ length + diameter + shell_w para sex = F") +
+  labs(y = "resíduos", x = "age x shucked_w")
+
+# Grafico: resid x diameter*shell_w
+ggplot(rlm_length_f_data, aes(x = diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = F") +
+  labs(y = "resíduos", x = "diameter x shell_w")
+
+# Grafico: resid x diameter*shucked_w
+ggplot(rlm_length_f_data, aes(x = diameter*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shucked_w): modelo age ~ length + diameter + shell_w para sex = F") +
+  labs(y = "resíduos", x = "diameter x shell_w")
+
+# Grafico: resid x shell_w*shucked_w
+ggplot(rlm_length_f_data, aes(x = shell_w*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (shell_w x shucked_w): modelo age ~ length + diameter + shell_w para sex = F") +
+  labs(y = "resíduos", x = "shell_w x shell_w")
+```
+Todos os gráficos são relativamente parecidos, não havendo um claro padrão sistemático. Portanto, a princípio, não seria necessário adicionar nenhuma variável produto das variáveis explicativas no modelo.
 
 ```{r}
 #| layout-ncol: 2
 
 # Gráfico de quantis (para resíduos)
-ggplot(rlm_length_m_data, aes(sample = resid)) +
+ggplot(rlm_length_f_data, aes(sample = resid)) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
-  ggtitle("Gráfico de quantis (resíduos) - Modelo 1")
+  ggtitle("Gráfico de quantis (resíduos) Para Sex = F")
 # Gráfico de quantis (para resíduos semi-studentizados)
-ggplot(rlm_length_m_data, aes(sample = resid/sd(resid))) +
+ggplot(rlm_length_f_data, aes(sample = resid/sd(resid))) +
   stat_qq() + stat_qq_line() +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
   ggtitle("Gráfico de quantis (resíduos padronizados) Sex = F")
 
 ```
-Observa-se desvios de normalidade mais fortes no primeiro quartil, em relação ao último.
+De forma similar ao modelo limitado ao sexo masculino, percebemos desvios de normalidade nas duas caudas, com a cauda esquerda sendo bem mais alongada do que uma distribuição normal. Os desvios ocorrem próximos aos quantis de módulo 2 para os resíduos padronizados.
+
+---
+
+#### Não Identificado
+
+```{r}
+#| layout-ncol: 2
+
+# Constrói tabela com dados do modelo length ~ age + diameter + shell_w + shucked_w
+rlm_length_i_data <- abalone_i %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = rlm_length_i$fit) %>%
+  mutate(resid = rlm_length_i$res)
+
+# Gera gráficos dos resíduos:
+# Grafico: resid x resposta ajustada (yhat)
+ggplot(rlm_length_i_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos: modelo length ~ age + diameter + shell_w + shucked_w para sex = I") +
+  labs(y = "resíduos", x = "resposta ajustada (age)")
+# Grafico: |resid| x resposta ajustada (yhat)
+ggplot(rlm_length_i_data, aes(x = fitted, y = abs(resid))) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos absolutos: modelo length ~ age + diameter + shell_w + shucked_w para sex = I") +
+  labs(y = "|resíduos|", x = "resposta ajustada (age)")
+
+```
+Esse modelo possui um forte outlier. Também parece existir uma forte tendência linear e os resíduos parecem ser homoscedásticos. Testando a hipótese:
+```{r}
+bptest(rlm_length_i)
+```
+Temos um dos maiores p-valores para esse teste até então, não existindo evidência contra a hipótese nula. Portanto, não podemos rejeitar a hipótese de resíduos homoscedásticos nesse caso, o que é uma boa qualidade para o modelo.
+
+A seguir, avaliaremos os gráficos de resíduos em função de cada variável explicativa para o modelo `rlm_length_i`:
+
+```{r}
+#| layout-ncol: 2
+
+# Grafico: resid x var. explic. age
+ggplot(rlm_length_i_data, aes(x = age, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. age: modelo length ~ age + diameter + shell_w + shucked_w para sex = I") +
+  labs(y = "resíduos", x = "variável explicativa (age)")
+# Grafico: resid x var. explic. diameter
+ggplot(rlm_length_f_data, aes(x = diameter, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. diameter: modelo length ~ age + diameter + shell_w + shucked_w para sex = I") +
+  labs(y = "resíduos", x = "variável explicativa (diameter)")
+# Grafico: resid x var. explic. shell_w
+ggplot(rlm_length_m_data, aes(x = shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = I") +
+  labs(y = "resíduos", x = "variável explicativa (shell_w)")
+
+# Grafico: resid x var. explic. shucked_w
+ggplot(rlm_length_i_data, aes(x = shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. shell_w: modelo length ~ age + diameter + shell_w + shucked_w para sex = I") +
+  labs(y = "resíduos", x = "variável explicativa (shucked_w)")
+```
+Percebe-se, nos resíduos, que o outlier foge mais dos padrões de `age` e `shucked_w`. Além disso, para essas mesmas variáveis, identificamos forte linearidade. `diameter` é a variável explicativa que aparenta ser menos linear e que possui maior variância média.
+
+Vamos avaliar os resíduos das combinações dois a dois:
+```{r}
+#| layout-ncol: 2
+
+# Grafico: resid x age*diameter
+ggplot(rlm_length_i_data, aes(x = age*diameter, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x diameter): modelo age ~ length + diameter + shell_w para sex = I") +
+  labs(y = "resíduos", x = "age x diameter")
+
+# Grafico: resid x age*shell_w
+ggplot(rlm_length_i_data, aes(x = age*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x shell_w): modelo age ~ length + diameter + shell_w para sex = I") +
+  labs(y = "resíduos", x = "age x shell_w")
+
+# Grafico: resid x age*shucked_w
+ggplot(rlm_length_i_data, aes(x = age*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (age x shucked_w): modelo age ~ length + diameter + shell_w para sex = I") +
+  labs(y = "resíduos", x = "age x shucked_w")
+
+# Grafico: resid x diameter*shell_w
+ggplot(rlm_length_i_data, aes(x = diameter*shell_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shell_w): modelo age ~ length + diameter + shell_w para sex = I") +
+  labs(y = "resíduos", x = "diameter x shell_w")
+
+# Grafico: resid x diameter*shucked_w
+ggplot(rlm_length_i_data, aes(x = diameter*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (diameter x shucked_w): modelo age ~ length + diameter + shell_w para sex = I") +
+  labs(y = "resíduos", x = "diameter x shell_w")
+
+# Grafico: resid x shell_w*shucked_w
+ggplot(rlm_length_i_data, aes(x = shell_w*shucked_w, y = resid)) +
+  geom_point() +
+  geom_smooth(se=FALSE) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de resíduos vs. (shell_w x shucked_w): modelo age ~ length + diameter + shell_w para sex = I") +
+  labs(y = "resíduos", x = "shell_w x shell_w")
+```
+Novamente, os gráficos são relativamente parecidos. Nenhum padrão sistemático foi identificado.
+
+```{r}
+#| layout-ncol: 2
+
+# Gráfico de quantis (para resíduos)
+ggplot(rlm_length_i_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
+  ggtitle("Gráfico de quantis (resíduos) Para Sex = I")
+# Gráfico de quantis (para resíduos semi-studentizados)
+ggplot(rlm_length_i_data, aes(sample = resid/sd(resid))) +
+  stat_qq() + stat_qq_line() +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") +
+  ggtitle("Gráfico de quantis (resíduos padronizados) Sex = I")
+
+```
+O gráfico de quantis também segue possui caldas mais alongadas na direita e na esquerda. Com exceção do ponto outlier, porém, as caudas parecem ser relativamente simétricas, diferente dos casos masculino e feminino.
+
+### Conclusão
+
+Os três modelos parecem adequados para modelar o comportamento de `length`, possuindo boas métricas de MSE e $R^2_{aj}$. Observa-se, porém, que para os casos do modelo Masculino e Não Identificado, seria possível construir esses modelos sem as variáveis explicativas `age` e `shell_w` e avaliar os resultados, dado que o p-valor dos coeficientes associados é alto. Isso , porém, não ocorre no modelo feminino, o que nos leva a crer que existem diferenças no relacionamento das características dos abalones para cada sexo. De fato, alguns coeficientes são seguramente diferentes ao se fazer a análise de intervalos de confiança dos betas. Por fim, o diagnóstico não revelou nenhum problema grave dos modelos que, embora não sejam perfeitos e não satisfaçam todas as hipóteses de uma RLM perfeita, se adequam bem na maior parte dos valores das variáveis. Portanto, a divisão em nível e `sex` parece ser efetiva e a modelagem de `length` pelas variáveis `diameter` e `shucked_w` é efetiva para todos os níveis de `sex`, enquanto que `age` e `shell_w` são boas adições para o sexo feminino e devem ser melhor exploradas para os outros níveis de `sex` para se afirmar, de fato, que não são necessárias para suas respectivas modelagens.
 
 ----
