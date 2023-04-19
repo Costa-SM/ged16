@@ -1,0 +1,215 @@
+---
+lang: pt  
+title: "GED-16: Análise de Regressão"
+subtitle: "AULA07: Prática (1o. semestre/2023)"
+author: "Prof. Denise B. Ferrari"
+date: "2023-04-19"  
+format:
+  html:
+    theme: cosmo
+execute:
+  echo: true
+  eval: true
+  warning: false    
+---
+```{r include = FALSE}
+library(tidyverse)
+library(gridExtra)
+```
+
+----
+
+Abalone é um tipo de molusco que vive em águas marinhas costeiras em diversas regiões do globo. A concha do abalone apresenta tamanho que varia entre 10 a 25cm e sua coloração interior iridescente nacarada é muito valorizada na confecção de jóias e ornamentos; além disso, a carne do animal é considerada uma iguaria em muitos países. Devido ao seu alto valor comercial e consequente pesca excessiva, além da degradação de seu habitat pela ação humana, diversas espécies de abalone atualmente correm risco de extinção. Existem mais de 100 espécies de abalone ao redor do mundo, das quais cerca de 15 são produzidas por meio de aquicultura. Determinar a idade do abalone de maneira acurada é importante tanto em termos comerciais (o valor comercial do abalone está associado à sua idade) bem como em termos ambientais (condições ambientais podem afetar a saúde do animal). A idade do animal pode ser determinada a partir da contagem do número de anéis na concha, utilizando um microscópio, a partir de um procedimento delicado e trabalhoso.
+
+
+![Abalone (Image by <a href="https://pixabay.com/users/lisaleo-3220940/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4919586">Lisa Yount</a> from <a href="https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4919586">Pixabay</a>)](img/abalone.jpg){width=80%}
+
+Os dados disponíveis no arquivo `data/abalone/abalone.data` foram
+obtidos no [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Abalone) e são bastante utilizados na investigação de métodos de Machine Learning. Tais dados foram coletados a partir do estudo original:
+
+Warwick J Nash, Tracy L Sellers, Simon R Talbot, Andrew J Cawthorn and
+	Wes B Ford (1994) "The Population Biology of Abalone (_Haliotis_
+	species) in Tasmania. I. Blacklip Abalone (_H. rubra_) from the
+	North	Coast and Islands of Bass Strait", Sea Fisheries Division,
+	Technical Report No. 48 (ISSN 1034-3288).
+
+O principal objetivo do projeto era determinar a idade do molusco a partir de medidas físicas do animal mais fáceis de serem obtidas. Os dados originais foram pré-processados no sentido de remover observações faltantes e os valores das variáveis contínuas foram dividos por 200. Há um total de 4177 observações coletadas para 9 variáveis:
+
+1. `sex`: sexo do animal (M, F, I)
+2. `length`: maior comprimento da concha (mm)
+3. `diameter`: comprimento perpendicular à `length` (mm)
+4. `height`: comprimento da carne da concha (mm)
+5. `whole_w`: peso do animal (g)
+6. `shucked_w`: peso da carne (g)
+7. `viscera_w`: peso das vísceras (g)
+8. `shell_w`: peso da concha (g)
+9. `rings`: número de anéis (a idade é obtida somando 1.5)
+
+Mais informações a respeito dos dados podem ser obtidas no arquivo `data/abalone/abalone.names`.
+
+
+## Análise Exploratória de Dados
+
+Conduza a análise exploratória da massa de dados `abalone`, a fim de compreender suas características principais.   
+Voltaremos a utilizar essa massa de dados em atividades futuras.
+
+```{r}
+#| warning: false
+#| message: false
+
+# carrega dados
+abalone <- read_csv("data/abalone/abalone.data", col_names = FALSE)
+# nomeia variáveis
+names(abalone) <- c("sex", "length", "diameter", "height", 
+                    "whole_w", "shucked_w", "viscera_w", "shell_w",
+                    "rings")
+```
+
+```
+---
+>>> REPLICAR AQUI A ANÁLISE REALIZADA
+---
+```
+
+
+```{r}
+abalone <- abalone %>% 
+  # recodifica `sex` como "factor" (variável categórica)
+  mutate_at('sex', as.factor) %>%
+  # recodifica `rings` como "integer"
+  mutate_at('rings', as.integer) %>%
+  # reescalando as variáveis contínuas (multiplicar por 200)
+  # mutate(across(-c(sex, rings), ~ . * 200)) %>%
+  # modifica os valores da variável `height` que aparecem como zero para `NA`
+  mutate(height = na_if(height, 0)) %>%
+  # Remove linhas correspondentes às obs. faltantes da variável `height`
+  drop_na()
+```
+
+
+## PARTE 1: Regressão Linear Simples
+
+1. Assuma que um modelo de regressão linear simples é adequado para modelar a relação da variável de resposta `length` a cada uma das variáveis explicativas  `diameter`, `shucked_w`, `shell_w` e `rings`.
+
+  + Construa um modelo de regressão para cada um desses pares de variáveis;  
+  + Construa gráficos de dispersão (separados) com as retas de regressão ajustadas para cada caso;  
+  + Calcule o MSE para cada modelo. Que variável explicativa produz menor variabilidade em torno da reta de regressão ajustada?  
+  + Utilizando R^2^ como critério, qual das variáveis explicativas contribui para a maior redução na variabilidade da resposta `age`?
+
+2. Para cada nível da variável `sex`, construa um modelo de regressão para a variável de resposta `length` em função de `diameter`. Assuma que o modelo de 1a. ordem é adequado para modelar essas relações. 
+
+  + Obtenha os modelos de regressão ajustados.  
+  + As funções de regressão estimadas são semelhantes para todos os níveis da variável `sex`? Discuta. 
+  + Calcule o MSE para cada nível da variável `sex`. A variabilidade em torno da reta de regressão ajustada é semelhante para todos os níveis?  
+  + Construa intervalos de confiança 95% para o coeficiente angular da reta de regressão para cada nível da variável `sex`. As retas de regressão para diferentes níveis parecem ter mesma inclinação? O que se pode concluir?  
+  + Construa intervalos de confiança para a resposta esperada correspondendo a `diameter = 90`, para cada nível da variável `sex`. O que se pode concluir?  
+  + Construa intervalos de previsão para um novo animal de cada sexo que tenha `diameter = 90`. O que se pode concluir?
+
+3. Para cada nível da variável `sex`, construa um modelo de regressão para a variável de resposta `length` em função de `shell_w`. Assuma que o modelo de 1a. ordem é adequado para modelar essas relações. 
+
+  + Obtenha os modelos de regressão ajustados.  
+  + As funções de regressão estimadas são semelhantes para todos os níveis da variável `sex`? Discuta. 
+  + Calcule o MSE para cada nível da variável `sex`. A variabilidade em torno da reta de regressão ajustada é semelhante para todos os níveis?  
+  + Construa intervalos de confiança 95% para o coeficiente angular da reta de regressão para cada nível da variável `sex`. As retas de regressão para diferentes níveis parecem ter mesma inclinação? O que se pode concluir?  
+  + Construa intervalos de confiança para a resposta esperada correspondendo a `shell_w = 50`, para cada nível da variável `sex`. O que se pode concluir? 
+  + Faz sentido aplicar alguma transformação à variável explicativa? Em caso positivo, replique os itens anteriores para um modelo para a variável explicativa transformada.
+
+
+```
+---
+>>> REPLICAR AQUI A ANÁLISE REALIZADA
+---
+```
+  
+### Diagnóstico
+
+1. Para cada um dos modelos de regressão ajustados no item (1) da seção anterior, realize o diagnóstico através da análise dos resíduos e apresente um resumo de suas conclusões. O modelo de regressão linear simples clássico é adequado a alguma das situações investigadas? 
+
+2. Ajuste um modelo de regressão linear simples para a variável `length` como função de `diameter` após excluir as observações 1211 (X = 0.375 e Y = 0.185) e 4088 (X = 0.365 e Y = 0.61). Obtenha intervalos de previsão de 95% de confiança para novas observações que apresentam valores da variável explicativa iguais a 0.375 e 0.365. As observações eliminadas encontram-se nos limites dos intervalos de previsão obtidos? Discuta o significado dos resultados obtidos.
+
+3. Para os modelos considerando cada nível da variável `sex` no item (2) da seção anterior, realize o diagnóstico através da análise dos resíduos. Todos aparentam ter mesma variância dos erros? Que conclusões é possível obter a partir da análise?
+
+```
+---
+>>> REPLICAR AQUI A ANÁLISE REALIZADA
+---
+```
+
+## PARTE 2: Regressão Linear Múltipla
+
+Para os exercícios a seguir, suponha que a idade do abalone seja dada pela seguinte forma:
+
+$$\textsf{age} = \textsf{rings} + \delta, \quad \delta \sim N(\mu = 1.5, \sigma = 0.5)$$
+
+```{r}
+set.seed(16)
+abalone <- abalone %>%
+  # cria nova variável `age`
+  mutate(age = rings + rnorm(n = nrow(abalone), mean = 1.5, sd = 0.5))
+```
+
+Dois modelos foram propostos para prever a idade de um abalone (`age`):
+
+**Modelo I:** utiliza como variáveis explicativas `length`, `diameter` e `shell_w`
+
+**Modelo II:** utiliza como variáveis explicativas `height`, `diameter` e `shell_w`
+
+1. Construa a matriz de gráficos de dispersão, bem como a matriz de correlação para cada modelo proposto. Interprete os resultados obtidos.
+
+2. Para cada modelo, ajuste um modelo de regressão de 1a. ordem com as três variáveis explicativas consideradas. Discuta os resultados obtidos.
+
+3. Realize o diagnóstico dos modelos. É possível identificar um modelo que seja mais adequado aos dados?
+
+4. Para cada nível da variável `sex`, construa um modelo de regressão de 1a. ordem para `length` como função das variáveis `age`, `diameter` e `shucked_w` e `shell_w`.
+
+  + Comente sobre os resultados obtidos para os modelos ajustados.
+  + As funções de regressão estimadas são semelhantes para os diferentes níveis da variável `sex`? Discuta. 
+  + Analise os valores de MSE e $R^2_{aj}$ para cada modelo. Essas medidas são semelhantes para os três níveis de `sex`? Discuta.
+  + Realize o diagnóstico dos modelos construídos. Interprete os gráficos e os resultados obtidos.
+  
+## PARTE 3: Construção de Modelos
+
+Continuaremos considerando que a idade do abalone seja dada pela seguinte forma:
+
+$$\textsf{age} = \textsf{rings} + \delta, \quad \delta \sim N(\mu = 1.5, \sigma = 0.5)$$
+
+```{r}
+set.seed(16)
+abalone <- abalone %>%
+  # cria nova variável `age`
+  mutate(age = rings + rnorm(n = nrow(abalone), mean = 1.5, sd = 0.5))
+```
+
+Utilize o procedimento para construção de modelos para prever a idade de um abalone (`age`):
+
+**Modelo I:** considere como variáveis explicativas `length`, `diameter` e `shell_w` (e transformações).
+
+**Modelo II:** considere como variáveis explicativas `height`, `diameter` e `shell_w` (e transformações).
+
+Lembre-se que os passos apropriados em análise de regressão consistem em:
+
+**construção do modelo**
+
+1. formulação do modelo   
+2. ajuste do modelo  
+3. avaliação do modelo
+
+Para a formulação dos modelos, devemos utilizar o seguinte procedimento:  
+
+1. inclusão de variáveis quantitativas (polinomiais, transformações, etc.);  
+2. inclusão de variáveis qualitativas;  
+3. inclusão de interações entre termos contendo variáveis quantitativas e qualitativas.
+
+
+**utilização do modelo**
+
+ + para realizar inferências
+ + para auxiliar o processo de tomada de decisão
+ 
+Não esqueça de realizar análise de resíduos, inferências e validação do modelo. Forneça interpretações e discussão para os resultados obtidos.
+
+
+
+
+
+----
