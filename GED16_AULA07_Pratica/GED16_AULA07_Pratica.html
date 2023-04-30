@@ -266,8 +266,8 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">age =</span> rings <span class="sc">+</span> <span class="fu">rnorm</span>(<span class="at">n =</span> <span class="fu">nrow</span>(abalone), <span class="at">mean =</span> <span class="fl">1.5</span>, <span class="at">sd =</span> <span class="fl">0.5</span>))</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Utilize o procedimento para construção de modelos para prever a idade de um abalone (<code>age</code>):</p>
-<p><strong>Modelo I:</strong> considere como variáveis explicativas <code>length</code>, <code>diameter</code> e <code>shell_w</code> (e transformações).</p>
-<p><strong>Modelo II:</strong> considere como variáveis explicativas <code>height</code>, <code>diameter</code> e <code>shell_w</code> (e transformações).</p>
+<p><strong>Modelo I:</strong> considere como variáveis explicativas <code>length</code>, <code>diameter</code>, <code>shell_w</code> e <code>sex</code> (e transformações).</p>
+<p><strong>Modelo II:</strong> considere como variáveis explicativas <code>height</code>, <code>diameter</code>, <code>shell_w</code> e <code>sex</code> (e transformações).</p>
 <p>Lembre-se que os passos apropriados em análise de regressão consistem em:</p>
 <p><strong>construção do modelo</strong></p>
 <ol type="1">
@@ -291,6 +291,115 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <li>para auxiliar o processo de tomada de decisão</li>
 </ul>
 <p>Não esqueça de realizar análise de resíduos, inferências e validação do modelo. Forneça interpretações e discussão para os resultados obtidos.</p>
+<hr>
+</section>
+<section id="construção-do-modelo-1" class="level2">
+<h2 class="anchored" data-anchor-id="construção-do-modelo-1">Construção do Modelo 1</h2>
+<p>A princípio, vamos construir o modelo com os termos quadráticos de cada variável explicativa quantitativa: <span class="math display">\[
+  E[age] = \beta_0 + \beta_1 length + \beta_{11}length^2  + \beta_2 diameter + \beta_{22} diameter^2 +  \beta_3 shell_w + \beta_{33} shell_w^2 + \beta_{12} length \cdot diameter + \beta_{13} length \cdot shell_w + \beta_{23} diameter \cdot shell_w
+\]</span> Começaremos avaliando a correlação dos termos lineares e quadráticos:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>length, abalone<span class="sc">$</span>length<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9875853</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>diameter, abalone<span class="sc">$</span>diameter<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9866137</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>shell_w, abalone<span class="sc">$</span>shell_w<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9404706</code></pre>
+</div>
+</div>
+<p>Percebe-se que todas as correlações são muito altas. Podemos conferir esse comportamento visualmente:</p>
+<div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># diagramas de dispersão</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> length, <span class="at">y =</span> length<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Diagrama de dispersão: `length^2` x `length`"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> diameter, <span class="at">y =</span> diameter<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Diagrama de dispersão: `diameter^2` x `diameter`"</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w, <span class="at">y =</span> shell_w<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Diagrama de dispersão: `shell_w^2` x `shell_w`"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-10-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-10-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Vamos então centralizar as variáveis explicativas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># centralizando a variável explicativa</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone <span class="sc">|&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diameter_c =</span> diameter <span class="sc">-</span> <span class="fu">mean</span>(diameter), </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">shell_w_c =</span> shell_w <span class="sc">-</span> <span class="fu">mean</span>(shell_w),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">length_c =</span> length <span class="sc">-</span> <span class="fu">mean</span>(length)) </span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># novas correlações</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>length_c, abalone<span class="sc">$</span>length_c<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.4457653</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>diameter_c, abalone<span class="sc">$</span>diameter_c<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.4361484</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>shell_w_c, abalone<span class="sc">$</span>shell_w_c<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3903075</code></pre>
+</div>
+</div>
+<p>Percebe-se uma redução significativa em todas as correlações. Podemos agora construir um modelo inicial com as variáveis explicativas quantitativas centralizadas:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo polinomial de 2a. ordem completo para as variáveis quantitativas</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>m1_quant <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> <span class="fu">I</span>(length_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(diameter_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(shell_w_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> length_c<span class="sc">*</span>shell_w_c<span class="sc">+</span> diameter_c<span class="sc">*</span>length_c <span class="sc">+</span> diameter_c<span class="sc">*</span> shell_w_c  , <span class="at">data =</span> abalone)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co"># resumo do modelo </span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_quant)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + 
+    length_c * shell_w_c + diameter_c * length_c + diameter_c * 
+    shell_w_c, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.7503 -1.4690 -0.3961  1.0045 16.5719 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          12.5381347  0.0590556 212.311  &lt; 2e-16 ***
+I(length_c^2)        -0.0020872  0.0006210  -3.361 0.000784 ***
+I(diameter_c^2)      -0.0045317  0.0013369  -3.390 0.000706 ***
+I(shell_w_c^2)       -0.0002512  0.0001065  -2.360 0.018320 *  
+length_c             -0.1180018  0.0101822 -11.589  &lt; 2e-16 ***
+shell_w_c             0.1497556  0.0051200  29.249  &lt; 2e-16 ***
+diameter_c            0.0230993  0.0130173   1.775 0.076052 .  
+length_c:shell_w_c   -0.0013842  0.0007141  -1.938 0.052644 .  
+length_c:diameter_c   0.0051125  0.0015577   3.282 0.001039 ** 
+shell_w_c:diameter_c  0.0010126  0.0009031   1.121 0.262262    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.373 on 4165 degrees of freedom
+Multiple R-squared:  0.473, Adjusted R-squared:  0.4719 
+F-statistic: 415.4 on 9 and 4165 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
 <hr>
 </section>
 </section>

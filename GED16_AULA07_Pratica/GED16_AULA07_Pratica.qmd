@@ -115,9 +115,9 @@ abalone <- abalone %>%
 
 Utilize o procedimento para construção de modelos para prever a idade de um abalone (`age`):
 
-**Modelo I:** considere como variáveis explicativas `length`, `diameter` e `shell_w` (e transformações).
+**Modelo I:** considere como variáveis explicativas `length`, `diameter`, `shell_w` e `sex` (e transformações).
 
-**Modelo II:** considere como variáveis explicativas `height`, `diameter` e `shell_w` (e transformações).
+**Modelo II:** considere como variáveis explicativas `height`, `diameter`, `shell_w` e `sex` (e transformações).
 
 Lembre-se que os passos apropriados em análise de regressão consistem em:
 
@@ -145,7 +145,54 @@ Não esqueça de realizar análise de resíduos, inferências e validação do m
 
 ## Construção do Modelo 1
 
+A princípio, vamos construir o modelo com os termos quadráticos de cada variável explicativa quantitativa:
+$$
+  E[age] = \beta_0 + \beta_1 length + \beta_{11}length^2  + \beta_2 diameter + \beta_{22} diameter^2 +  \beta_3 shell_w + \beta_{33} shell_w^2 + \beta_{12} length \cdot diameter + \beta_{13} length \cdot shell_w + \beta_{23} diameter \cdot shell_w
+$$
+Começaremos avaliando a correlação dos termos lineares e quadráticos:
+```{r}
+cor(abalone$length, abalone$length^2)
+cor(abalone$diameter, abalone$diameter^2)
+cor(abalone$shell_w, abalone$shell_w^2)
 
+```
+Percebe-se que todas as correlações são muito altas. Podemos conferir esse comportamento visualmente:
 
+```{r}
+#| layout-ncol: 2
 
+# diagramas de dispersão
+ggplot(abalone, aes(x = length, y = length^2)) +
+  geom_point() +
+  ggtitle("Diagrama de dispersão: `length^2` x `length`")
+ggplot(abalone, aes(x = diameter, y = diameter^2)) +
+  geom_point() +
+  ggtitle("Diagrama de dispersão: `diameter^2` x `diameter`")
+ggplot(abalone, aes(x = shell_w, y = shell_w^2)) +
+  geom_point() +
+  ggtitle("Diagrama de dispersão: `shell_w^2` x `shell_w`")
+```
+Vamos então centralizar as variáveis explicativas:
+
+```{r}
+# centralizando a variável explicativa
+abalone <- abalone |>
+  mutate(diameter_c = diameter - mean(diameter), 
+         shell_w_c = shell_w - mean(shell_w),
+         length_c = length - mean(length)) 
+
+# novas correlações
+cor(abalone$length_c, abalone$length_c^2)
+cor(abalone$diameter_c, abalone$diameter_c^2)
+cor(abalone$shell_w_c, abalone$shell_w_c^2)
+```
+Percebe-se uma redução significativa em todas as correlações. Podemos agora construir um modelo inicial com as variáveis explicativas quantitativas centralizadas:
+
+```{r}
+# modelo polinomial de 2a. ordem completo para as variáveis quantitativas
+m1_quant <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + length_c*shell_w_c+ diameter_c*length_c + diameter_c* shell_w_c  , data = abalone)
+
+# resumo do modelo 
+summary(m1_quant)
+```
 ----
