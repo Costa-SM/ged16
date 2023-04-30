@@ -141,6 +141,9 @@ Para a formulação dos modelos, devemos utilizar o seguinte procedimento:
  
 Não esqueça de realizar análise de resíduos, inferências e validação do modelo. Forneça interpretações e discussão para os resultados obtidos.
 
+---
+
+## Construção do Modelo 1
 
 
 
