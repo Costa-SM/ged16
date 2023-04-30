@@ -98,7 +98,6 @@ Obtemos duas observações que não fazem sentido (altura zero e pesos diferente
 abalone <- abalone[abalone$height!=0,]
 ```
 
-
   
 ## PARTE 3: Construção de Modelos
 
@@ -195,4 +194,6 @@ m1_quant <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + length_c
 # resumo do modelo 
 summary(m1_quant)
 ```
+
+
 ----
