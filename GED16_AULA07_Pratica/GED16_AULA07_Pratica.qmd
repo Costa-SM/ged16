@@ -99,7 +99,7 @@ abalone <- abalone[abalone$height!=0,]
 ```
 
   
-## PARTE 3: Construção de Modelos
+# PARTE 3: Construção de Modelos
 
 Continuaremos considerando que a idade do abalone seja dada pela seguinte forma:
 
@@ -304,5 +304,84 @@ m_quali <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter
 summary(m_quali)
 ```
 
+## Construção do Modelo 2
+
+Para o segundo modelo, consideramos como variáveis explicativas `height`, `diameter`, `shell_w` e `sex`. Assim como antes, primeiro construiremos o modelo com as variáveis quantitativas. Dessa forma, temos:
+
+$$
+\begin{align}
+E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &\beta_3\cdot shell\_w +\beta_{33}\cdot shell\_w^2 + \beta_{12}\cdot height\cdot diameter\\
+      +  &\beta_{13}\cdot height\cdot shell\_w + \beta_{23}\cdot diameter\cdot shell\_w
+\end{align}
+$$
+Podemos, então, agrupar a correlação dos diferentes termos do modelo na tabela abaixo.
+
+| Termos Analisados                  | Correlação                                    |
+|------------------------------------|-----------------------------------------------|
+| `height` e `height`*`height`       | `r cor(abalone$height, abalone$height^2)`     |
+| `diameter` e `diameter`*`diameter` | `r cor(abalone$diameter, abalone$diameter^2)` |
+| `shell_w` e `shell_w`*`shell_w`    | `r cor(abalone$shell_w, abalone$shell_w^2)`   |
+
+
+Percebe-se que a correlação referente a `diameter` e `shell_w` é bastante alta, enquanto `height` beira 75%. Como já foram analisados anteriormente, geraremos apenas o diagrama de dispersão referente à variável `height`. Através da análise deste, nota-se que há a presença
+de dois _outliers_, que causam a redução no valor de correlação obtido. Podemos retirá-los do _dataset_, gerando o segundo gráfico de dispersão.
+
+```{r}
+#| layout-ncol: 2
+# diagramas de dispersão
+ggplot(abalone, aes(x = height, y = height^2)) +
+  geom_point() +
+  ggtitle("Diagrama de dispersão: `height^2` x `height`")
+
+abalone <- abalone[abalone$height < 100,]
+
+ggplot(abalone, aes(x = height, y = height^2)) +
+  geom_point() +
+  ggtitle("Diagrama de dispersão: `height^2` x `height` -- Sem Outlier")
+```
+Dessa forma, temos que o novo valor de correlação entre `height` e `height`*`height` é dado por `r cor(abalone$height, abalone$height^2)`, que, assim como nos anteriores, é bastante próximo de 1.
+
+A seguir, podemos centralizar as variáveis explicativas, como feito no primeiro modelo, e obter a nova correlação apenas para a variável `height`, dado que, para as demais, isso já foi feito anteriormente. Nota-se que, como nos casos anteriores, há uma redução significativa no valor obtido.
+
+```{r}
+# centralizando a variável explicativa
+abalone <- abalone |>
+  mutate(height_c = height - mean(height))
+
+# nova correlação
+cor(abalone$height_c, abalone$height_c^2)
+```
+
+A seguir, construímos um modelo inicial análogo ao primeiro.
+
+```{r}
+# modelo polinomial de 2a. ordem completo para as variáveis quantitativas
+m2_quant <- lm(age ~ I(height_c^2) + I(diameter_c^2) + I(shell_w_c^2) + height_c*shell_w_c+ diameter_c*height_c + diameter_c* shell_w_c  , data = abalone)
+
+# resumo do modelo 
+summary(m2_quant)
+```
+
+Para realizar a inclusão das variáveis categóricas, usamos variáveis _dummy_. Então, consideramos o modelo abaixo, em que as variáveis
+$X_M$, $X_F$ e $X_I$ representam os diferentes níveis de `sex`.
+
+$$
+\begin{align}
+E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &\beta_3\cdot shell\_w +\beta_{33}\cdot shell\_w^2 + \beta_{12}\cdot height\cdot diameter\\
+      +  &\beta_{13}\cdot height\cdot shell\_w + \beta_{23}\cdot diameter\cdot shell\_w \\
+      +  &\beta_M\cdot X_M+ \beta_F\cdot X_F+ \beta_I\cdot X_I
+\end{align}
+$$
+
+Assim, alteramos o conjunto de dados, para realizar a inclusão das variáveis _dummy_ para cada nível de `sex`.
+```{r}
+# modelo polinomial de 2a. ordem completo para as variáveis quantitativas
+m2_qual <- lm(age ~ I(height_c^2) + I(diameter_c^2) + I(shell_w_c^2) + height_c*shell_w_c+ diameter_c*height_c + diameter_c* shell_w_c + sex, data = abalone)
+
+# resumo do modelo 
+summary(m2_qual)
+```
 
 ---
