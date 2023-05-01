@@ -105,7 +105,7 @@ summary(abalone)
 
 Dado o sumário, analisaremos agora a distribuição de algumas das grandezas de interesse no conjunto de dados. Começaremos pela idade dos Abalones, a partir da qual pode ser construído o histograma abaixo, juntamente com a sua curva de densidade estimada. Pela análise destes, nota-se que há um grande número de Abalones com uma idade próxima a 10 anos, com os mais velhos podendo ter até próximo de 30 anos.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Histograma de `age`
 ggplot(abalone, aes(x = age)) +
   geom_histogram(aes(y = after_stat(density))) +
@@ -118,13 +118,13 @@ ggplot(abalone, aes(x = age)) +
 
 Pode-se, também, construir um conjunto de gráficos para analisar a relação entre cada uma das características do conjunto de dados. Nota-se, entretanto, que esse conjunto não conta com os valores de correlação das variáveis.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
   plot(abalone[,-c(9,9)])
 ```
 
 Dessa maneira, pode-se, com base na figura anterior, construir a próxima, que conta com os valores de correlação entre as diferentes variáveis, bem como gráficos mais informativos relacionando o sexo dos Abalones com as suas outras características.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
   library(GGally)
   ggpairs(abalone[,-c(9,9)])
 ```
@@ -136,12 +136,12 @@ abalone[c(1,2,3),]
 ```
 Assim, pode-se gerar o gráfico da variável `whole_w` *versus* a soma das variáveis `shucked_w`, `viscera_w` e `shell_w`. Bem como o valor de correlação das duas grandezas obtidas. Por fim, nota-se que este último é de aproximadamente 99.51\%, um valor bastante alto.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
   abalone$sum_w <- abalone$shucked_w + abalone$viscera_w + abalone$shell_w
   plot(abalone$whole_w, abalone$sum_w)
 ```
 
-```{r eval=FALSE}
+```{r eval=TRUE}
   cor(abalone$whole_w, abalone$sum_w)
 ```
 
@@ -162,7 +162,7 @@ ggplot(abalone, aes(x = age, y = "")) +
 
 Pode-se também realizar a análise da distribuição de idades conforme o sexo do Abalone, para determinar se há uma tendência dos machos ou fêmeas terem uma expectativa de vida maior. Para tal, geram-se, novamente, *boxplots* da idade para cada um dos sexos. Não há grandes diferenças na distribuição de idades de machos e fêmeas. Nota-se, porém, que a grande maioria dos indivíduos de sexo não identificado são mais jovens do que os demais. Isso pode ser uma evidência de se existir uma dificuldade na identificação do sexo do Abalone quando este é mais jovem, sendo esta tarefa possivelmente mais fácil conforme estes envelhecem.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Boxplots
 ggplot(abalone, aes(x = age, y = sex)) +
   geom_boxplot()
@@ -170,29 +170,29 @@ ggplot(abalone, aes(x = age, y = sex)) +
 ```
 
 Ainda com base nos gráficos de relação entre as características, podemos analisar mais a fundo a relação entre o tamanho e o peso dos abalones. Tomando as variáveis `whole_w` e `diameter`, podemos percaber uma grande correlação entre essas variáveis.
-```{r eval=FALSE}
+```{r eval=TRUE}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = diameter))
 ```
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 cor(abalone$whole_w, abalone$diameter)
 ```
 Podemos também hipotetizar que os abalones tem densidade aproximadamente constante. Assim, analisando o gráfico entre `whole_w` *versus* `height`*`diameter`^2, encontramos um gráfico que lembra uma reta. Também podemos perceber que encontra-se uma correlação ainda maior que a do caso anterior.
-```{r eval=FALSE}
+```{r eval=TRUE}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = height*diameter**2))
 ```
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 cor(abalone$whole_w, abalone$length*abalone$diameter**2)
 ```
 Podemos hipotetizar também que abalones mais velhos sejam mais pesados. Ainda que exista alguma relação entre essas variáveis, parece que ela é mais forte quando os abalones são mais novos, porém quanto mais velhos eles ficam, mais dispersos ficam os pesos. Percebe-se uma correlação significativamente menor entre essas variáveis se comparados aos casos anteriormente analisados.
-```{r eval=FALSE}
+```{r eval=TRUE}
 ggplot(abalone)+ 
   geom_point(aes(x=whole_w, y = age))
 ```
-```{r eval=FALSE}
+```{r eval=TRUE}
 cor(abalone$whole_w, abalone$age)
 ```
 
@@ -236,7 +236,7 @@ lm_diameter
 
 Percebe-se que os coeficientes do modelo são ambos não nulos. Como nenhum abalone tem `diameter` = 0,  o valor do intercepto não tem significado prática. Geramos o gráfico de dispersão para avaliar o modelo.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = diameter, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
@@ -270,7 +270,7 @@ lm_shucked <- lm(length ~ shucked_w, data = abalone)
 lm_shucked
 ```
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shucked_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
@@ -296,7 +296,7 @@ lm_shell <- lm(length ~ shell_w, data = abalone)
 lm_shell
 ```
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
@@ -327,7 +327,7 @@ lm_rings <- lm(length ~ rings, data = abalone)
 lm_rings
 ```
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 # Gera o grafico de dispersao
 ggplot(abalone, aes(x = rings, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 ```
@@ -637,7 +637,7 @@ Analisando-se os cada um dos casos, nota-se que 95% dos Abalones masculinos com 
 
 Primeiramente, é necessário determinar se vale a pena realizar a análise novamente, com uma transformação na variável explicativa. Para tal, pode-se gerar o gráfico relacionando a variável `length` a `shell_w` e, em seguida, o que relaciona `length` e a raiz cúbica de `shell_w`, transformação escolhida com base no fato de o peso do abalone ser uma função do produto de uma densidade média, suposta constante, e uma medida de volume, que tentaremos reproduzir como o cubo da variável `length`.
 
-```{r eval=FALSE}
+```{r eval=TRUE}
 plot_normal <- ggplot(abalone, aes(x = shell_w, y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 plot_cubic <- ggplot(abalone, aes(x = shell_w ^ (1/3), y = length)) + geom_point() + geom_smooth(method = lm, se = FALSE)
 
@@ -3149,31 +3149,31 @@ E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot d
 $$
 
 ```{r}
-anova(m2_qual_redfin)
+anova(m2_qual_red_nd)
 ```
 
 ```{r}
 #| layout-ncol: 2
 # Constrói tabela com dados do modelo `m_red`
-m2_qual_redfin_data <- abalone %>%
+m2_qual_rednd_data <- abalone %>%
                        # inclui coluna com valores ajustados
-                       mutate(fitted = m2_qual_redfin$fit) %>%
-                       mutate(resid = m2_qual_redfin$res)
+                       mutate(fitted = m2_qual_red_nd$fit) %>%
+                       mutate(resid = m2_qual_red_nd$res)
 
 # Gera gráficos dos resíduos:
-ggplot(m2_qual_redfin_data, aes(x = fitted, y = resid)) +
+ggplot(m2_qual_rednd_data, aes(x = fitted, y = resid)) +
   geom_point() +
   geom_hline(yintercept = 0, linetype = "dashed") +
   ggtitle("Gráfico de Resíduos: Modelo 2 Final") +
   labs(y = "Resíduos", x = "Resposta Ajustada (age)")
 # Gráfico de quantis
-ggplot(m2_qual_redfin_data, aes(sample = resid)) +
+ggplot(m2_qual_rednd_data, aes(sample = resid)) +
   stat_qq() + stat_qq_line() +
   ggtitle("gráfico de quantis normais") +
   labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") 
 ```
 
-Nota-se, por fim, que, salvo pela interação entre `diameter^2` e `sex`, todos os coeficientes do modelo ajudam na redução de variabilidade da resposta.
+Nota-se, por fim, que todos os coeficientes do modelo ajudam na redução de variabilidade da resposta.
 
 Portanto, conclui-se que o Modelo 2 também é adequado para a modelagem da variável `age`, com as mesmas ressalvas quanto ao Modelo 1, referentes a intervalos de confiança e previsão bastante largos, devido ao relativamente baixo coeficiente de determinação ajustado, e o gráfico de resíduos esparso.
 
