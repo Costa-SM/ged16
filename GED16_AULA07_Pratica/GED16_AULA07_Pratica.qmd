@@ -142,7 +142,9 @@ Não esqueça de realizar análise de resíduos, inferências e validação do m
 
 ---
 
-## Construção do Modelo 1
+### Construção do Modelo 1
+
+#### 1.1) Modelo para a Variável Quantitativa
 
 A princípio, vamos construir o modelo com os termos quadráticos de cada variável explicativa quantitativa:
 $$
@@ -195,5 +197,112 @@ m1_quant <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + length_c
 summary(m1_quant)
 ```
 
+Percebe-se que o modelo é significativo (passa no teste-F global com valor-p da ordem de e-16) e o coeficiente de determinação ajustado indica que aproximadamente 47.2% da variabilidade na resposta é explicada pelo modelo. Com $\alpha = 5%$, percebemos que os coeficientes de `shell_w_c^2`, `diameter_c`, `length_c:shell_w_c` e `shell_w_c:diameter_c` não são significantes. Vamos considerar um modelo reduzido sem essas variáveis, exceto por `diameter_c`, uma vez que o princípio da hierarquia determina que, se `diameter_c` for removido, `diameter_c^2` também deve ser, porém o modelo considera `diameter_c^2` como estatisticamente significante, manteremos o termo linear. 
 
-----
+```{r}
+# modelo reduzido
+m1_red <- lm(age ~ I(length_c^2) + I(diameter_c^2) + diameter_c*length_c + shell_w_c  , data = abalone)
+# resumo do modelo reduzido 
+summary(m1_red)
+```
+Todos os coeficientes são estatisiticamente significantes, o modelo reduzido é significativo pela estatística F e o coeficiente de determinação ajustado indica que aproximadamente 46.3% da variabilidade na resposta é explicada pelo modelo.
+
+Vamos agora realizar o teste de hipótese a seguir:
+Ho: $\beta_{33} = \beta_{13} = \beta_{23} = 0$  
+Ha: nem todos os coeficientes são nulos
+
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m1_red, m1_quant, test="F")
+```
+O teste indica que podemos rejeitar a hipótese nula, logo não podemos concluir que os três coeficientes são nulos. Vamos tentar incluir `shell_w_c^2` no modelo reduzido e avaliar novamente:
+
+```{r}
+# modelo reduzido
+m1_red_2 <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter_c*length_c + shell_w_c , data = abalone)
+# resumo do modelo reduzido 
+summary(m1_red_2)
+```
+Incluindo novamente `shell_w_c^2`, percebemos que o termo agora recebe p-valor muito baixo, indicando ser significante. Percebemos nesse ultimo modelo tambem que `diameter_c` voltou a ser considerado não significativo (ainda que esteja no limiar), porém o termo de interação `diameter_c:length_c` e o termo quadrático `diameter_c^2` ainda são significativos. Esse modelo reduzido também é significativo pela estatística F e o coeficiente de determinação ajustado indica que aproximadamente 47.2% da variabilidade na resposta é explicada pelo modelo. Vamos compará-lo ao modelo `m1_quant` agora, com as seguintes hipóteses:
+
+Ho: $\beta_{13} = \beta_{23} = 0$  
+Ha: nem todos os coeficientes são nulos
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m1_red_2, m1_quant, test="F")
+```
+Ainda não podemos inferir, com 95% de confiança, que os coeficientes são nulos (rejeita-se a hipótese nula). Vamos adicionar novamente o termo  `length_c:shell_w_c`, pois ele possui menor p-valor em `m1_quant` do que `shell_w_c:diameter_c`:
+
+```{r}
+# modelo reduzido
+m1_red_3 <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter_c*length_c + shell_w_c*length_c , data = abalone)
+# resumo do modelo reduzido 
+summary(m1_red_3)
+```
+O modelo é significante pela estatística F e o coeficiente de determinação ajustado indica que aproximadamente 47.2% da variabilidade na resposta é explicada por ele. Percebe-se que a tabela ANOVA indica que apenas `diameter_c` é não significante agora.
+
+Realizando o teste de hipótese ao comparar com `m1_quant`:
+Ho: $\beta_{23} = 0$  
+Ha: $\beta_{23} \neq 0$
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m1_red_3, m1_quant, test="F")
+```
+Não podemos rejeitar a hipótese nula. Aceitamos-a, portanto, e temos um modelo reduzido da forma
+$$
+  E[age] = \beta_0 + \beta_1 length + \beta_{11}length^2  + \beta_2 diameter + \beta_{22} diameter^2 +  \beta_3 shell_w + \beta_{33} shell_w^2 + \beta_{12} length \cdot diameter + \beta_{13} length \cdot shell_w
+$$
+Podemos prosseguir com a análise de resíduos para avaliar a validade do modelo:
+
+```{r}
+#| layout-ncol: 2
+
+# Constrói tabela com dados do modelo `m_red`
+abalone_m1_quant_red_3_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = m1_red_3$fit) %>%
+  mutate(resid = m1_red_3$res)
+
+# Gera gráficos dos resíduos:
+ggplot(abalone_m1_quant_red_3_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("gráfico de resíduos: modelo m1_red_3") +
+  labs(y = "resíduos", x = "resposta ajustada (age)")
+# Gráfico de quantis
+ggplot(abalone_m1_quant_red_3_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  ggtitle("gráfico de quantis normais") +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") 
+```
+O gráfico de resíduos indica um efeito cone, com o aumento da variância com o aumento de age. Conferiremos essa hipótese a seguir com o teste de Breusch-Pagan. Porém, não parece existir tendência de variação sistemática nos resíduos. O gráfico de quantis sugere desvio da normalidade, pequeno na cauda esquerda e mais acentuado na cauda direita. Esse desvio provavelmente não causará grandes problemas, mas é possível que transformações de variáveis ajudem a reduzir a fuga de normalidade.
+
+```{r}
+# Teste de Homoscedasticidade de Breusch-Pagan
+# Ho: sigma^2  = cte
+# Ha: sigma^2 != cte
+
+library(lmtest)
+bptest(m1_red_3)
+# Teste de Homoscedasticidade de Breusch-Pagan
+# Ho: sigma^2  = cte
+# Ha: sigma^2 != cte
+
+library(lmtest)
+bptest(m1_red_3)
+```
+De fato, os testes rejeitam as hipóteses nulas e confirmam as violações nas hipóteses de homoscedasticidade e de normalidade. 
+
+#### 1.2)Inclusão da Variável Categórica
+
+Prosseguiremos adicionando a variável categórica `sex` ao modelo reduzido `m1_red_3`:¨
+```{r}
+# modelo que inclui variável explicativa qualitativa `cylinder`
+m_quali <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter_c*length_c + shell_w_c*length_c  + sex, data = abalone)
+
+# resumo do modelo
+summary(m_quali)
+```
+
+
+---
