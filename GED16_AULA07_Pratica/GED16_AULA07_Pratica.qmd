@@ -303,6 +303,136 @@ m_quali <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter
 # resumo do modelo
 summary(m_quali)
 ```
+Do resumo da regressão, percebemos que o modelo é significativo (baixo valor-p para a estatística-F do teste global para a regressão), e a variável categórica contribui com informação adicional quando avaliamos a diferença entre sexo feminino e não identificado, enquanto o masculino não é tão significativo. Percebe-se que o coeficiente de determinação ajustado é um pouco superior àquele do modelo sem a variável categórica.
+
+Podemos avaliar a significância incremental das variáveis explicativas, utilizando ANOVA:
+```{r}
+# Tabela ANOVA para o modelo que 
+anova(m_quali)
+```
+Percebe-se que `sex` contribui de forma signicativa para reduzir a variabilidade da resposta. Nessa análise, `diameter_c^2`, `diameter_c:length_c` e `length_c:shell_w_c` contribuem pouco, porém, como visto na seção anterior, são necessárias para a especificação do modelo.
+
+#### 1.3) Inclusão de Termos de Interação entre as Variáveis Quantitativas e a Variável Categórica
+
+Vamos considerar agora a existência de interação entre as variáveis quantitativas e a variável categórica `sex`. Iniciaremos a análise visualizando se há evidências de interação entre tais variáveis:
+
+```{r}
+#| layout-ncol: 2
+
+ggplot(abalone, aes(x = length_c, y = age)) +
+  # adiciona pontos 
+  # (cores e símbolos distintos para diferentes classes da variável `cylinder`)
+  geom_point(aes(color = sex, shape = sex)) + 
+  # adiciona retas de tendência
+  geom_smooth(aes(color = sex), method = "lm", se = FALSE) +
+  ggtitle("`age` x `length_c`, para diferentes níveis de `sex`")
+ggplot(abalone, aes(x = diameter_c, y = age)) +
+  # adiciona pontos 
+  # (cores e símbolos distintos para diferentes classes da variável `cylinder`)
+  geom_point(aes(color = sex, shape = sex)) + 
+  # adiciona retas de tendência
+  geom_smooth(aes(color = sex), method = "lm", se = FALSE) +
+  ggtitle("`age` x `diameter_c`, para diferentes níveis de `sex`")
+ggplot(abalone, aes(x = shell_w_c, y = age)) +
+  # adiciona pontos 
+  # (cores e símbolos distintos para diferentes classes da variável `cylinder`)
+  geom_point(aes(color = sex, shape = sex)) + 
+  # adiciona retas de tendência
+  geom_smooth(aes(color = sex), method = "lm", se = FALSE) +
+  ggtitle("`age` x `shell_w_c`, para diferentes níveis de `sex`")
+```
+
+Nos três gráficos, identifica-se que a classe "I" é a que mais se difere das demais, sendo as retas de "F" e "M" relativamente próximas. Para `length_c` e `diameter_c`, possivelmente não há interação com `sex`, já que as retas parecem estar apenas transladadas. Já no caso de `shell_w`, parece haver inclinação maior para `sex` = I.
+
+Vamos construir um modelo completo, incluindo interação entre os termos das variáveis quantitativas e a variável categórica. Por simplicidade, decidiu-se não adicionar termo de interação com variável categórica aos termos que já são de interação entre diferentes variáveis.
+
+$$
+  E[age] = \beta_0 + \beta_1 length_c + \beta_{11}length_c^2  + \beta_2 diameter_c + \beta_{22} diameter_c^2 +  \beta_3 shell_{wc} + \beta_{33} shell_{wc}^2 + \beta_{4} sex + \beta_{12} length_c \cdot diameter_c + \beta_{13} length_c \cdot shell_{wc} + \beta_{23} diameter_c \cdot shell_{wc} + \beta_{14} length_c \cdot sex + \beta_{24} length_c \cdot diameter + \beta_{34} shell_{wc} \cdot sex + \beta_{114} length_c^2 \cdot sex + \beta_{224} diameter_c^2 \cdot sex + \beta_{334} shell_{wc}^2 \cdot sex
+$$
+```{r}
+# modelo incluindo todas as variáveis (numéricas e categórica)
+m1_all <- lm(age ~ diameter_c*length_c + shell_w_c*length_c  + sex + I(length_c^2)*sex + I(diameter_c^2)*sex + I(shell_w_c^2)*sex + diameter_c*sex + shell_w_c*sex + length_c*sex, data = abalone)
 
 
+# resumo do modelo
+summary(m1_all)
+```
+
+Percebe-se que, para `length_c^2`, `diameter_c^2`, `shell_w_c^2`, `diameter_c` e `length_c`, todos os termos de interação com `sex` não são significativos. Vamos refazer o modelo, considerando então somente o termo de interação de `sex` com `shell_w_c`:
+
+```{r}
+m1_quali_red <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter_c*length_c + shell_w_c*length_c  + sex + shell_w_c*sex, data=abalone)
+
+summary(m1_quali_red)
+
+```
+
+Realizando o teste de hipótese ao comparar com `m1_all`:
+Ho: $\beta_{14} = \beta_{24} = \beta_{114} = \beta_{224} = \beta_{334} = 0$  
+Ha: nem todos os coeficientes são nulos
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m1_all, m1_quali_red, test="F")
+```
+
+Não podemos rejeitar a hipótese nula, logo consideramos que todos os coeficientes de interação de sex, exceto com `shell_w` são nulos.
+
+Com esse resumo de modelo, percebemos que o coeficiente de `length_c:shell_w_c` é considerada como não significativa. Possivelmente, a adição de `sex` e suas interações ao modelo tira a necessidade de termos esse termo no modelo. Vamos avaliar se é possível retirá-lo:
+
+```{r}
+m1_quali_red_2 <- lm(age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) +  diameter_c*length_c + sex + shell_w_c*sex, data=abalone)
+
+summary(m1_quali_red_2)
+```
+Chega-se em um modelo que possui o mair coeficiente de determinação ajustado até então que possui, com exceção de `sexM:shell_w_c` e `diameter_c`, todos os coeficientes significativos. Perceba, porém, que os termos citados como não significativos precisam ser incluídos no modelo, respectivamente porque `diameter_c_^2` e `sexI:shell_w_c` são significativos. Avaliaremos a hipótese da equivalência e `m1_quali_red` com `m1_quali_red_2`:
+
+Ho: $\beta_{13} = 0$  
+Ha: $\beta_{13} \neq 0$
+```{r}
+anova(m1_quali_red, m1_quali_red_2, test="F")
+```
+
+Não podemos rejeitar a hipótese nula, confirmando então que podemos retirar o termo de interação de `shell_w_c` e `length_c` do modelo final. Chegamos então ao modelo 1 dado por:
+$$
+  E[age] = \beta_0 + \beta_1 length_c + \beta_{11}length_c^2  + \beta_2 diameter_c + \beta_{22} diameter_c^2 +  \beta_3 shell_{wc} + \beta_{33} shell_{wc}^2 + \beta_{4} sex + \beta_{12} length_c \cdot diameter_c + \beta_{34} shell_{wc} \cdot sex
+$$
+```{r}
+m1_final <- m1_quali_red_2
+
+summary(m1_final)
+```
+
+Tem-se, portanto, um modelo significativo pela estatística F e o coeficiente de determinação de aproximadamente 48% indica que parte da variação da resposta é explicada pelo modelo. Os coeficientes são significativos para um nível de significância de 5%.
+
+Podemos por fim analisar o gráfico de resíduos e o gráfico de quantis normais desse modelo:
+
+```{r}
+#| layout-ncol: 2
+
+# Constrói tabela com dados do modelo `m_red`
+abalone_m1_final_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = m1_final$fit) %>%
+  mutate(resid = m1_final$res)
+
+# Gera gráficos dos resíduos:
+ggplot(abalone_m1_final_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("gráfico de resíduos: modelo m1_final") +
+  labs(y = "resíduos", x = "resposta ajustada (age)")
+# Gráfico de quantis
+ggplot(abalone_m1_final_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  ggtitle("gráfico de quantis normais") +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") 
+```
+Percebe-se gráficos bem similares ao modelo só com variáveis quantitiativas, que possui os mesmos problemas (ainda que não muito graves) dele. Podemos também avaliar a tabela anova desse modelo:
+
+```{r}
+anova(m1_final)
+```
+Percebe-se que, com exceção de `diameter_c^2`, todos os coeficientes do modelo ajudam na redução da variabilidade da resposta.
+
+Conclui-se então que o modelo 1 é adequado para modelagem de `age`, ainda que sejam esperados intervalos de confiança e previsão relativamente largos dado que o gráfico de resídups é relativamente esparso e o coeficiente de determinação ajustado não é muito alto.
 ---

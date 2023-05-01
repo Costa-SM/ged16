@@ -664,6 +664,336 @@ Multiple R-squared:  0.4785,    Adjusted R-squared:  0.4772
 F-statistic: 382.1 on 10 and 4164 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
+<p>Do resumo da regressão, percebemos que o modelo é significativo (baixo valor-p para a estatística-F do teste global para a regressão), e a variável categórica contribui com informação adicional quando avaliamos a diferença entre sexo feminino e não identificado, enquanto o masculino não é tão significativo. Percebe-se que o coeficiente de determinação ajustado é um pouco superior àquele do modelo sem a variável categórica.</p>
+<p>Podemos avaliar a significância incremental das variáveis explicativas, utilizando ANOVA:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabela ANOVA para o modelo que </span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_quali)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: age
+                      Df  Sum Sq Mean Sq   F value    Pr(&gt;F)    
+I(length_c^2)          1  4485.4  4485.4  804.5707 &lt; 2.2e-16 ***
+I(diameter_c^2)        1    11.6    11.6    2.0756   0.14974    
+I(shell_w_c^2)         1  5099.5  5099.5  914.7368 &lt; 2.2e-16 ***
+diameter_c             1  6288.3  6288.3 1127.9751 &lt; 2.2e-16 ***
+length_c               1   270.1   270.1   48.4488 3.921e-12 ***
+shell_w_c              1  4820.8  4820.8  864.7360 &lt; 2.2e-16 ***
+sex                    2   271.8   135.9   24.3768 2.984e-11 ***
+diameter_c:length_c    1    34.5    34.5    6.1907   0.01288 *  
+length_c:shell_w_c     1    17.7    17.7    3.1719   0.07499 .  
+Residuals           4164 23213.8     5.6                        
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Percebe-se que <code>sex</code> contribui de forma signicativa para reduzir a variabilidade da resposta. Nessa análise, <code>diameter_c^2</code>, <code>diameter_c:length_c</code> e <code>length_c:shell_w_c</code> contribuem pouco, porém, como visto na seção anterior, são necessárias para a especificação do modelo.</p>
+</section>
+<section id="inclusão-de-termos-de-interação-entre-as-variáveis-quantitativas-e-a-variável-categórica" class="level4">
+<h4 class="anchored" data-anchor-id="inclusão-de-termos-de-interação-entre-as-variáveis-quantitativas-e-a-variável-categórica">1.3) Inclusão de Termos de Interação entre as Variáveis Quantitativas e a Variável Categórica</h4>
+<p>Vamos considerar agora a existência de interação entre as variáveis quantitativas e a variável categórica <code>sex</code>. Iniciaremos a análise visualizando se há evidências de interação entre tais variáveis:</p>
+<div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> length_c, <span class="at">y =</span> age)) <span class="sc">+</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona pontos </span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># (cores e símbolos distintos para diferentes classes da variável `cylinder`)</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> sex, <span class="at">shape =</span> sex)) <span class="sc">+</span> </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona retas de tendência</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> sex), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"`age` x `length_c`, para diferentes níveis de `sex`"</span>)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> diameter_c, <span class="at">y =</span> age)) <span class="sc">+</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona pontos </span></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># (cores e símbolos distintos para diferentes classes da variável `cylinder`)</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> sex, <span class="at">shape =</span> sex)) <span class="sc">+</span> </span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona retas de tendência</span></span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> sex), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"`age` x `diameter_c`, para diferentes níveis de `sex`"</span>)</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> shell_w_c, <span class="at">y =</span> age)) <span class="sc">+</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona pontos </span></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># (cores e símbolos distintos para diferentes classes da variável `cylinder`)</span></span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> sex, <span class="at">shape =</span> sex)) <span class="sc">+</span> </span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># adiciona retas de tendência</span></span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="fu">aes</span>(<span class="at">color =</span> sex), <span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"`age` x `shell_w_c`, para diferentes níveis de `sex`"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-23-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-23-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Nos três gráficos, identifica-se que a classe “I” é a que mais se difere das demais, sendo as retas de “F” e “M” relativamente próximas. Para <code>length_c</code> e <code>diameter_c</code>, possivelmente não há interação com <code>sex</code>, já que as retas parecem estar apenas transladadas. Já no caso de <code>shell_w</code>, parece haver inclinação maior para <code>sex</code> = I.</p>
+<p>Vamos construir um modelo completo, incluindo interação entre os termos das variáveis quantitativas e a variável categórica. Por simplicidade, decidiu-se não adicionar termo de interação com variável categórica aos termos que já são de interação entre diferentes variáveis.</p>
+<p><span class="math display">\[
+  E[age] = \beta_0 + \beta_1 length_c + \beta_{11}length_c^2  + \beta_2 diameter_c + \beta_{22} diameter_c^2 +  \beta_3 shell_{wc} + \beta_{33} shell_{wc}^2 + \beta_{4} sex + \beta_{12} length_c \cdot diameter_c + \beta_{13} length_c \cdot shell_{wc} + \beta_{23} diameter_c \cdot shell_{wc} + \beta_{14} length_c \cdot sex + \beta_{24} length_c \cdot diameter + \beta_{34} shell_{wc} \cdot sex + \beta_{114} length_c^2 \cdot sex + \beta_{224} diameter_c^2 \cdot sex + \beta_{334} shell_{wc}^2 \cdot sex
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo incluindo todas as variáveis (numéricas e categórica)</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>m1_all <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> diameter_c<span class="sc">*</span>length_c <span class="sc">+</span> shell_w_c<span class="sc">*</span>length_c  <span class="sc">+</span> sex <span class="sc">+</span> <span class="fu">I</span>(length_c<span class="sc">^</span><span class="dv">2</span>)<span class="sc">*</span>sex <span class="sc">+</span> <span class="fu">I</span>(diameter_c<span class="sc">^</span><span class="dv">2</span>)<span class="sc">*</span>sex <span class="sc">+</span> <span class="fu">I</span>(shell_w_c<span class="sc">^</span><span class="dv">2</span>)<span class="sc">*</span>sex <span class="sc">+</span> diameter_c<span class="sc">*</span>sex <span class="sc">+</span> shell_w_c<span class="sc">*</span>sex <span class="sc">+</span> length_c<span class="sc">*</span>sex, <span class="at">data =</span> abalone)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a><span class="co"># resumo do modelo</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_all)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ diameter_c * length_c + shell_w_c * length_c + 
+    sex + I(length_c^2) * sex + I(diameter_c^2) * sex + I(shell_w_c^2) * 
+    sex + diameter_c * sex + shell_w_c * sex + length_c * sex, 
+    data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.4286 -1.4585 -0.3514  0.9920 16.4111 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          12.7259004  0.0965386 131.822  &lt; 2e-16 ***
+diameter_c            0.0444931  0.0274324   1.622   0.1049    
+length_c             -0.1333054  0.0218726  -6.095  1.2e-09 ***
+shell_w_c             0.1286165  0.0092497  13.905  &lt; 2e-16 ***
+sexI                 -0.2735783  0.1848851  -1.480   0.1390    
+sexM                 -0.1392656  0.1301128  -1.070   0.2845    
+I(length_c^2)        -0.0019930  0.0008489  -2.348   0.0189 *  
+I(diameter_c^2)      -0.0030385  0.0012266  -2.477   0.0133 *  
+I(shell_w_c^2)       -0.0001526  0.0001174  -1.300   0.1937    
+diameter_c:length_c   0.0037532  0.0016017   2.343   0.0192 *  
+length_c:shell_w_c   -0.0002226  0.0003622  -0.615   0.5387    
+sexI:I(length_c^2)   -0.0003910  0.0006936  -0.564   0.5730    
+sexM:I(length_c^2)   -0.0001736  0.0006810  -0.255   0.7988    
+sexI:I(diameter_c^2)  0.0005733  0.0010306   0.556   0.5781    
+sexM:I(diameter_c^2)  0.0001326  0.0010095   0.131   0.8955    
+sexI:I(shell_w_c^2)  -0.0001572  0.0002502  -0.628   0.5299    
+sexM:I(shell_w_c^2)  -0.0001076  0.0001260  -0.854   0.3930    
+diameter_c:sexI      -0.0229170  0.0417900  -0.548   0.5835    
+diameter_c:sexM      -0.0448922  0.0364015  -1.233   0.2176    
+shell_w_c:sexI        0.0391044  0.0168861   2.316   0.0206 *  
+shell_w_c:sexM        0.0127559  0.0121563   1.049   0.2941    
+length_c:sexI         0.0160287  0.0331406   0.484   0.6287    
+length_c:sexM         0.0309870  0.0288893   1.073   0.2835    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.353 on 4152 degrees of freedom
+Multiple R-squared:  0.4837,    Adjusted R-squared:  0.481 
+F-statistic: 176.8 on 22 and 4152 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Percebe-se que, para <code>length_c^2</code>, <code>diameter_c^2</code>, <code>shell_w_c^2</code>, <code>diameter_c</code> e <code>length_c</code>, todos os termos de interação com <code>sex</code> não são significativos. Vamos refazer o modelo, considerando então somente o termo de interação de <code>sex</code> com <code>shell_w_c</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>m1_quali_red <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> <span class="fu">I</span>(length_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(diameter_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(shell_w_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span>  diameter_c<span class="sc">*</span>length_c <span class="sc">+</span> shell_w_c<span class="sc">*</span>length_c  <span class="sc">+</span> sex <span class="sc">+</span> shell_w_c<span class="sc">*</span>sex, <span class="at">data=</span>abalone)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_quali_red)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + 
+    diameter_c * length_c + shell_w_c * length_c + sex + shell_w_c * 
+    sex, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.3703 -1.4637 -0.3565  0.9849 16.5102 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         12.7746206  0.0826402 154.581  &lt; 2e-16 ***
+I(length_c^2)       -0.0022908  0.0005851  -3.915 9.18e-05 ***
+I(diameter_c^2)     -0.0028619  0.0010469  -2.734  0.00629 ** 
+I(shell_w_c^2)      -0.0001976  0.0001008  -1.961  0.04996 *  
+diameter_c           0.0167889  0.0128785   1.304  0.19243    
+length_c            -0.1131914  0.0101102 -11.196  &lt; 2e-16 ***
+shell_w_c            0.1333028  0.0057100  23.346  &lt; 2e-16 ***
+sexI                -0.3489266  0.1312668  -2.658  0.00789 ** 
+sexM                -0.2302608  0.0971546  -2.370  0.01783 *  
+diameter_c:length_c  0.0039308  0.0015014   2.618  0.00887 ** 
+length_c:shell_w_c  -0.0002645  0.0002886  -0.916  0.35958    
+shell_w_c:sexI       0.0344776  0.0057606   5.985 2.34e-09 ***
+shell_w_c:sexM       0.0042109  0.0035111   1.199  0.23047    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.351 on 4162 degrees of freedom
+Multiple R-squared:  0.4832,    Adjusted R-squared:  0.4817 
+F-statistic: 324.3 on 12 and 4162 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Realizando o teste de hipótese ao comparar com <code>m1_all</code>: Ho: <span class="math inline">\(\beta_{14} = \beta_{24} = \beta_{114} = \beta_{224} = \beta_{334} = 0\)</span><br>
+Ha: nem todos os coeficientes são nulos</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># teste-F (comparação de modelos aninhados)</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1_all, m1_quali_red, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: age ~ diameter_c * length_c + shell_w_c * length_c + sex + I(length_c^2) * 
+    sex + I(diameter_c^2) * sex + I(shell_w_c^2) * sex + diameter_c * 
+    sex + shell_w_c * sex + length_c * sex
+Model 2: age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + diameter_c * 
+    length_c + shell_w_c * length_c + sex + shell_w_c * sex
+  Res.Df   RSS  Df Sum of Sq      F Pr(&gt;F)
+1   4152 22981                            
+2   4162 23003 -10   -22.165 0.4005  0.947</code></pre>
+</div>
+</div>
+<p>Não podemos rejeitar a hipótese nula, logo consideramos que todos os coeficientes de interação de sex, exceto com <code>shell_w</code> são nulos.</p>
+<p>Com esse resumo de modelo, percebemos que o coeficiente de <code>length_c:shell_w_c</code> é considerada como não significativa. Possivelmente, a adição de <code>sex</code> e suas interações ao modelo tira a necessidade de termos esse termo no modelo. Vamos avaliar se é possível retirá-lo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>m1_quali_red_2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> <span class="fu">I</span>(length_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(diameter_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(shell_w_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span>  diameter_c<span class="sc">*</span>length_c <span class="sc">+</span> sex <span class="sc">+</span> shell_w_c<span class="sc">*</span>sex, <span class="at">data=</span>abalone)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_quali_red_2)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + 
+    diameter_c * length_c + sex + shell_w_c * sex, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.2938 -1.4697 -0.3654  0.9709 16.4799 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          1.277e+01  8.262e-02 154.599  &lt; 2e-16 ***
+I(length_c^2)       -2.336e-03  5.830e-04  -4.008 6.24e-05 ***
+I(diameter_c^2)     -2.780e-03  1.043e-03  -2.665  0.00773 ** 
+I(shell_w_c^2)      -2.764e-04  5.251e-05  -5.264 1.48e-07 ***
+diameter_c           1.673e-02  1.288e-02   1.299  0.19406    
+length_c            -1.136e-01  1.010e-02 -11.242  &lt; 2e-16 ***
+sexI                -3.473e-01  1.313e-01  -2.646  0.00818 ** 
+sexM                -2.305e-01  9.715e-02  -2.373  0.01769 *  
+shell_w_c            1.332e-01  5.709e-03  23.335  &lt; 2e-16 ***
+diameter_c:length_c  3.723e-03  1.484e-03   2.508  0.01217 *  
+sexI:shell_w_c       3.518e-02  5.710e-03   6.160 7.95e-10 ***
+sexM:shell_w_c       4.270e-03  3.510e-03   1.216  0.22392    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.351 on 4163 degrees of freedom
+Multiple R-squared:  0.4831,    Adjusted R-squared:  0.4818 
+F-statistic: 353.7 on 11 and 4163 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Chega-se em um modelo que possui o mair coeficiente de determinação ajustado até então que possui, com exceção de <code>sexM:shell_w_c</code> e <code>diameter_c</code>, todos os coeficientes significativos. Perceba, porém, que os termos citados como não significativos precisam ser incluídos no modelo, respectivamente porque <code>diameter_c_^2</code> e <code>sexI:shell_w_c</code> são significativos. Avaliaremos a hipótese da equivalência e <code>m1_quali_red</code> com <code>m1_quali_red_2</code>:</p>
+<p>Ho: <span class="math inline">\(\beta_{13} = 0\)</span><br>
+Ha: <span class="math inline">\(\beta_{13} \neq 0\)</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1_quali_red, m1_quali_red_2, <span class="at">test=</span><span class="st">"F"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + diameter_c * 
+    length_c + shell_w_c * length_c + sex + shell_w_c * sex
+Model 2: age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + diameter_c * 
+    length_c + sex + shell_w_c * sex
+  Res.Df   RSS Df Sum of Sq      F Pr(&gt;F)
+1   4162 23003                           
+2   4163 23008 -1   -4.6402 0.8396 0.3596</code></pre>
+</div>
+</div>
+<p>Não podemos rejeitar a hipótese nula, confirmando então que podemos retirar o termo de interação de <code>shell_w_c</code> e <code>length_c</code> do modelo final. Chegamos então ao modelo 1 dado por: <span class="math display">\[
+  E[age] = \beta_0 + \beta_1 length_c + \beta_{11}length_c^2  + \beta_2 diameter_c + \beta_{22} diameter_c^2 +  \beta_3 shell_{wc} + \beta_{33} shell_{wc}^2 + \beta_{4} sex + \beta_{12} length_c \cdot diameter_c + \beta_{34} shell_{wc} \cdot sex
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>m1_final <span class="ot">&lt;-</span> m1_quali_red_2</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1_final)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ I(length_c^2) + I(diameter_c^2) + I(shell_w_c^2) + 
+    diameter_c * length_c + sex + shell_w_c * sex, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.2938 -1.4697 -0.3654  0.9709 16.4799 
+
+Coefficients:
+                      Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)          1.277e+01  8.262e-02 154.599  &lt; 2e-16 ***
+I(length_c^2)       -2.336e-03  5.830e-04  -4.008 6.24e-05 ***
+I(diameter_c^2)     -2.780e-03  1.043e-03  -2.665  0.00773 ** 
+I(shell_w_c^2)      -2.764e-04  5.251e-05  -5.264 1.48e-07 ***
+diameter_c           1.673e-02  1.288e-02   1.299  0.19406    
+length_c            -1.136e-01  1.010e-02 -11.242  &lt; 2e-16 ***
+sexI                -3.473e-01  1.313e-01  -2.646  0.00818 ** 
+sexM                -2.305e-01  9.715e-02  -2.373  0.01769 *  
+shell_w_c            1.332e-01  5.709e-03  23.335  &lt; 2e-16 ***
+diameter_c:length_c  3.723e-03  1.484e-03   2.508  0.01217 *  
+sexI:shell_w_c       3.518e-02  5.710e-03   6.160 7.95e-10 ***
+sexM:shell_w_c       4.270e-03  3.510e-03   1.216  0.22392    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.351 on 4163 degrees of freedom
+Multiple R-squared:  0.4831,    Adjusted R-squared:  0.4818 
+F-statistic: 353.7 on 11 and 4163 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Tem-se, portanto, um modelo significativo pela estatística F e o coeficiente de determinação de aproximadamente 48% indica que parte da variação da resposta é explicada pelo modelo. Os coeficientes são significativos para um nível de significância de 5%.</p>
+<p>Podemos por fim analisar o gráfico de resíduos e o gráfico de quantis normais desse modelo:</p>
+<div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Constrói tabela com dados do modelo `m_red`</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>abalone_m1_final_data <span class="ot">&lt;-</span> abalone <span class="sc">%&gt;%</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># inclui coluna com valores ajustados</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">fitted =</span> m1_final<span class="sc">$</span>fit) <span class="sc">%&gt;%</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">resid =</span> m1_final<span class="sc">$</span>res)</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Gera gráficos dos resíduos:</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone_m1_final_data, <span class="fu">aes</span>(<span class="at">x =</span> fitted, <span class="at">y =</span> resid)) <span class="sc">+</span></span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"gráfico de resíduos: modelo m1_final"</span>) <span class="sc">+</span></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"resíduos"</span>, <span class="at">x =</span> <span class="st">"resposta ajustada (age)"</span>)</span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de quantis</span></span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone_m1_final_data, <span class="fu">aes</span>(<span class="at">sample =</span> resid)) <span class="sc">+</span></span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_qq</span>() <span class="sc">+</span> <span class="fu">stat_qq_line</span>() <span class="sc">+</span></span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"gráfico de quantis normais"</span>) <span class="sc">+</span></span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"quantis amostrais"</span>, <span class="at">x =</span> <span class="st">"quantis teóricos (dist. normal)"</span>) </span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-30-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Percebe-se gráficos bem similares ao modelo só com variáveis quantitiativas, que possui os mesmos problemas (ainda que não muito graves) dele. Podemos também avaliar a tabela anova desse modelo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1_final)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Response: age
+                      Df  Sum Sq Mean Sq   F value    Pr(&gt;F)    
+I(length_c^2)          1  4485.4  4485.4  811.5786 &lt; 2.2e-16 ***
+I(diameter_c^2)        1    11.6    11.6    2.0937    0.1480    
+I(shell_w_c^2)         1  5099.5  5099.5  922.7043 &lt; 2.2e-16 ***
+diameter_c             1  6288.3  6288.3 1137.8000 &lt; 2.2e-16 ***
+length_c               1   270.1   270.1   48.8708 3.170e-12 ***
+sex                    2   997.7   498.8   90.2609 &lt; 2.2e-16 ***
+shell_w_c              1  4094.9  4094.9  740.9244 &lt; 2.2e-16 ***
+diameter_c:length_c    1    34.5    34.5    6.2447    0.0125 *  
+sex:shell_w_c          2   223.7   111.8   20.2344 1.798e-09 ***
+Residuals           4163 23007.8     5.5                        
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Percebe-se que, com exceção de <code>diameter_c^2</code>, todos os coeficientes do modelo ajudam na redução da variabilidade da resposta.</p>
+<p>Conclui-se então que o modelo 1 é adequado para modelagem de <code>age</code>, ainda que sejam esperados intervalos de confiança e previsão relativamente largos dado que o gráfico de resídups é relativamente esparso e o coeficiente de determinação ajustado não é muito alto.</p>
 <hr>
 </section>
 </section>
