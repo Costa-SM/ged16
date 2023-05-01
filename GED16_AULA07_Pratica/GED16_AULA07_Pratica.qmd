@@ -441,6 +441,8 @@ Conclui-se então que o modelo 1 é adequado para modelagem de `age`, ainda que 
 
 ## Construção do Modelo 2
 
+### Modelo de Variáveis Quantitativas
+
 Para o segundo modelo, consideramos como variáveis explicativas `height`, `diameter`, `shell_w` e `sex`. Assim como antes, primeiro construiremos o modelo com as variáveis quantitativas. Dessa forma, temos:
 
 $$
@@ -492,31 +494,116 @@ A seguir, construímos um modelo inicial análogo ao primeiro.
 
 ```{r}
 # modelo polinomial de 2a. ordem completo para as variáveis quantitativas
-m2_quant <- lm(age ~ I(height_c^2) + I(diameter_c^2) + I(shell_w_c^2) + height_c*shell_w_c+ diameter_c*height_c + diameter_c* shell_w_c  , data = abalone)
+m2_quant <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) +  shell_w_c + I(shell_w_c^2) + height_c*shell_w_c+ diameter_c*height_c + diameter_c* shell_w_c  , data = abalone)
 
 # resumo do modelo 
 summary(m2_quant)
 ```
 
-Para realizar a inclusão das variáveis categóricas, usamos variáveis _dummy_. Então, consideramos o modelo abaixo, em que as variáveis
-$X_M$, $X_F$ e $X_I$ representam os diferentes níveis de `sex`.
+Analisando o _summary_ referente ao segundo modelo, constatamos que ele é significativo, dado que o p-valor da sua estatística F é inferior a $10^{-16}$, e que o seu coeficiente de determinação ajustado indica que aproximadamente 46% da variabilidade da resposta é explicada pelo modelo. Considerando um nível de significância de 5%, constatamos que os coeficientes `I(shell_w_c^2)`, `height_c:diameter_c` e `shell_w_c:diameter_c` não são significativos. Assim, dado que não há requisitos de presença decorrentes do princípio da hierarquia, consideraremos um modelo reduzido que não considera estas variáveis.
+
+```{r}
+# modelo reduzido
+m2_red <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c, data = abalone)
+
+# resumo do modelo 
+summary(m2_red)
+```
+
+Nota-se que, agora, todos os coeficientes são estatisticamente significantes, que o modelo reduzido ainda é significativo, com p-valor da estatística F inferior a $10^{-16}$, e que o coeficiente de determinação ajustado é um pouco inferior, e indica que 45.5% da variabilidade do modelo foi capturada.
+
+A seguir, iremos realizar o teste de hipótese com $H_0:\beta_{33}=\beta_{12}=\beta_{23}=0$, que representa o modelo reduzido, e $H_a:\beta_{ij}\neq0, \text{para algum par ij}$.
+
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m2_red, m2_quant, test="F")
+```
+
+Assim, nota-se que podemos aceitar a Hipótese Nula, dado que temos um p-valor de aproximadamente 28%. Portanto, descartamos as três variáveis que consideramos, e temos o modelo reduzido a seguir.
 
 $$
 \begin{align}
 E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
-      +  &\beta_3\cdot shell\_w +\beta_{33}\cdot shell\_w^2 + \beta_{12}\cdot height\cdot diameter\\
-      +  &\beta_{13}\cdot height\cdot shell\_w + \beta_{23}\cdot diameter\cdot shell\_w \\
-      +  &\beta_M\cdot X_M+ \beta_F\cdot X_F+ \beta_I\cdot X_I
+      +  &\beta_3\cdot shell\_w + \beta_{13}\cdot height\cdot shell\_w\\
 \end{align}
 $$
 
-Assim, alteramos o conjunto de dados, para realizar a inclusão das variáveis _dummy_ para cada nível de `sex`.
-```{r}
-# modelo polinomial de 2a. ordem completo para as variáveis quantitativas
-m2_qual <- lm(age ~ I(height_c^2) + I(diameter_c^2) + I(shell_w_c^2) + height_c*shell_w_c+ diameter_c*height_c + diameter_c* shell_w_c + sex, data = abalone)
+Seguimos, então, para a análise de resíduos, de maneira a determinar a validade do modelo.
 
-# resumo do modelo 
+```{r}
+#| layout-ncol: 2
+# Constrói tabela com dados do modelo `m_red`
+m2_red_data <- abalone %>%
+  # inclui coluna com valores ajustados
+  mutate(fitted = m2_red$fit) %>%
+  mutate(resid = m2_red$res)
+
+# Gera gráficos dos resíduos
+ggplot(m2_red_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de Resíduos: Modelo 2 Reduzido") +
+  labs(y = "resíduos", x = "resposta ajustada (age)")
+
+
+# Gráfico de quantis
+ggplot(m2_red_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  ggtitle("Gráfico de Quantis Normais: Modelo 2 Reduzido") +
+  labs(y = "Quantis Amostrais", x = "Quantis Teóricos (dist. normal)") 
+```
+
+Pela análise dos gráficos de resíduos, não parece existir uma variação sistemática nos resíduos, porém, nota-se um efeito cone, que indica variância não constante, e aumentando com o valor de `age`. Pode-se, então, realizar o teste de Breusch-Pagan para verificar essa constatação. O gráfico de quantis, por sua vez, parece indicar um desvio da normalidade na cauda da distribuição, que é mais alongada que uma distribuição normal.
+
+```{r}
+# Teste de Homoscedasticidade de Breusch-Pagan
+# Ho: sigma^2  = cte
+# Ha: sigma^2 != cte
+
+library(lmtest)
+bptest(m2_red)
+```
+
+Nota-se, portanto, que o teste rejeita a Hipótese Nula, e confirma a violação da hipótese de homoscedasticidade e normalidade. Eventualmente, esse desvio pode ser reduzido através de transformações de variáveis, porém, espera-se que ele não cause grandes problemas.
+
+### Inclusão da Variável Categórica
+
+Primeiramente, realizamos a inclusão da variável categórica `sex` ao modelo reduzido obtido anteriormente.
+
+```{r}
+# Inclusão da variável categórica no modelo
+m2_qual <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c + sex, data = abalone)
+
+# Resumo
 summary(m2_qual)
 ```
+
+Nota-se que, assim como antes, o modelo apresenta-se como significativo, com um p-valor do Teste F inferior a $10^{-16}$, e com um coeficiente de determinação ajustado indicando que aproximadamente 46% da variabilidade da resposta foi capturada. Adotando um nível de significância de 5%, entretanto, também percebemos que o nível Masculino não possui significância estatística para o modelo, porém, como para os demais níveis o p-valor excede 5%, consideramos ela como significativa.
+
+Realizando a inclusão das variáveis categóricas, e dos termos de interação, temos o modelo abaixo.
+
+```{r}
+# Inclusão da variável categórica e interações no modelo
+m2_qual_full <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                   + height_c * sex + I(height_c^2) * sex + diameter_c * sex + I(diameter_c^2) * sex + shell_w_c * sex + sex, data = abalone)
+
+# Resumo
+summary(m2_qual_full)
+```
+
+Primeiramente, temos que o modelo apresenta-se como significativo estatisticamente, com um p-valor no teste F inferior a $10^{-16}$, e coeficiente de determinação ajustado de aproximadamente 46%. Adotando, novamente, um nível de significância de 5%, temos uma série de termos que não possuem significância estatística nesse modelo, sendo eles `I(height_c^2)`, para os três níveis da variável categórica, `height_c`, `I(height_c^2)`, `diameter_c`, `shell_w_c`, todos para os níveis Masculino e Infante, e `I(diameter_c^2)` apenas para o nível Infante. Portanto, consideramos o modelo reduzido a seguir.
+
+```{r}
+# Inclusão da variável categórica e interações no modelo
+m2_qual_red <- lm(age ~ height_c + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                   + height_c * sex + I(height_c^2) * sex + diameter_c * sex + I(diameter_c^2) * sex + shell_w_c * sex + sex, data = abalone)
+
+# Resumo
+summary(m2_qual_red)
+```
+
+
+
+
 
 ---
