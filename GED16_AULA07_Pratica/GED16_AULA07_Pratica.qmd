@@ -2990,30 +2990,192 @@ summary(m2_qual)
 
 Nota-se que, assim como antes, o modelo apresenta-se como significativo, com um p-valor do Teste F inferior a $10^{-16}$, e com um coeficiente de determinação ajustado indicando que aproximadamente 46% da variabilidade da resposta foi capturada. Adotando um nível de significância de 5%, entretanto, também percebemos que o nível Masculino não possui significância estatística para o modelo, porém, como para os demais níveis o p-valor excede 5%, consideramos ela como significativa.
 
-Realizando a inclusão das variáveis categóricas, e dos termos de interação, temos o modelo abaixo.
+Podemos também avaliar a significância incremental das variáveis explicativas, através do ANOVA.
 
 ```{r}
-# Inclusão da variável categórica e interações no modelo
+anova(m2_qual)
+```
+
+Nota-se que a variável categórica `sex` contribui significativamente para reduzir a variabilidade da resposta, e que, adotando um nível de significância de 5%, não há variáveis que são estatisticamente insignificantes. Assim, podemos passar para a próxima etapa.
+
+### Inclusão dos Termos de Interação
+
+Consideraremos, então que há interação entre as variáveis quantitativas e `sex`. Para tal, começamos procurando evidências gráficas dessa interação.
+
+```{r}
+#| layout-ncol: 3
+ggplot(abalone, aes(x = height_c, y = age)) +
+  # adiciona pontos 
+  # (cores e símbolos distintos para diferentes classes da variável `cylinder`)
+  geom_point(aes(color = sex, shape = sex)) + 
+  # adiciona retas de tendência
+  geom_smooth(aes(color = sex), method = "lm", se = FALSE) +
+  ggtitle("`age` x `length_c`, para diferentes níveis de `sex`")
+
+ggplot(abalone, aes(x = diameter_c, y = age)) +
+  # adiciona pontos 
+  # (cores e símbolos distintos para diferentes classes da variável `cylinder`)
+  geom_point(aes(color = sex, shape = sex)) + 
+  # adiciona retas de tendência
+  geom_smooth(aes(color = sex), method = "lm", se = FALSE) +
+  ggtitle("`age` x `diameter_c`, para diferentes níveis de `sex`")
+
+ggplot(abalone, aes(x = shell_w_c, y = age)) +
+  # adiciona pontos 
+  # (cores e símbolos distintos para diferentes classes da variável `cylinder`)
+  geom_point(aes(color = sex, shape = sex)) + 
+  # adiciona retas de tendência
+  geom_smooth(aes(color = sex), method = "lm", se = FALSE) +
+  ggtitle("`age` x `shell_w_c`, para diferentes níveis de `sex`")
+```
+
+Analisando os três gráficos gerados, constata-se que, assim como no primeiro modelo, os Abalones Infantes são a classe que mais se difere das demais, apresentando uma reta com coeficiente angular significativamente diferente dos Femininos e Masculinos.
+
+Construiremos, com base no modelo reduzido obtido anteriormente, um modelo completo, incluindo interações entre os termos das variáveis quantitativas e a categórica, de maneira que teremos o observado abaixo.
+
+$$
+\begin{align}
+E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &\beta_3\cdot shell\_w + \beta_{13}\cdot height\cdot shell\_w + \beta_{14}\cdot height\cdot sex \\
+      +  &\beta_{24}\cdot diameter\cdot sex + \beta_{34}\cdot shell\_w\cdot sex + \beta_{114}\cdot height^2\cdot sex\\
+      +  &\beta_{224}\cdot diameter^2 \cdot sex + \beta_4 \cdot sex
+\end{align}
+$$
+
+```{r}
+# modelo incluindo todas as variáveis (numéricas e categórica)
 m2_qual_full <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
                    + height_c * sex + I(height_c^2) * sex + diameter_c * sex + I(diameter_c^2) * sex + shell_w_c * sex + sex, data = abalone)
 
-# Resumo
+# resumo do modelo
 summary(m2_qual_full)
 ```
 
-Primeiramente, temos que o modelo apresenta-se como significativo estatisticamente, com um p-valor no teste F inferior a $10^{-16}$, e coeficiente de determinação ajustado de aproximadamente 46%. Adotando, novamente, um nível de significância de 5%, temos uma série de termos que não possuem significância estatística nesse modelo, sendo eles `I(height_c^2)`, para os três níveis da variável categórica, `height_c`, `I(height_c^2)`, `diameter_c`, `shell_w_c`, todos para os níveis Masculino e Infante, e `I(diameter_c^2)` apenas para o nível Infante. Portanto, consideramos o modelo reduzido a seguir.
+Primeiramente, temos que o modelo apresenta-se como significativo estatisticamente, com um p-valor no teste F inferior a $10^{-16}$, e coeficiente de determinação ajustado de aproximadamente 46%. Adotando, novamente, um nível de significância de 5%, dentre os termos de interação acrescentados, temos que `height_c`, `I(height_c^2)`, `diameter_c` e `shell_w_c` não são estatisticamente significantes. Portanto, criamos um modelo reduzido sem esses termos.
 
 ```{r}
-# Inclusão da variável categórica e interações no modelo
-m2_qual_red <- lm(age ~ height_c + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
-                   + height_c * sex + I(height_c^2) * sex + diameter_c * sex + I(diameter_c^2) * sex + shell_w_c * sex + sex, data = abalone)
+# modelo reduzido de variáveis (numéricas e categórica)
+m2_qual_red <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                   + I(diameter_c^2) * sex + sex, data = abalone)
 
-# Resumo
+# resumo do modelo reduzido
 summary(m2_qual_red)
 ```
 
+Assim, podemos realizar o teste de hipótese com $H_0:\beta_{14}=\beta_{24}=\beta_{34}=\beta_{114}=0$, que representa o modelo reduzido, e $H_a:\beta_{ij}\neq0, \text{para algum par ij}$.
 
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m2_qual_full, m2_qual_red, test="F")
+```
 
+Nota-se que a Hipótese Nula foi rejeitada. Portanto, podemos tentar incluir as variáveis retiradas do modelo anterior, para determinar quais podem ser excluídas.
+
+```{r}
+# m2_qual_full <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+#                    + height_c * sex + I(height_c^2) * sex + diameter_c * sex + I(diameter_c^2) * sex + shell_w_c * sex + sex, data = abalone)
+
+# One not zero
+m2_qual_red_t1 <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                  + I(height_c^2) * sex + I(diameter_c^2) * sex + sex, data = abalone)
+
+m2_qual_red_t2 <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                  + shell_w_c * sex + I(diameter_c^2) * sex + sex, data = abalone)
+
+m2_qual_red_t3 <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                  + diameter_c * sex + I(diameter_c^2) * sex + sex, data = abalone)
+
+m2_qual_red_t4 <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                  + height_c * sex + I(diameter_c^2) * sex + sex, data = abalone)
+```
+
+| Hipótese Nula Adotada                                | p-valor do ANOVA                                           |
+|------------------------------------------------------|------------------------------------------------------------|
+| $H_0:\beta_{14}=\beta_{24}=\beta_{34}=\beta_{114}=0$ | `r anova(m2_qual_full, m2_qual_red, test="F")$'Pr(>F)'`    |
+| $H_0:\beta_{14}=\beta_{24}=\beta_{34}=0$             | `r anova(m2_qual_full, m2_qual_red_t1, test="F")$'Pr(>F)'` |
+| $H_0:\beta_{14}=\beta_{24}=\beta_{114}=0$            | `r anova(m2_qual_full, m2_qual_red_t2, test="F")$'Pr(>F)'` |
+| $H_0:\beta_{14}=\beta_{34}=\beta_{114}=0$            | `r anova(m2_qual_full, m2_qual_red_t3, test="F")$'Pr(>F)'` |
+| $H_0:\beta_{24}=\beta_{34}=\beta_{114}=0$            | `r anova(m2_qual_full, m2_qual_red_t4, test="F")$'Pr(>F)'` |
+
+Percebe-se que, realizando a inclusão do termo de interação com a variável `height`, atinge-se um p-valor superior a 5%, de maneira que podemos aceitar a hipótese nula. Portanto, consideramos o modelo a seguir.
+
+$$
+\begin{align}
+E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &\beta_3\cdot shell\_w + \beta_{13}\cdot height\cdot shell\_w + \beta_{14}\cdot height\cdot sex \\
+      +  &\beta_{224}\cdot diameter^2 \cdot sex + \beta_4 \cdot sex
+\end{align}
+$$
+
+```{r}
+# modelo adotado
+m2_qual_redfin <- m2_qual_red_t4
+
+# teste-F (comparação de modelos aninhados)
+anova(m2_qual_full, m2_qual_redfin, test="F")
+```
+
+```{r}
+summary(m2_qual_redfin)
+```
+
+Nota-se que a interação de `diameter_c^2` e `sex` passou a ser não significativa após a inclusão da interação com `height`. Testaremos então se podemos retirá-la do modelo.
+
+```{r}
+# modelo sem diameter^2
+m2_qual_red_nd <- lm(age ~ height_c + I(height_c^2) + diameter_c + I(diameter_c^2) + shell_w_c + height_c*shell_w_c
+                  + height_c * sex + sex, data = abalone)
+
+# resumo do modelo reduzido
+summary(m2_qual_red_nd)
+```
+
+```{r}
+# teste-F (comparação de modelos aninhados)
+anova(m2_qual_redfin, m2_qual_red_nd, test="F")
+```
+
+Obtém-se um p-valor de 25%, superior ao nível de significância de 5%, de maneira que podemos aceitar a Hipótese Nula, de que $\beta_{224}=0$. Nota-se que temos um coeficiente de determinação ajustado de 46.5% para o modelo, em que todas as variáveis são estatisticamente significativas.
+
+### Modelo Final
+
+Com base na análise realizada, temos que o modelo final é descrito abaixo, e, como observado anteriormente, ele é estatisticamente significativo, e possui um coeficiente de determinação ajustado de aproximadamente 46.5%, o que evidencia que ele foi capaz de explicar parcialmente a variação da resposta. Todos os seus coeficientes são significativos, para um nível de significância de 5% e, por fim, pode-se analisar a tabela ANOVA correspondente, o seu gráfico de resíduos e o de quantis normais.
+
+$$
+\begin{align}
+E[age] = &\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &\beta_3\cdot shell\_w + \beta_{13}\cdot height\cdot shell\_w + \beta_{14}\cdot height\cdot sex + \beta_4 \cdot sex
+\end{align}
+$$
+
+```{r}
+anova(m2_qual_redfin)
+```
+
+```{r}
+#| layout-ncol: 2
+# Constrói tabela com dados do modelo `m_red`
+m2_qual_redfin_data <- abalone %>%
+                       # inclui coluna com valores ajustados
+                       mutate(fitted = m2_qual_redfin$fit) %>%
+                       mutate(resid = m2_qual_redfin$res)
+
+# Gera gráficos dos resíduos:
+ggplot(m2_qual_redfin_data, aes(x = fitted, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  ggtitle("Gráfico de Resíduos: Modelo 2 Final") +
+  labs(y = "Resíduos", x = "Resposta Ajustada (age)")
+# Gráfico de quantis
+ggplot(m2_qual_redfin_data, aes(sample = resid)) +
+  stat_qq() + stat_qq_line() +
+  ggtitle("gráfico de quantis normais") +
+  labs(y = "quantis amostrais", x = "quantis teóricos (dist. normal)") 
+```
+
+Nota-se, por fim, que, salvo pela interação entre `diameter^2` e `sex`, todos os coeficientes do modelo ajudam na redução de variabilidade da resposta.
+
+Portanto, conclui-se que o Modelo 2 também é adequado para a modelagem da variável `age`, com as mesmas ressalvas quanto ao Modelo 1, referentes a intervalos de confiança e previsão bastante largos, devido ao relativamente baixo coeficiente de determinação ajustado, e o gráfico de resíduos esparso.
 
 
 ---
