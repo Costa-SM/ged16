@@ -255,8 +255,9 @@ Voltaremos a utilizar essa massa de dados em atividades futuras.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>height<span class="sc">!=</span><span class="dv">0</span>,]</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="parte-3-construção-de-modelos" class="level2">
-<h2 class="anchored" data-anchor-id="parte-3-construção-de-modelos">PARTE 3: Construção de Modelos</h2>
+</section>
+<section id="parte-3-construção-de-modelos" class="level1">
+<h1>PARTE 3: Construção de Modelos</h1>
 <p>Continuaremos considerando que a idade do abalone seja dada pela seguinte forma:</p>
 <p><span class="math display">\[\textsf{age} = \textsf{rings} + \delta, \quad \delta \sim N(\mu = 1.5, \sigma = 0.5)\]</span></p>
 <div class="cell">
@@ -665,7 +666,7 @@ F-statistic: 382.1 on 10 and 4164 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 <p>Do resumo da regressão, percebemos que o modelo é significativo (baixo valor-p para a estatística-F do teste global para a regressão), e a variável categórica contribui com informação adicional quando avaliamos a diferença entre sexo feminino e não identificado, enquanto o masculino não é tão significativo. Percebe-se que o coeficiente de determinação ajustado é um pouco superior àquele do modelo sem a variável categórica.</p>
-<p>Podemos avaliar a significância incremental das variáveis explicativas, utilizando ANOVA:</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Podemos avaliar a significância incremental das variáveis explicativas, utilizando ANOVA:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabela ANOVA para o modelo que </span></span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m_quali)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -997,6 +998,165 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <hr>
 </section>
 </section>
+<section id="construção-do-modelo-2" class="level2">
+<h2 class="anchored" data-anchor-id="construção-do-modelo-2">Construção do Modelo 2</h2>
+<p>Para o segundo modelo, consideramos como variáveis explicativas <code>height</code>, <code>diameter</code>, <code>shell_w</code> e <code>sex</code>. Assim como antes, primeiro construiremos o modelo com as variáveis quantitativas. Dessa forma, temos:</p>
+<p><span class="math display">\[
+\begin{align}
+E[age] = &amp;\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &amp;\beta_3\cdot shell\_w +\beta_{33}\cdot shell\_w^2 + \beta_{12}\cdot height\cdot diameter\\
+      +  &amp;\beta_{13}\cdot height\cdot shell\_w + \beta_{23}\cdot diameter\cdot shell\_w
+\end{align}
+\]</span> Podemos, então, agrupar a correlação dos diferentes termos do modelo na tabela abaixo.</p>
+<table class="table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Termos Analisados</th>
+<th>Correlação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>height</code> e <code>height</code>*<code>height</code></td>
+<td>0.7654885</td>
+</tr>
+<tr class="even">
+<td><code>diameter</code> e <code>diameter</code>*<code>diameter</code></td>
+<td>0.9866137</td>
+</tr>
+<tr class="odd">
+<td><code>shell_w</code> e <code>shell_w</code>*<code>shell_w</code></td>
+<td>0.9404706</td>
+</tr>
+</tbody>
+</table>
+<p>Percebe-se que a correlação referente a <code>diameter</code> e <code>shell_w</code> é bastante alta, enquanto <code>height</code> beira 75%. Como já foram analisados anteriormente, geraremos apenas o diagrama de dispersão referente à variável <code>height</code>. Através da análise deste, nota-se que há a presença de dois <em>outliers</em>, que causam a redução no valor de correlação obtido. Podemos retirá-los do <em>dataset</em>, gerando o segundo gráfico de dispersão.</p>
+<div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="co"># diagramas de dispersão</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> height, <span class="at">y =</span> height<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Diagrama de dispersão: `height^2` x `height`"</span>)</span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone[abalone<span class="sc">$</span>height <span class="sc">&lt;</span> <span class="dv">100</span>,]</span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(abalone, <span class="fu">aes</span>(<span class="at">x =</span> height, <span class="at">y =</span> height<span class="sc">^</span><span class="dv">2</span>)) <span class="sc">+</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Diagrama de dispersão: `height^2` x `height` -- Sem Outlier"</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output-display quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="GED16_AULA07_Pratica_files/figure-html/unnamed-chunk-32-2.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+<p>Dessa forma, temos que o novo valor de correlação entre <code>height</code> e <code>height</code>*<code>height</code> é dado por 0.982604, que, assim como nos anteriores, é bastante próximo de 1.</p>
+<p>A seguir, podemos centralizar as variáveis explicativas, como feito no primeiro modelo, e obter a nova correlação apenas para a variável <code>height</code>, dado que, para as demais, isso já foi feito anteriormente. Nota-se que, como nos casos anteriores, há uma redução significativa no valor obtido.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># centralizando a variável explicativa</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>abalone <span class="ot">&lt;-</span> abalone <span class="sc">|&gt;</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">height_c =</span> height <span class="sc">-</span> <span class="fu">mean</span>(height))</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="co"># nova correlação</span></span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(abalone<span class="sc">$</span>height_c, abalone<span class="sc">$</span>height_c<span class="sc">^</span><span class="dv">2</span>)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.1848979</code></pre>
+</div>
+</div>
+<p>A seguir, construímos um modelo inicial análogo ao primeiro.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo polinomial de 2a. ordem completo para as variáveis quantitativas</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>m2_quant <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> <span class="fu">I</span>(height_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(diameter_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(shell_w_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> height_c<span class="sc">*</span>shell_w_c<span class="sc">+</span> diameter_c<span class="sc">*</span>height_c <span class="sc">+</span> diameter_c<span class="sc">*</span> shell_w_c  , <span class="at">data =</span> abalone)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a><span class="co"># resumo do modelo </span></span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2_quant)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ I(height_c^2) + I(diameter_c^2) + I(shell_w_c^2) + 
+    height_c * shell_w_c + diameter_c * height_c + diameter_c * 
+    shell_w_c, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.5349 -1.4885 -0.4088  0.9729 17.3568 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           1.228e+01  6.270e-02 195.923  &lt; 2e-16 ***
+I(height_c^2)         6.603e-03  1.777e-03   3.715 0.000206 ***
+I(diameter_c^2)      -1.196e-03  4.483e-04  -2.667 0.007673 ** 
+I(shell_w_c^2)        4.601e-06  1.232e-04   0.037 0.970217    
+height_c              6.828e-02  1.373e-02   4.972 6.88e-07 ***
+shell_w_c             1.253e-01  5.753e-03  21.781  &lt; 2e-16 ***
+diameter_c           -1.087e-01  7.216e-03 -15.068  &lt; 2e-16 ***
+height_c:shell_w_c   -3.382e-03  9.728e-04  -3.477 0.000512 ***
+height_c:diameter_c  -1.964e-03  1.404e-03  -1.399 0.161850    
+shell_w_c:diameter_c  2.904e-04  4.178e-04   0.695 0.486995    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.41 on 4163 degrees of freedom
+Multiple R-squared:  0.4566,    Adjusted R-squared:  0.4554 
+F-statistic: 388.6 on 9 and 4163 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Para realizar a inclusão das variáveis categóricas, usamos variáveis <em>dummy</em>. Então, consideramos o modelo abaixo, em que as variáveis <span class="math inline">\(X_M\)</span>, <span class="math inline">\(X_F\)</span> e <span class="math inline">\(X_I\)</span> representam os diferentes níveis de <code>sex</code>.</p>
+<p><span class="math display">\[
+\begin{align}
+E[age] = &amp;\beta_0+\beta_1\cdot height +\beta_{11}\cdot height^2 + \beta_2\cdot diameter +\beta_{22}\cdot diameter^2\\
+      +  &amp;\beta_3\cdot shell\_w +\beta_{33}\cdot shell\_w^2 + \beta_{12}\cdot height\cdot diameter\\
+      +  &amp;\beta_{13}\cdot height\cdot shell\_w + \beta_{23}\cdot diameter\cdot shell\_w \\
+      +  &amp;\beta_M\cdot X_M+ \beta_F\cdot X_F+ \beta_I\cdot X_I
+\end{align}
+\]</span></p>
+<p>Assim, alteramos o conjunto de dados, para realizar a inclusão das variáveis <em>dummy</em> para cada nível de <code>sex</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># modelo polinomial de 2a. ordem completo para as variáveis quantitativas</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>m2_qual <span class="ot">&lt;-</span> <span class="fu">lm</span>(age <span class="sc">~</span> <span class="fu">I</span>(height_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(diameter_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> <span class="fu">I</span>(shell_w_c<span class="sc">^</span><span class="dv">2</span>) <span class="sc">+</span> height_c<span class="sc">*</span>shell_w_c<span class="sc">+</span> diameter_c<span class="sc">*</span>height_c <span class="sc">+</span> diameter_c<span class="sc">*</span> shell_w_c <span class="sc">+</span> sex, <span class="at">data =</span> abalone)</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="co"># resumo do modelo </span></span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2_qual)</span></code><button title="Copiar para a área de transferência" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = age ~ I(height_c^2) + I(diameter_c^2) + I(shell_w_c^2) + 
+    height_c * shell_w_c + diameter_c * height_c + diameter_c * 
+    shell_w_c + sex, data = abalone)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.4831 -1.4804 -0.3924  0.9787 17.3379 
+
+Coefficients:
+                       Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)           1.254e+01  8.443e-02 148.517  &lt; 2e-16 ***
+I(height_c^2)         6.307e-03  1.769e-03   3.566 0.000367 ***
+I(diameter_c^2)      -1.411e-03  4.472e-04  -3.154 0.001621 ** 
+I(shell_w_c^2)        2.079e-06  1.226e-04   0.017 0.986464    
+height_c              6.065e-02  1.370e-02   4.426 9.87e-06 ***
+shell_w_c             1.189e-01  5.803e-03  20.484  &lt; 2e-16 ***
+diameter_c           -1.078e-01  7.179e-03 -15.014  &lt; 2e-16 ***
+sexI                 -7.546e-01  1.134e-01  -6.657 3.16e-11 ***
+sexM                 -1.487e-01  9.073e-02  -1.639 0.101225    
+height_c:shell_w_c   -3.080e-03  9.688e-04  -3.180 0.001486 ** 
+height_c:diameter_c  -1.807e-03  1.397e-03  -1.294 0.195890    
+shell_w_c:diameter_c  4.235e-04  4.163e-04   1.017 0.308984    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.397 on 4161 degrees of freedom
+Multiple R-squared:  0.4627,    Adjusted R-squared:  0.4613 
+F-statistic: 325.7 on 11 and 4161 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<hr>
 </section>
 </section>
 
